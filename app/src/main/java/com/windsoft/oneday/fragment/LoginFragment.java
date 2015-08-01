@@ -20,6 +20,13 @@ public class LoginFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
         // 동규짱
+        // 동규짱
+        // 동규짱
+        // 동규짱
+        // 동규짱
+        // 동규짱
+        // 동규짱
+        // 동규짱
 
         return rootView;
     }
