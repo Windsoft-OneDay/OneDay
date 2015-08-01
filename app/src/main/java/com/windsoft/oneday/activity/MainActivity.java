@@ -13,7 +13,12 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);//뀪
+        //뀪?
+        //뀪꾺뀪ㄲㄲ????
+        //으ㅔ브베ㅡㅔ베베
+        //능레뱆ㄷㅎㅁㄴㅇ르에에에ㅔㅔ에ㅔ
+        //흐엥에ㅔ에ㅔㅔ
     }
 
     @Override
