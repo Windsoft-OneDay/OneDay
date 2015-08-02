@@ -2,4 +2,20 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!--기본 설정-->
+    <dimen name="base_margin">16dp</dimen>
+    <dimen name="small_margin">8dp</dimen>
+
+    <dimen name="base_padding">16dp</dimen>
+    <dimen name="small_padding">8dp</dimen>
+
+    <!--글씨 크기-->
+    <dimen name="font_big_size">36sp</dimen>
+    <dimen name="font_middle_size">26sp</dimen>
+    <dimen name="font_small_size">16sp</dimen>
+
+    <!--버튼 크기-->
+    <dimen name="btn_small">48dp</dimen>
+    <dimen name="btn_large">72dp</dimen>
 </resources>
