@@ -19,6 +19,7 @@
             android:orientation="vertical"
             android:layout_weight="0.6">
             <EditText
+                android:id="@+id/fragment_login_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="ID"
@@ -28,6 +29,7 @@
                 android:textColor="#ff000000"
                 android:textColorHint="#ff000000"/>
             <EditText
+                android:id="@+id/fragment_login_pw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -44,6 +46,7 @@
             android:layout_weight="0.4"
             android:orientation="vertical">
             <Button
+                android:id="@+id/fragment_login_submit"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Log in"

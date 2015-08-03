@@ -22,6 +22,9 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.facebook.android:facebook-android-sdk:4.0.0'
-    compile files('libs/naveroauthlib-4.1.3.jar')
+    compile 'com.android.support:recyclerview-v7:22.2.1'        // 리사이클러 뷰
+    compile 'com.nispok:snackbar:2.10.+'        // 스낵바
+    compile 'com.facebook.android:facebook-android-sdk:4.0.0'   // 페이스북
+    compile 'com.github.nkzawa:socket.io-client:0.5.1'          // socket.io
+    compile files('libs/naveroauthlib-4.1.3.jar')               // 네이버
 }

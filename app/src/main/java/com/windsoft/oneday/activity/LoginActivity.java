@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.nispok.snackbar.Snackbar;
 import com.windsoft.oneday.Global;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
@@ -14,7 +15,8 @@ import com.windsoft.oneday.login.NaverLogin;
 /**
  * Created by dongkyu Lee on 2015-08-02.
  * */
-public class LoginActivity extends FragmentActivity implements FacebookLogin.OnFacebookLoginHandler, NaverLogin.OnNaverLoginHandler {
+public class LoginActivity extends FragmentActivity implements FacebookLogin.OnFacebookLoginHandler, NaverLogin.OnNaverLoginHandler
+                , LoginFragment.OnLoginHandler{
 
     private static final String TAG = "LoginActivity";
 
@@ -22,6 +24,9 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
     private NaverLogin naverLoginLogin;                    // 네이버 로그인 클래스
 
     private LoginFragment loginFragment;                    // 로그인 프레그먼트
+
+    private String id;              // 자동로그인 아이디
+    private String pw;              // 자동로그인 패스워드
 
 
     @Override
@@ -46,6 +51,84 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
                 .add(R.id.activity_main_container, loginFragment)
                 .commit();
 
+
+        // 자동 로그인 허용된 아이디 탐색
+        getAutoLogin();
+    }
+
+
+    /**
+     * TODO: 자동로그인
+     * */
+    private void getAutoLogin() {
+        Global.pref = getSharedPreferences(Global.PREF_KEY, MODE_PRIVATE);
+        id = Global.pref.getString(Global.KEY_USER_ID, null);
+        pw = Global.pref.getString(Global.KEY_USER_PW, null);
+
+        if (id != null) {           // 자동 로그인 허용 된 아이디가 있다면
+            Intent intent = new Intent(LoginActivity.this, OneDayService.class);
+            intent.putExtra(Global.KEY_COMMAND, Global.KEY_LOGIN);              // 로그인 요청
+            intent.putExtra(Global.KEY_LOGIN_ID, id);                           // 아이디 전송
+            if (pw != null) {                   // 비밀번호 있다면
+                intent.putExtra(Global.KEY_LOGIN_PW, pw);                       // 비밀번호 전송
+                intent.putExtra(Global.KEY_LOGIN_TYPE, Global.ONE_DAY);         // 타입 = 원데이
+            } else {
+                intent.putExtra(Global.KEY_LOGIN_TYPE, Global.FACEBOOK);        // 타입 = 페이스북
+            }
+            startService(intent);
+        }
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent != null) {
+            String command = intent.getStringExtra(Global.KEY_COMMAND);
+            if (command.equals(Global.VALUE_CONNECT)) {
+                processConnection();
+            } else if (command.equals(Global.KEY_LOGIN)) {
+                int cond = intent.getIntExtra(Global.KEY_COND, Global.NULL);
+                String id = intent.getStringExtra(Global.KEY_USER_ID);
+                String pw = intent.getStringExtra(Global.KEY_USER_PW);
+                processLogin(cond, id, pw);
+            }
+        }
+
+        super.onNewIntent(intent);
+    }
+
+
+    /**
+     * TODO: 로그인 응답 처리
+     * @param cond : 상태
+     *             NULL = 실패
+     *             SUCCESS = 성공
+     * @param id : 아이디
+     * @param pw : 패스워드
+     * */
+    private void processLogin(int cond, String id, String pw) {
+        if (cond == Global.NULL) {                      // 로그인 실패 시
+            Snackbar.with(getApplicationContext())      // 스낵바 띄우기
+                    .text(R.string.login_null)
+                    .showAnimation(true)
+                    .show(this);
+        } else if (cond == Global.SUCCESS) {            // 로그인 성공 시
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);     // 메인 액티비티로 이동
+            startActivity(intent);
+            finish();
+
+            Global.editor = Global.pref.edit();                     // 자동로그인 데이터 설정
+            Global.editor.putString(Global.KEY_USER_ID, id);
+            Global.editor.putString(Global.KEY_USER_PW, pw);
+            Global.editor.commit();
+        }
+    }
+
+
+    /**
+     * TODO: 서버와 연결되었을 때 실행
+     * */
+    private void processConnection() {
 
     }
 
@@ -73,21 +156,28 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
 
     @Override
     public void OnFacebookLogin(String token, String id) {
-        intentLoginData(id, Global.FACEBOOK);
+        intentLoginData(id, null, Global.FACEBOOK);
     }
 
 
     @Override
     public void OnNaverLogin(String email) {
-        intentLoginData(email, Global.NAVER);
+        intentLoginData(email, null, Global.NAVER);
     }
 
 
-    private void intentLoginData(String id, int cond) {
+    @Override
+    public void OnLoginReq(String id, String pw) {
+        intentLoginData(id, pw, Global.ONE_DAY);
+    }
+
+
+    private void intentLoginData(String id, String pw, int cond) {
         Intent intent = new Intent(LoginActivity.this, OneDayService.class);
         intent.putExtra(Global.KEY_COMMAND, Global.KEY_LOGIN);
         intent.putExtra(Global.KEY_LOGIN_ID, id);
-        intent.putExtra(Global.KEY_LOGIN_TYPE, Global.FACEBOOK);
+        intent.putExtra(Global.KEY_LOGIN_PW, pw);
+        intent.putExtra(Global.KEY_LOGIN_TYPE, cond);
         startService(intent);
     }
 }

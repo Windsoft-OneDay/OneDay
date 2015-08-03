@@ -1,11 +1,15 @@
 package com.windsoft.oneday.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.facebook.login.widget.LoginButton;
@@ -19,13 +23,25 @@ import com.windsoft.oneday.login.NaverLogin;
  */
 public class LoginFragment extends Fragment {
 
-    private LinearLayout snsContainer;
+    private static final String TAG = "LoginFragment";
 
-    private static FacebookLogin facebookLogin;
-    private static NaverLogin naverLogin;
+    private LinearLayout snsContainer;          // 네이버, 페북 로그인 버튼 위치할 레이아웃
 
-    private LoginButton facebookBtn;
-    private OAuthLoginButton naverBtn;
+    private static FacebookLogin facebookLogin; // 페북 로그인 관리 클래스
+    private static NaverLogin naverLogin;   // 네이버 로그인 관리 클래스
+
+    private EditText idInput;               // 아이디 입력 상자
+    private EditText pwInput;               // 비밀번호 입력 상자
+
+    private String id;                      // 아이디 변수
+    private String pw;                      // 비밀번호 변수
+
+    private LoginButton facebookBtn;        // 페이스북 로그인 버튼
+    private OAuthLoginButton naverBtn;      // 네이버 로그인 버튼
+    private Button submit;                  // 로그인 버튼
+
+
+    private OnLoginHandler sender;
 
     public static final LoginFragment createInstance(FacebookLogin facebookLogin, NaverLogin naverLogin) {
         LoginFragment.facebookLogin = facebookLogin;
@@ -33,6 +49,12 @@ public class LoginFragment extends Fragment {
         return new LoginFragment();
     }
 
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        sender = (OnLoginHandler) activity;
+    }
 
     @Nullable
     @Override
@@ -53,7 +75,37 @@ public class LoginFragment extends Fragment {
         naverBtn = naverLogin.getLoginButton();
 
         snsContainer = (LinearLayout) rootView.findViewById(R.id.fragment_login_sns_container);
-        snsContainer.addView(facebookBtn);
-        snsContainer.addView(naverBtn);
+        snsContainer.addView(facebookBtn);                  // 페이스북 로그인 버튼 추가
+        snsContainer.addView(naverBtn);                     // 네이버 로그인 버튼 추가
+
+        submit = (Button) rootView.findViewById(R.id.fragment_login_submit);
+
+        idInput = (EditText) rootView.findViewById(R.id.fragment_login_id);
+        pwInput = (EditText) rootView.findViewById(R.id.fragment_login_pw);
+
+        setListener();      // 리스너 부착
+    }
+
+
+    /**
+     * TODO: 리스너 부착
+     * */
+    private void setListener() {
+        submit.setOnClickListener(new View.OnClickListener() {              // 로그인 버튼
+            @Override
+            public void onClick(View v) {
+                id = idInput.getText().toString();
+                pw = pwInput.getText().toString();
+
+                if (id != null && id.length() > 0 && pw != null && pw.length() > 0) {       // 아이디, 비밀번호 모두 입력 되었다면
+                    sender.OnLoginReq(id, pw);              // 로그인 요청
+                }
+            }
+        });
+    }
+
+
+    public interface OnLoginHandler {
+        void OnLoginReq(String id, String pw);
     }
 }
