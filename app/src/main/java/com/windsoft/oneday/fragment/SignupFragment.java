@@ -10,7 +10,7 @@ import android.widget.NumberPicker;
 import com.windsoft.oneday.R;
 
 /**
- * Created by kim on 2015-08-03.
+ * Created by kim on 2015-08-04.
  */
 public class SignUpFragment extends Fragment {
     NumberPicker year;

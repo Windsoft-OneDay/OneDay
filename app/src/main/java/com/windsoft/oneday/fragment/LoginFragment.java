@@ -41,7 +41,6 @@ public class LoginFragment extends Fragment {
     private OAuthLoginButton naverBtn;      // 네이버 로그인 버튼
     private Button submit;                  // 로그인 버튼
 
-
     private OnLoginHandler sender;
 
     public static final LoginFragment createInstance(FacebookLogin facebookLogin, NaverLogin naverLogin) {
