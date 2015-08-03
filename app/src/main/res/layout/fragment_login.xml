@@ -71,7 +71,7 @@
             android:layout_marginRight="5dp"
             android:text="회원가입"
             android:textSize="18sp"
-            android:id="@+id/fragment_login_signup"/>
+            android:id="@+id/fragment_login_sign_up"/>
         <Button
             android:layout_width="0dp"
             android:layout_height="72dp"
