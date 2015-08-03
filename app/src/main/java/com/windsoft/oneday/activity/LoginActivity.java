@@ -11,6 +11,7 @@ import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
 import com.windsoft.oneday.SocketIO;
 import com.windsoft.oneday.fragment.LoginFragment;
+import com.windsoft.oneday.fragment.SignUpFragment;
 import com.windsoft.oneday.fragment.SplashFragment;
 import com.windsoft.oneday.login.FacebookLogin;
 import com.windsoft.oneday.login.NaverLogin;
@@ -28,6 +29,8 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
 
     private LoginFragment loginFragment;                    // 로그인 프레그먼트
     private SplashFragment splashFragment;                    // 로그인 프레그먼트
+
+    private SignUpFragment signUpFragment;                  //회원가입 프레그먼트
 
     private String id;              // 자동로그인 아이디
     private String pw;              // 자동로그인 패스워드
@@ -63,6 +66,8 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.activity_main_container, splashFragment)
                 .commit();
+
+        signUpFragment = new SignUpFragment();
 
 
         // 자동 로그인 허용된 아이디 탐색
@@ -196,6 +201,10 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
     @Override
     public void OnSignUp() {
         // 회원가입 버튼 눌렀을 때
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.activity_main_container, signUpFragment)
+                .addToBackStack(null)
+                .commit();
 
 
 
