@@ -105,7 +105,7 @@ public class LoginFragment extends Fragment {
                 if (id != null && id.length() > 0 && pw != null && pw.length() > 0) {       // 아이디, 비밀번호 모두 입력 되었다면
                     int cond = Secure.checkPasswordSecureLevel(pw);
                     if (cond == Secure.SUCCESS) {
-                        sender.OnLoginReq(id, pw);              // 로그인 요청
+                        sender.onLoginReq(id, pw);              // 로그인 요청
                     } else if (cond == Secure.NOT_ENOUGH_LETTER) {
                         Snackbar.with(getActivity())
                                 .text(R.string.login_not_enough_letter)
@@ -125,14 +125,14 @@ public class LoginFragment extends Fragment {
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sender.OnSignUp();
+                sender.onSignUp();
             }
         });
     }
 
 
     public interface OnLoginHandler {
-        void OnLoginReq(String id, String pw);
-        void OnSignUp();
+        void onLoginReq(String id, String pw);
+        void onSignUp();
     }
 }

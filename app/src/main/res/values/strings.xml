@@ -11,7 +11,8 @@
     <string name="facebook_app_id">107117226304241</string>
     <string name="title_activity_main">MainActivity</string>
 
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
+    <string name="title_section1">글</string>
+    <string name="title_section2">글쓰기</string>
+    <string name="title_section3">내정보</string>
+    <string name="title_section4">설정</string>
 </resources>

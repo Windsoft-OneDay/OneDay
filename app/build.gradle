@@ -22,9 +22,10 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.android.support:recyclerview-v7:22.2.1'        // ¸®»çÀÌÅ¬·¯ ºä
-    compile 'com.nispok:snackbar:2.10.+'        // ½º³¼¹Ù
-    compile 'com.facebook.android:facebook-android-sdk:4.0.0'   // ÆäÀÌ½ººÏ
+    compile 'com.android.support:recyclerview-v7:22.2.1'        // ë¦¬ì‚¬ì´í´ëŸ¬ ë·°
+    compile 'com.nispok:snackbar:2.10.+'        // ìŠ¤ë‚µë°”
+    compile 'com.facebook.android:facebook-android-sdk:4.0.0'   // í˜ì´ìŠ¤ë¶ë¡œê·¸ì¸
     compile 'com.github.nkzawa:socket.io-client:0.5.1'          // socket.io
-    compile files('libs/naveroauthlib-4.1.3.jar')               // ³×ÀÌ¹ö
+    compile files('libs/naveroauthlib-4.1.3.jar')               // ë„¤ì´ë²„ ë¡œê·¸ì¸
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'            // ë·°í˜ì´ì €
 }

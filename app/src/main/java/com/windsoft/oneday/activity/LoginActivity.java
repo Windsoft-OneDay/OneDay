@@ -181,25 +181,25 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
 
 
     @Override
-    public void OnFacebookLogin(String token, String id) {
+    public void onFacebookLogin(String token, String id) {
         intentLoginData(id, null, Global.FACEBOOK);
     }
 
 
     @Override
-    public void OnNaverLogin(String email) {
+    public void onNaverLogin(String email) {
         intentLoginData(email, null, Global.NAVER);
     }
 
 
     @Override
-    public void OnLoginReq(String id, String pw) {
+    public void onLoginReq(String id, String pw) {
         intentLoginData(id, pw, Global.ONE_DAY);
     }
 
 
     @Override
-    public void OnSignUp() {
+    public void onSignUp() {
         // 회원가입 버튼 눌렀을 때
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.activity_main_container, signUpFragment)
@@ -208,13 +208,13 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
 
 
 
-        
+
 
 
     }
 
     @Override
-    public void OnSplash() {                    // 스플레시 보이고 2초 뒤 실행
+    public void onSplash() {                    // 스플레시 보이고 2초 뒤 실행
         Socket socket = SocketIO.getSocket();
         if (socket != null)
             isConnected = socket.connected();

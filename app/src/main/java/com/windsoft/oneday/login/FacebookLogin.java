@@ -97,7 +97,7 @@ public class FacebookLogin {
                 if (newToken != null) {     // 로그인
                     Log.d(TAG, "new.token = " + newToken.getToken());
                     Log.d(TAG, "new.id = " + newToken.getUserId());
-                    sender.OnFacebookLogin(newToken.getToken(), newToken.getUserId());
+                    sender.onFacebookLogin(newToken.getToken(), newToken.getUserId());
                 }
             }
         };
@@ -186,6 +186,6 @@ public class FacebookLogin {
      * TODO: 페이스북 로그인 성공 인터페이스
      * */
     public interface OnFacebookLoginHandler {
-        void OnFacebookLogin(String token, String id);
+        void onFacebookLogin(String token, String id);
     }
 }

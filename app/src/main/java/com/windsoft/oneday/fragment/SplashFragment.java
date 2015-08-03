@@ -54,7 +54,7 @@ public class SplashFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                sender.OnSplash();
+                sender.onSplash();
             }
 
             @Override
@@ -68,6 +68,6 @@ public class SplashFragment extends Fragment {
 
 
     public interface OnSplashHandler {
-        void OnSplash();
+        void onSplash();
     }
 }

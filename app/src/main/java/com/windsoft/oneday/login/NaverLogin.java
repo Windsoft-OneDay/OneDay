@@ -127,7 +127,7 @@ public class NaverLogin {
 
                         Log.d(TAG, "email = " + email);
 
-                        sender.OnNaverLogin(email);
+                        sender.onNaverLogin(email);
 
                     } catch (Exception e) {
 
@@ -139,7 +139,7 @@ public class NaverLogin {
 
 
     public interface OnNaverLoginHandler{
-        void OnNaverLogin(String email);
+        void onNaverLogin(String email);
     }
 
 
