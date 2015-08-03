@@ -45,6 +45,10 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+
         init();
     }
 
@@ -64,7 +68,7 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
 
         /*프래그먼트 부착 소스*/
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.activity_main_container, splashFragment)
+                .add(R.id.activity_login_container, splashFragment)
                 .commit();
 
         signUpFragment = new SignUpFragment();
@@ -150,7 +154,7 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
         if (!isLoginShowed && isSplashShowed2sec) {
             /*프래그먼트 변경 소스*/
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.activity_main_container, loginFragment)
+                    .replace(R.id.activity_login_container, loginFragment)
                     .commit();
             isLoginShowed = true;
         }
@@ -202,15 +206,9 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
     public void onSignUp() {
         // 회원가입 버튼 눌렀을 때
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.activity_main_container, signUpFragment)
+                .replace(R.id.activity_login_container, signUpFragment)
                 .addToBackStack(null)
                 .commit();
-
-
-
-
-
-
     }
 
     @Override
@@ -221,7 +219,7 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
         isSplashShowed2sec = true;
         if (!isLoginShowed && isConnected) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.activity_main_container, loginFragment)
+                    .replace(R.id.activity_login_container, loginFragment)
                     .commit();
             isLoginShowed = true;
         }

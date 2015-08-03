@@ -15,4 +15,6 @@
     <string name="title_section2">글쓰기</string>
     <string name="title_section3">내정보</string>
     <string name="title_section4">설정</string>
+
+    <string name="card_main_menu_title"></string>
 </resources>

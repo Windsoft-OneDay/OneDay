@@ -18,4 +18,7 @@
     <!--버튼 크기-->
     <dimen name="btn_small">48dp</dimen>
     <dimen name="btn_large">72dp</dimen>
+
+    <!-- 카드뷰 크기-->
+    <dimen name="card_profile">60dp</dimen>
 </resources>
