@@ -194,6 +194,17 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
 
 
     @Override
+    public void OnSignUp() {
+        // 회원가입 버튼 눌렀을 때
+
+
+
+        
+
+
+    }
+
+    @Override
     public void OnSplash() {                    // 스플레시 보이고 2초 뒤 실행
         Socket socket = SocketIO.getSocket();
         if (socket != null)

@@ -41,6 +41,8 @@ public class LoginFragment extends Fragment {
     private OAuthLoginButton naverBtn;      // 네이버 로그인 버튼
     private Button submit;                  // 로그인 버튼
 
+    private Button signUpBtn;               // 회원가입 버튼
+
     private OnLoginHandler sender;
 
     public static final LoginFragment createInstance(FacebookLogin facebookLogin, NaverLogin naverLogin) {
@@ -84,6 +86,8 @@ public class LoginFragment extends Fragment {
         idInput = (EditText) rootView.findViewById(R.id.fragment_login_id);
         pwInput = (EditText) rootView.findViewById(R.id.fragment_login_pw);
 
+        signUpBtn = (Button) rootView.findViewById(R.id.fragment_login_sign_up);
+
         setListener();      // 리스너 부착
     }
 
@@ -116,10 +120,19 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
+
+
+        signUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sender.OnSignUp();
+            }
+        });
     }
 
 
     public interface OnLoginHandler {
         void OnLoginReq(String id, String pw);
+        void OnSignUp();
     }
 }
