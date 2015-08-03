@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.github.nkzawa.socketio.client.Socket;
 import com.nispok.snackbar.Snackbar;
 import com.windsoft.oneday.Global;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
+import com.windsoft.oneday.SocketIO;
 import com.windsoft.oneday.fragment.LoginFragment;
+import com.windsoft.oneday.fragment.SplashFragment;
 import com.windsoft.oneday.login.FacebookLogin;
 import com.windsoft.oneday.login.NaverLogin;
 
@@ -16,7 +19,7 @@ import com.windsoft.oneday.login.NaverLogin;
  * Created by dongkyu Lee on 2015-08-02.
  * */
 public class LoginActivity extends FragmentActivity implements FacebookLogin.OnFacebookLoginHandler, NaverLogin.OnNaverLoginHandler
-                , LoginFragment.OnLoginHandler{
+                , LoginFragment.OnLoginHandler, SplashFragment.OnSplashHandler{
 
     private static final String TAG = "LoginActivity";
 
@@ -24,9 +27,14 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
     private NaverLogin naverLoginLogin;                    // 네이버 로그인 클래스
 
     private LoginFragment loginFragment;                    // 로그인 프레그먼트
+    private SplashFragment splashFragment;                    // 로그인 프레그먼트
 
     private String id;              // 자동로그인 아이디
     private String pw;              // 자동로그인 패스워드
+
+    private boolean isLoginShowed = false;
+    private boolean isSplashShowed2sec = false;
+    private boolean isConnected = false;
 
 
     @Override
@@ -42,13 +50,18 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
      * TODO: 생성자
      * */
     private void init() {
+        OneDayService.createInstance(getApplicationContext());
+
         facebookLogin = new FacebookLogin(this);
         naverLoginLogin = new NaverLogin(this);
 
         // 로그인 프레그먼트 부착
         loginFragment = LoginFragment.createInstance(facebookLogin, naverLoginLogin);
+        splashFragment = new SplashFragment();
+
+        /*프래그먼트 부착 소스*/
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.activity_main_container, loginFragment)
+                .add(R.id.activity_main_container, splashFragment)
                 .commit();
 
 
@@ -65,8 +78,8 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
         id = Global.pref.getString(Global.KEY_USER_ID, null);
         pw = Global.pref.getString(Global.KEY_USER_PW, null);
 
+        Intent intent = new Intent(LoginActivity.this, OneDayService.class);
         if (id != null) {           // 자동 로그인 허용 된 아이디가 있다면
-            Intent intent = new Intent(LoginActivity.this, OneDayService.class);
             intent.putExtra(Global.KEY_COMMAND, Global.KEY_LOGIN);              // 로그인 요청
             intent.putExtra(Global.KEY_LOGIN_ID, id);                           // 아이디 전송
             if (pw != null) {                   // 비밀번호 있다면
@@ -75,8 +88,8 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
             } else {
                 intent.putExtra(Global.KEY_LOGIN_TYPE, Global.FACEBOOK);        // 타입 = 페이스북
             }
-            startService(intent);
         }
+        startService(intent);
     }
 
 
@@ -129,8 +142,16 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
      * TODO: 서버와 연결되었을 때 실행
      * */
     private void processConnection() {
-
+        if (!isLoginShowed && isSplashShowed2sec) {
+            /*프래그먼트 변경 소스*/
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.activity_main_container, loginFragment)
+                    .commit();
+            isLoginShowed = true;
+        }
+        isConnected = true;
     }
+
 
 
     @Override
@@ -171,6 +192,20 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
         intentLoginData(id, pw, Global.ONE_DAY);
     }
 
+
+    @Override
+    public void OnSplash() {                    // 스플레시 보이고 2초 뒤 실행
+        Socket socket = SocketIO.getSocket();
+        if (socket != null)
+            isConnected = socket.connected();
+        isSplashShowed2sec = true;
+        if (!isLoginShowed && isConnected) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.activity_main_container, loginFragment)
+                    .commit();
+            isLoginShowed = true;
+        }
+    }
 
     private void intentLoginData(String id, String pw, int cond) {
         Intent intent = new Intent(LoginActivity.this, OneDayService.class);

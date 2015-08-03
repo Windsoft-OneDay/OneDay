@@ -1,14 +1,23 @@
 package com.windsoft.oneday;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 public class OneDayService extends Service {
 
     private static final String TAG = "OneDayService";
 
-    private SocketIO socketIO;
+    private static SocketIO socketIO;
+
+
+    public static void createInstance(Context context) {
+        Log.d(TAG, "서비스 생성");
+        if (socketIO == null)
+            socketIO = new SocketIO(context);
+    }
 
     public OneDayService() {
     }
@@ -16,9 +25,6 @@ public class OneDayService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (socketIO == null)
-            socketIO = new SocketIO(this);
-
         if (intent != null) {
             String command = intent.getStringExtra(Global.KEY_COMMAND);
             if (command != null) {

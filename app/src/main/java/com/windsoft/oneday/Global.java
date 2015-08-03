@@ -29,6 +29,6 @@ public class Global {
 
 
     public static final String PREF_KEY = "windsoft-oneday";
-    public static SharedPreferences pref;                     // ÀÚµ¿ ·Î±×ÀÎ
+    public static SharedPreferences pref;                     // ï¿½Úµï¿½ ï¿½Î±ï¿½ï¿½ï¿½
     public static SharedPreferences.Editor editor;
 }

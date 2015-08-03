@@ -4,6 +4,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="login_null">아이디/비밀번호를 확인하세요</string>
+    <string name="login_not_enough_letter">비밀번호를 8자리 이상 입력하세요</string>
+    <string name="login_no_special_letter">비밀번호에 특수문자를 사용하세요</string>
 
 
     <string name="facebook_app_id">107117226304241</string>

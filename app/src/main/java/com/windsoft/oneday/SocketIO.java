@@ -1,6 +1,6 @@
 package com.windsoft.oneday;
 
-import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -23,11 +23,11 @@ public class SocketIO {
 
     private int cond;
 
-    private Socket socket;
-    private Service service;
+    private static Socket socket;
+    private Context context;
 
-    public SocketIO(Service service) {
-        this.service = service;
+    public SocketIO(Context context) {
+        this.context = context;
         init();
     }
 
@@ -44,6 +44,11 @@ public class SocketIO {
     }
 
 
+    public static Socket getSocket() {
+        return socket;
+    }
+
+
     private void socketConnect() {
         if (socket != null && socket.connected()) {
             socket.disconnect();
@@ -56,8 +61,10 @@ public class SocketIO {
             @Override
             public void call(Object... args) {
                 Log.d(TAG, "연결 응답");
-                Intent intent = new Intent(service, LoginActivity.class);
+                Intent intent = new Intent(context, LoginActivity.class);
                 intent.putExtra(Global.KEY_COMMAND, Global.VALUE_CONNECT);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
             }
         }).on(Global.KEY_LOGIN, new Emitter.Listener() {                    // 로그인 응답 왔을 때
             @Override
@@ -93,13 +100,13 @@ public class SocketIO {
      * */
     private void processLoginRes(int cond, String id, String pw) {
         Log.d(TAG, "로그인 응답");
-        Intent intent = new Intent(service, LoginActivity.class);
+        Intent intent = new Intent(context, LoginActivity.class);
         intent.putExtra(Global.KEY_COMMAND, Global.KEY_LOGIN);
         intent.putExtra(Global.KEY_COND, cond);
         intent.putExtra(Global.KEY_USER_ID, id);
         intent.putExtra(Global.KEY_USER_PW, pw);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        service.startActivity(intent);
+        context.startActivity(intent);
     }
 
 
@@ -114,6 +121,8 @@ public class SocketIO {
             JSONObject obj = new JSONObject();
             obj.put(Global.KEY_USER_ID, id);
             if (cond == Global.ONE_DAY) {
+                pw = Secure.Sha256Encrypt(pw);
+                Log.d(TAG, "pw = " + pw);
                 obj.put(Global.KEY_USER_PW, pw);
             }
             socket.emit(Global.KEY_LOGIN, obj);
