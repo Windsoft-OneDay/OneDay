@@ -24,7 +24,8 @@
             android:layout_marginRight="@dimen/base_margin"
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginBottom="@dimen/small_margin"
-            android:hint="아이디"/>
+            android:hint="아이디"
+            android:id="@+id/fragment_sign_up_id"/>
     </FrameLayout>
     <FrameLayout
         android:layout_width="match_parent"
@@ -46,7 +47,9 @@
             android:layout_marginRight="@dimen/base_margin"
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginBottom="@dimen/small_margin"
-            android:hint="비밀번호"/>
+            android:hint="비밀번호"
+            android:inputType="textPassword"
+            android:id="@+id/fragment_sign_up_pw"/>
     </FrameLayout>
     <FrameLayout
         android:layout_width="match_parent"
@@ -68,7 +71,9 @@
             android:layout_marginRight="@dimen/base_margin"
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginBottom="@dimen/small_margin"
-            android:hint="비밀번호 확인"/>
+            android:hint="비밀번호 확인"
+            android:inputType="textPassword"
+            android:id="@+id/fragment_sign_up_config"/>
     </FrameLayout>
     <FrameLayout
         android:layout_width="match_parent"
@@ -90,7 +95,9 @@
             android:layout_marginRight="@dimen/base_margin"
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginBottom="@dimen/small_margin"
-            android:hint="메일"/>
+            android:hint="메일"
+            android:inputType="textEmailAddress"
+            android:id="@+id/fragment_sign_up_mail"/>
     </FrameLayout>
     <FrameLayout
         android:layout_width="match_parent"
@@ -141,5 +148,12 @@
             android:layout_marginRight="@dimen/base_margin">
         </NumberPicker>
     </LinearLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="확인"
+        android:layout_marginRight="@dimen/base_margin"
+        android:layout_marginLeft="@dimen/base_margin"
+        android:id="@+id/fragment_sign_up_submit"/>
 
 </LinearLayout>

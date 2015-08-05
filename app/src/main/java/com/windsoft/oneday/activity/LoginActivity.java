@@ -45,10 +45,6 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-
         init();
     }
 
