@@ -67,6 +67,31 @@
         </LinearLayout>
 
 
+        <LinearLayout
+            android:id="@+id/fragment_write_choice_picture_layout"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:padding="@dimen/small_padding"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:layout_width="@dimen/btn_small"
+                android:layout_height="@dimen/btn_small"
+                android:layout_marginRight="@dimen/base_margin"/>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|left"
+                android:text="@string/fragment_write_choice_picture"/>
+
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
 </LinearLayout>

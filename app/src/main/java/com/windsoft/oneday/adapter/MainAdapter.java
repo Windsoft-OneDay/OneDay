@@ -176,7 +176,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         return noticeList.size();
     }
 
-    public class ViewHolder extends UltimateRecyclerviewViewHolder {
+    public static class ViewHolder extends UltimateRecyclerviewViewHolder {
 
         ImageView profileImage;
         TextView name;

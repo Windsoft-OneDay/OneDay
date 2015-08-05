@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.Calendar;
+
 public class OneDayService extends Service {
 
     private static final String TAG = "OneDayService";
@@ -35,12 +37,19 @@ public class OneDayService extends Service {
                     if (cond != -1)
                         socketIO.login(id, pw, cond);                    // 로그인 처리
 
-                } else if (command.equals(Global.KEY_SIGN_UP)) {
+                } else if (command.equals(Global.KEY_SIGN_UP)) {                // 회원가입
                     String id = intent.getStringExtra(Global.KEY_USER_ID);
                     String pw = intent.getStringExtra(Global.KEY_USER_PW);
+                    String mail = intent.getStringExtra(Global.KEY_USER_MAIL);
+                    long birth = intent.getLongExtra(Global.KEY_USER_BIRTH, 0);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(birth);
 
                     if (id != null && pw != null)
-                        socketIO.signUp(id, pw);
+                        socketIO.signUp(id, pw, mail, calendar.getTime());
+                } else if (command.equals(Global.KEY_GET_PROFILE)) {
+                    String id = intent.getStringExtra(Global.KEY_USER_ID);
+                    socketIO.getProfile(id);
                 }
             }
         }

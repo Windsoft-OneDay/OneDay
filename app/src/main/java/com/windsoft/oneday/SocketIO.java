@@ -8,8 +8,13 @@ import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 import com.windsoft.oneday.activity.LoginActivity;
+import com.windsoft.oneday.activity.MainActivity;
+import com.windsoft.oneday.model.NoticeModel;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by ironFactory on 2015-08-03.
@@ -18,8 +23,6 @@ public class SocketIO {
 
     private static final String URL = "http://windsoft-oneday.herokuapp.com";
     private static final String TAG = "SocketIO";
-
-    private static final String COND = "cond";
 
     private int cond;
 
@@ -55,7 +58,7 @@ public class SocketIO {
             socket.close();
         }
 
-        cond = Global.NULL;
+        cond = 0;
 
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {            // 서버와 연결 됬을 때
             @Override
@@ -71,14 +74,12 @@ public class SocketIO {
             public void call(Object... args) {
                 try {
                     JSONObject obj = (JSONObject) args[0];
-                    int cond = obj.getInt(COND);
+                    int cond = obj.getInt(Global.KEY_CODE);
                     String id = null;
-                    String pw = null;
-                    if (cond == Global.SUCCESS) {
+                    if (cond == Global.CODE_SUCCESS) {
                         id = obj.getString(Global.KEY_USER_ID);
-                        pw = obj.getString(Global.KEY_USER_PW);
                     }
-                    processLoginRes(cond, id, pw);
+                    processLoginRes(cond, id);
                 } catch (Exception e) {
                     Log.e(TAG, "로그인 응답 오류 = " + e.getMessage());
                 }
@@ -86,12 +87,29 @@ public class SocketIO {
         }).on(Global.KEY_SIGN_UP, new Emitter.Listener() {                      // 로그인 응답
             @Override
             public void call(Object... args) {
-                
+                try {
+                    JSONObject obj = (JSONObject) args[0];
+                    int cond = obj.getInt(Global.KEY_CODE);
+                    processSignUp(cond);
+                } catch (Exception e) {
+                    Log.e(TAG, "회원가입 에러 = " + e.getMessage());
+                }
             }
         }).on(Global.KEY_READ_NOTICE, new Emitter.Listener() {                  // 게시글 읽어오기 응답
             @Override
             public void call(Object... args) {
 
+            }
+        }).on(Global.KEY_GET_PROFILE, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    JSONObject obj = (JSONObject) args[0];
+                    Log.d(TAG, "notice list = " + obj.get(Global.KEY_NOTICE));
+                    ArrayList<NoticeModel> noticeList = (ArrayList<NoticeModel>) obj.get(Global.KEY_NOTICE);
+                } catch (Exception e) {
+                    Log.e(TAG, "프로필 받아오기 오류 = " + e.getMessage());
+                }
             }
         });
 
@@ -101,20 +119,30 @@ public class SocketIO {
 
 
     /**
+     * TODO: 회원가입 응답
+     * @param code : 회원가입 성공 여부
+     * */
+    private void processSignUp(int code) {
+        Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_SIGN_UP);
+        intent.putExtra(Global.KEY_CODE, code);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+    }
+
+
+    /**
      * TODO: 로그인 응답 처리
-     * @param cond : 응답요건
+     * @param code : 응답요건
      *             NULL(0) = 아이디/비밀번호 틀림
      *             SUCCESS(1) = 성공
      * @param id : 자동로그인용 id
-     * @param pw : 자동로그인용 pw
      * */
-    private void processLoginRes(int cond, String id, String pw) {
+    private void processLoginRes(int code, String id) {
         Log.d(TAG, "로그인 응답");
         Intent intent = new Intent(context, LoginActivity.class);
         intent.putExtra(Global.KEY_COMMAND, Global.KEY_LOGIN);
-        intent.putExtra(Global.KEY_COND, cond);
+        intent.putExtra(Global.KEY_CODE, code);
         intent.putExtra(Global.KEY_USER_ID, id);
-        intent.putExtra(Global.KEY_USER_PW, pw);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
@@ -124,13 +152,13 @@ public class SocketIO {
      * TODO: 로그인 요청 시 실행
      * @param id : 아이디
      * @param pw : 비밀번호
-     * @param cond : 로그인 타입
+     * @param code : 로그인 타입
      * */
-    public void login(String id, String pw, int cond) {
+    public void login(String id, String pw, int code) {
         try {
             JSONObject obj = new JSONObject();
             obj.put(Global.KEY_USER_ID, id);
-            if (cond == Global.ONE_DAY) {
+            if (code == Global.ONE_DAY) {
                 pw = Secure.Sha256Encrypt(pw);
                 Log.d(TAG, "pw = " + pw);
                 obj.put(Global.KEY_USER_PW, pw);
@@ -146,15 +174,32 @@ public class SocketIO {
      * @param id : 아이디
      * @param pw : 비밀번호
      * */
-    public void signUp(String id, String pw) {
+    public void signUp(String id, String pw, String mail, Date birth) {
         try {
             JSONObject obj = new JSONObject();
             obj.put(Global.KEY_USER_ID, id);
             pw = Secure.Sha256Encrypt(pw);              // 암호화
             obj.put(Global.KEY_USER_PW, pw);
+            obj.put(Global.KEY_USER_MAIL, mail);
+            obj.put(Global.KEY_USER_BIRTH, birth);
             socket.emit(Global.KEY_SIGN_UP, obj);
         } catch (Exception e) {
             Log.e(TAG, "signUp 에러 = " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * TODO: 프로필 요청
+     * @param id : 아이디
+     * */
+    public void getProfile(String id) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put(Global.KEY_USER_ID, id);
+            socket.emit(Global.KEY_GET_PROFILE, obj);
+        } catch (Exception e) {
+
         }
     }
 

@@ -32,7 +32,6 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
 
     private SignUpFragment signUpFragment;                  //회원가입 프레그먼트
 
-    private String id;              // 자동로그인 아이디
     private String pw;              // 자동로그인 패스워드
 
     private boolean isLoginShowed = false;
@@ -71,30 +70,6 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
 
 
         // 자동 로그인 허용된 아이디 탐색
-        getAutoLogin();
-    }
-
-
-    /**
-     * TODO: 자동로그인
-     * */
-    private void getAutoLogin() {
-        Global.pref = getSharedPreferences(Global.PREF_KEY, MODE_PRIVATE);
-        id = Global.pref.getString(Global.KEY_USER_ID, null);
-        pw = Global.pref.getString(Global.KEY_USER_PW, null);
-
-        Intent intent = new Intent(LoginActivity.this, OneDayService.class);
-        if (id != null) {           // 자동 로그인 허용 된 아이디가 있다면
-            intent.putExtra(Global.KEY_COMMAND, Global.KEY_LOGIN);              // 로그인 요청
-            intent.putExtra(Global.KEY_LOGIN_ID, id);                           // 아이디 전송
-            if (pw != null) {                   // 비밀번호 있다면
-                intent.putExtra(Global.KEY_LOGIN_PW, pw);                       // 비밀번호 전송
-                intent.putExtra(Global.KEY_LOGIN_TYPE, Global.ONE_DAY);         // 타입 = 원데이
-            } else {
-                intent.putExtra(Global.KEY_LOGIN_TYPE, Global.FACEBOOK);        // 타입 = 페이스북
-            }
-        }
-        startService(intent);
     }
 
 
@@ -105,10 +80,10 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
             if (command.equals(Global.VALUE_CONNECT)) {
                 processConnection();
             } else if (command.equals(Global.KEY_LOGIN)) {
-                int cond = intent.getIntExtra(Global.KEY_COND, Global.NULL);
+                int code = intent.getIntExtra(Global.KEY_CODE, -1);
                 String id = intent.getStringExtra(Global.KEY_USER_ID);
-                String pw = intent.getStringExtra(Global.KEY_USER_PW);
-                processLogin(cond, id, pw);
+                if (code != -1)
+                    processLogin(code, id);
             }
         }
 
@@ -118,20 +93,20 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
 
     /**
      * TODO: 로그인 응답 처리
-     * @param cond : 상태
+     * @param code : 상태
      *             NULL = 실패
      *             SUCCESS = 성공
      * @param id : 아이디
-     * @param pw : 패스워드
      * */
-    private void processLogin(int cond, String id, String pw) {
-        if (cond == Global.NULL) {                      // 로그인 실패 시
+    private void processLogin(int code, String id) {
+        if (code == Global.CODE_LOGIN_NO_ID) {                      // 로그인 실패 시
             Snackbar.with(getApplicationContext())      // 스낵바 띄우기
-                    .text(R.string.login_null)
+                    .text(R.string.sign_up_null)
                     .showAnimation(true)
                     .show(this);
-        } else if (cond == Global.SUCCESS) {            // 로그인 성공 시
+        } else if (code == Global.CODE_SUCCESS) {            // 로그인 성공 시
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);     // 메인 액티비티로 이동
+            intent.putExtra(Global.KEY_USER_ID, id);
             startActivity(intent);
             finish();
 
@@ -195,6 +170,7 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
     @Override
     public void onLoginReq(String id, String pw) {
         intentLoginData(id, pw, Global.ONE_DAY);
+        this.pw = pw;
     }
 
 
@@ -223,11 +199,13 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
 
 
     @Override
-    public void onSignUp(String id, String pw) {
+    public void onSignUp(String id, String pw, String mail, long birth) {
         Intent intent = new Intent(LoginActivity.this, OneDayService.class);
         intent.putExtra(Global.KEY_COMMAND, Global.KEY_SIGN_UP);
         intent.putExtra(Global.KEY_USER_ID, id);
         intent.putExtra(Global.KEY_USER_PW, pw);
+        intent.putExtra(Global.KEY_USER_MAIL, mail);
+        intent.putExtra(Global.KEY_USER_BIRTH, birth);
         startService(intent);
     }
 

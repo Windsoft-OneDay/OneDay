@@ -19,6 +19,9 @@
     <dimen name="btn_small">48dp</dimen>
     <dimen name="btn_large">72dp</dimen>
 
+    <!-- 리스트뷰 헤더 -->
+    <dimen name="header">100dp</dimen>
+
     <!-- 카드뷰 크기-->
     <dimen name="card_profile">60dp</dimen>
 </resources>

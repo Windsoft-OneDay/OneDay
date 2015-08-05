@@ -1,9 +1,11 @@
 package com.windsoft.oneday.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,8 @@ import android.widget.LinearLayout;
 
 import com.facebook.login.widget.LoginButton;
 import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
+import com.windsoft.oneday.Global;
+import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
 import com.windsoft.oneday.login.FacebookLogin;
 import com.windsoft.oneday.login.NaverLogin;
@@ -87,6 +91,8 @@ public class LoginFragment extends Fragment {
         signUpBtn = (Button) rootView.findViewById(R.id.fragment_login_sign_up);
 
         setListener();      // 리스너 부착
+
+        getAutoLogin();
     }
 
 
@@ -113,6 +119,32 @@ public class LoginFragment extends Fragment {
                 sender.onIntentSignUp();
             }
         });
+    }
+
+
+    /**
+     * TODO: 자동로그인
+     * */
+    private void getAutoLogin() {
+        Global.pref = getActivity().getSharedPreferences(Global.PREF_KEY, getActivity().MODE_PRIVATE);
+        id = Global.pref.getString(Global.KEY_USER_ID, null);
+        pw = Global.pref.getString(Global.KEY_USER_PW, null);
+
+        Log.d(TAG,"id = " + id);
+        Log.d(TAG,"pw = " + pw);
+
+        Intent intent = new Intent(getActivity(), OneDayService.class);
+        if (id != null) {           // 자동 로그인 허용 된 아이디가 있다면
+            intent.putExtra(Global.KEY_COMMAND, Global.KEY_LOGIN);              // 로그인 요청
+            intent.putExtra(Global.KEY_LOGIN_ID, id);                           // 아이디 전송
+            if (pw != null) {                   // 비밀번호 있다면
+                intent.putExtra(Global.KEY_LOGIN_PW, pw);                       // 비밀번호 전송
+                intent.putExtra(Global.KEY_LOGIN_TYPE, Global.ONE_DAY);         // 타입 = 원데이
+            } else {
+                intent.putExtra(Global.KEY_LOGIN_TYPE, Global.FACEBOOK);        // 타입 = 페이스북
+            }
+        }
+        getActivity().startService(intent);
     }
 
 
