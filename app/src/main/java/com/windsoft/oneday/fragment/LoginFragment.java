@@ -110,7 +110,7 @@ public class LoginFragment extends Fragment {
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sender.onSignUp();
+                sender.onIntentSignUp();
             }
         });
     }
@@ -118,6 +118,6 @@ public class LoginFragment extends Fragment {
 
     public interface OnLoginHandler {
         void onLoginReq(String id, String pw);
-        void onSignUp();
+        void onIntentSignUp();
     }
 }

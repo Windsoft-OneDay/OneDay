@@ -20,7 +20,7 @@ import com.windsoft.oneday.login.NaverLogin;
  * Created by dongkyu Lee on 2015-08-02.
  * */
 public class LoginActivity extends FragmentActivity implements FacebookLogin.OnFacebookLoginHandler, NaverLogin.OnNaverLoginHandler
-                , LoginFragment.OnLoginHandler, SplashFragment.OnSplashHandler{
+                , LoginFragment.OnLoginHandler, SplashFragment.OnSplashHandler, SignUpFragment.OnSignUpHandler{
 
     private static final String TAG = "LoginActivity";
 
@@ -203,7 +203,7 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
 
 
     @Override
-    public void onSignUp() {
+    public void onIntentSignUp() {
         // 회원가입 버튼 눌렀을 때
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.activity_login_container, signUpFragment)
@@ -224,6 +224,17 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
             isLoginShowed = true;
         }
     }
+
+
+    @Override
+    public void onSignUp(String id, String pw) {
+        Intent intent = new Intent(LoginActivity.this, OneDayService.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_SIGN_UP);
+        intent.putExtra(Global.KEY_USER_ID, id);
+        intent.putExtra(Global.KEY_USER_PW, pw);
+        startService(intent);
+    }
+
 
     private void intentLoginData(String id, String pw, int cond) {
         Intent intent = new Intent(LoginActivity.this, OneDayService.class);

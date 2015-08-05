@@ -32,9 +32,15 @@ public class OneDayService extends Service {
                     String id = intent.getStringExtra(Global.KEY_LOGIN_ID);     // 아이디
                     String pw = intent.getStringExtra(Global.KEY_LOGIN_PW);     // 아이디
                     int cond = intent.getIntExtra(Global.KEY_LOGIN_TYPE, -1);   // 로그인 유형
-                    if (cond != -1) {
+                    if (cond != -1)
                         socketIO.login(id, pw, cond);                    // 로그인 처리
-                    }
+
+                } else if (command.equals(Global.KEY_SIGN_UP)) {
+                    String id = intent.getStringExtra(Global.KEY_USER_ID);
+                    String pw = intent.getStringExtra(Global.KEY_USER_PW);
+
+                    if (id != null && pw != null)
+                        socketIO.signUp(id, pw);
                 }
             }
         }

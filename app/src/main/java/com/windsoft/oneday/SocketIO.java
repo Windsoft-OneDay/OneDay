@@ -150,6 +150,7 @@ public class SocketIO {
         try {
             JSONObject obj = new JSONObject();
             obj.put(Global.KEY_USER_ID, id);
+            pw = Secure.Sha256Encrypt(pw);              // 암호화
             obj.put(Global.KEY_USER_PW, pw);
             socket.emit(Global.KEY_SIGN_UP, obj);
         } catch (Exception e) {

@@ -13,9 +13,9 @@ import com.windsoft.oneday.R;
  * Created by kim on 2015-08-04.
  */
 public class SignUpFragment extends Fragment {
-    NumberPicker year;
-    NumberPicker month;
-    NumberPicker day;
+    private NumberPicker year;
+    private NumberPicker month;
+    private NumberPicker day;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,6 +46,11 @@ public class SignUpFragment extends Fragment {
         month.setMinValue(1);
         month.setMaxValue(12);
         month.setWrapSelectorWheel(false);
+    }
+
+
+    public interface OnSignUpHandler {
+        void onSignUp(String id, String pw);
     }
 
 
