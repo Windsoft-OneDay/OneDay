@@ -85,8 +85,7 @@
             android:layout_marginLeft="@dimen/base_margin"
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginBottom="@dimen/small_margin"/>
-
-
+        
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"

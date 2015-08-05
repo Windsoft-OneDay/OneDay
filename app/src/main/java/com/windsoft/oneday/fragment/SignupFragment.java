@@ -129,11 +129,14 @@ public class SignUpFragment extends Fragment {
         });
 
 
+<<<<<<< HEAD
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         int yearInt = calendar.get(Calendar.YEAR);
 
 
+=======
+>>>>>>> origin/master
         year.setMinValue(1950);
         year.setMaxValue(yearInt);
         year.setValue(1997);

@@ -18,6 +18,7 @@ import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 import com.windsoft.oneday.Global;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
+import com.windsoft.oneday.activity.LoginActivity;
 import com.windsoft.oneday.login.FacebookLogin;
 import com.windsoft.oneday.login.NaverLogin;
 

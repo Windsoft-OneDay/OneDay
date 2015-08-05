@@ -174,6 +174,11 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
     }
 
 
+    public void login (String id, String pw) {
+
+    }
+
+
     @Override
     public void onIntentSignUp() {
         // 회원가입 버튼 눌렀을 때
