@@ -17,4 +17,5 @@
     <string name="title_section4">설정</string>
 
     <string name="card_main_menu_title"></string>
+    <string name="fragment_write_take_picture">사진 찍기</string>
 </resources>
