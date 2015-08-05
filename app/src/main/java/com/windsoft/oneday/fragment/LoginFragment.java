@@ -13,9 +13,7 @@ import android.widget.LinearLayout;
 
 import com.facebook.login.widget.LoginButton;
 import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
-import com.nispok.snackbar.Snackbar;
 import com.windsoft.oneday.R;
-import com.windsoft.oneday.Secure;
 import com.windsoft.oneday.login.FacebookLogin;
 import com.windsoft.oneday.login.NaverLogin;
 
@@ -103,20 +101,7 @@ public class LoginFragment extends Fragment {
                 pw = pwInput.getText().toString();
 
                 if (id != null && id.length() > 0 && pw != null && pw.length() > 0) {       // 아이디, 비밀번호 모두 입력 되었다면
-                    int cond = Secure.checkPasswordSecureLevel(pw);
-                    if (cond == Secure.SUCCESS) {
-                        sender.onLoginReq(id, pw);              // 로그인 요청
-                    } else if (cond == Secure.NOT_ENOUGH_LETTER) {
-                        Snackbar.with(getActivity())
-                                .text(R.string.login_not_enough_letter)
-                                .showAnimation(true)
-                                .show(getActivity());
-                    } else if (cond == Secure.NO_SPECIAL_LETTER) {
-                        Snackbar.with(getActivity())
-                                .text(R.string.login_no_special_letter)
-                                .showAnimation(true)
-                                .show(getActivity());
-                    }
+                    sender.onLoginReq(id, pw);
                 }
             }
         });

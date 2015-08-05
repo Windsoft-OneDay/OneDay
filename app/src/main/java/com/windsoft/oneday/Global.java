@@ -13,6 +13,10 @@ public class Global {
     public static final String KEY_LOGIN_PW = "loginPw";
     public static final String KEY_COMMAND = "command";
     public static final String KEY_COND = "cond";
+    public static final String KEY_SIGN_UP = "signUp";
+    public static final String KEY_READ_NOTICE = "readNotice";
+    public static final String KEY_COUNT = "count";
+    public static final String KEY_KEY_WORD = "keyWord";
 
     public static final String VALUE_CONNECT = "connection";
 
@@ -31,4 +35,10 @@ public class Global {
     public static final String PREF_KEY = "windsoft-oneday";
     public static SharedPreferences pref;                     // �ڵ� �α���
     public static SharedPreferences.Editor editor;
+
+
+    public static final int CODE_SUCCESS = 200;
+    public static final int CODE_ID_ALREADY = 300;
+    public static final int CODE_SIGN_UP_FAIL = 301;
+    public static final int CODE_READ_NOTCIE_FAIL = 302;
 }

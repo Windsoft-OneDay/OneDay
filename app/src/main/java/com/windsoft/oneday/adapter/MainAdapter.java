@@ -150,6 +150,27 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     }
 
 
+    public void addItem(NoticeModel notice) {
+        noticeList.add(notice);
+        notifyDataSetChanged();
+    }
+
+
+    public void addItem(ArrayList<NoticeModel> noticeList) {
+        for (NoticeModel notice :
+                noticeList) {
+            this.noticeList.add(notice);
+        }
+        notifyDataSetChanged();
+    }
+
+
+    public void setItem(ArrayList<NoticeModel> noticeList) {
+        this.noticeList = noticeList;
+        notifyDataSetChanged();
+    }
+
+
     @Override
     public int getItemCount() {
         return noticeList.size();

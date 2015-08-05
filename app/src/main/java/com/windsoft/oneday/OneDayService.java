@@ -33,7 +33,7 @@ public class OneDayService extends Service {
                     String pw = intent.getStringExtra(Global.KEY_LOGIN_PW);     // 아이디
                     int cond = intent.getIntExtra(Global.KEY_LOGIN_TYPE, -1);   // 로그인 유형
                     if (cond != -1) {
-                        socketIO.processLoginReq(id, pw, cond);                    // 로그인 처리
+                        socketIO.login(id, pw, cond);                    // 로그인 처리
                     }
                 }
             }

@@ -47,4 +47,21 @@ public class SignUpFragment extends Fragment {
         month.setMaxValue(12);
         month.setWrapSelectorWheel(false);
     }
+
+
+//      비밀번호 난이도 검사
+//    int cond = Secure.checkPasswordSecureLevel(pw);
+//    if (cond == Secure.SUCCESS) {
+//        sender.onLoginReq(id, pw);              // 로그인 요청
+//    } else if (cond == Secure.NOT_ENOUGH_LETTER) {
+//        Snackbar.with(getActivity())
+//                .text(R.string.login_not_enough_letter)
+//                .showAnimation(true)
+//                .show(getActivity());
+//    } else if (cond == Secure.NO_SPECIAL_LETTER) {
+//        Snackbar.with(getActivity())
+//                .text(R.string.login_no_special_letter)
+//                .showAnimation(true)
+//                .show(getActivity());
+//    }
 }

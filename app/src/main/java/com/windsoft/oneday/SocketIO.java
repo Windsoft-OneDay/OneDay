@@ -83,6 +83,16 @@ public class SocketIO {
                     Log.e(TAG, "로그인 응답 오류 = " + e.getMessage());
                 }
             }
+        }).on(Global.KEY_SIGN_UP, new Emitter.Listener() {                      // 로그인 응답
+            @Override
+            public void call(Object... args) {
+                
+            }
+        }).on(Global.KEY_READ_NOTICE, new Emitter.Listener() {                  // 게시글 읽어오기 응답
+            @Override
+            public void call(Object... args) {
+
+            }
         });
 
         socket.open();
@@ -116,7 +126,7 @@ public class SocketIO {
      * @param pw : 비밀번호
      * @param cond : 로그인 타입
      * */
-    public void processLoginReq(String id, String pw, int cond) {
+    public void login(String id, String pw, int cond) {
         try {
             JSONObject obj = new JSONObject();
             obj.put(Global.KEY_USER_ID, id);
@@ -127,6 +137,55 @@ public class SocketIO {
             }
             socket.emit(Global.KEY_LOGIN, obj);
         } catch (Exception e) {
+        }
+    }
+
+
+    /**
+     * TODO: 회원가입
+     * @param id : 아이디
+     * @param pw : 비밀번호
+     * */
+    public void signUp(String id, String pw) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put(Global.KEY_USER_ID, id);
+            obj.put(Global.KEY_USER_PW, pw);
+            socket.emit(Global.KEY_SIGN_UP, obj);
+        } catch (Exception e) {
+            Log.e(TAG, "signUp 에러 = " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * TODO: 게시글 읽어오기
+     * @param count : 몇 번째 리스트를 가져올건지 결정
+     * */
+    public void readNotice(int count) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put(Global.KEY_COUNT, count);
+            socket.emit(Global.KEY_READ_NOTICE, obj);
+        } catch (Exception e) {
+            Log.e(TAG, "readNotice 에러 = " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * TODO: 게시글 읽어오기
+     * @param count : 몇 번째 리스트를 가져올건지 결정
+     * @param keyWord : 검색 키워드
+     * */
+    public void readNotice(int count, String keyWord) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put(Global.KEY_COUNT, count);
+            obj.put(Global.KEY_KEY_WORD, keyWord);
+            socket.emit(Global.KEY_READ_NOTICE, obj);
+        } catch (Exception e) {
+            Log.e(TAG, "readNotice 에러 = " + e.getMessage());
         }
     }
 }
