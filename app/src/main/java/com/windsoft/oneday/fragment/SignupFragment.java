@@ -117,7 +117,6 @@ public class SignUpFragment extends Fragment {
         });
 
 
-
         year.setMinValue(1950);
         year.setMaxValue(2015);
         year.setWrapSelectorWheel(false);
