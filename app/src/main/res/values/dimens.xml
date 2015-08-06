@@ -22,6 +22,9 @@
     <!-- 리스트뷰 헤더 -->
     <dimen name="header">100dp</dimen>
 
+    <!-- 이미지 사이즈 -->
+    <dimen name="image_height">400dp</dimen>
+
     <!-- 카드뷰 크기-->
     <dimen name="card_profile">60dp</dimen>
 </resources>
