@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
 
         if (name == null || name.length() == 0)
             setName();
+        Log.d(TAG, "name = " + name);
     }
 
 
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
 
     private void init() {
         mainFragment = MainFragment.newInstance(id);
-        writeFragment = WriteFragment.newInstance(id);
+        writeFragment = WriteFragment.newInstance(id, name);
         profileFragment = ProfileFragment.newInstance(id);
         settingFragment = SettingFragment.newInstance(id);
 

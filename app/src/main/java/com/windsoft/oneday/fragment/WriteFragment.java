@@ -44,15 +44,17 @@ public class WriteFragment extends Fragment {
     private static final int TAKE_GALLERY = 1;
 
     private String id;
+    private String name;
 
     public WriteFragment() {
     }
 
 
-    public static WriteFragment newInstance(String id) {
+    public static WriteFragment newInstance(String id, String name) {
         WriteFragment fragment = new WriteFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Global.KEY_USER_ID, id);
+        bundle.putString(Global.KEY_USER_NAME, name);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -63,6 +65,7 @@ public class WriteFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         id = bundle.getString(Global.KEY_USER_ID);
+        name = bundle.getString(Global.KEY_USER_NAME);
     }
 
 
@@ -195,6 +198,7 @@ public class WriteFragment extends Fragment {
         } else {
             Intent intent = new Intent(getActivity(), OneDayService.class);
             intent.putExtra(Global.KEY_USER_ID, id);
+            intent.putExtra(Global.KEY_USER_NAME, name);
             intent.putExtra(Global.KEY_COMMAND, Global.KEY_POST_NOTICE);
             intent.putExtra(Global.KEY_CONTENT, content);
             intent.putParcelableArrayListExtra(Global.KEY_IMAGE, imageList);

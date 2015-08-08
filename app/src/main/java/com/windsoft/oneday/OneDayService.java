@@ -54,9 +54,10 @@ public class OneDayService extends Service {
                     socketIO.getProfile(id);
                 } else if (command.equals(Global.KEY_POST_NOTICE)) {                // 글쓰기
                     String id = intent.getStringExtra(Global.KEY_USER_ID);
+                    String name = intent.getStringExtra(Global.KEY_USER_NAME);
                     String content = intent.getStringExtra(Global.KEY_CONTENT);
                     ArrayList<Bitmap> imageList = intent.getParcelableArrayListExtra(Global.KEY_IMAGE);
-                    socketIO.postNotice(id, content, imageList);
+                    socketIO.postNotice(id, content, imageList, name);
                 } else if (command.equals(Global.KEY_SET_NAME)) {                   // 닉네임 설정
                     String id = intent.getStringExtra(Global.KEY_USER_ID);
                     String name = intent.getStringExtra(Global.KEY_USER_NAME);

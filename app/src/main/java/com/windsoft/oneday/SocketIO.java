@@ -289,12 +289,13 @@ public class SocketIO {
      * @param content : 내용
      * @param imageList : 이미지
      * */
-    public void postNotice(String id, String content, ArrayList<Bitmap> imageList) {
+    public void postNotice(String id, String content, ArrayList<Bitmap> imageList, String name) {
         try {
             JSONObject obj = new JSONObject();
             obj.put(Global.KEY_CONTENT, content);
             obj.put(Global.KEY_IMAGE, imageList);
             obj.put(Global.KEY_USER_ID, id);
+            obj.put(Global.KEY_USER_NAME, name);
             socket.emit(Global.KEY_POST_NOTICE, obj);
         } catch (Exception e) {
 
