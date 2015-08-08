@@ -2,6 +2,7 @@ package com.windsoft.oneday;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -74,12 +75,18 @@ public class SocketIO {
             public void call(Object... args) {
                 try {
                     JSONObject obj = (JSONObject) args[0];
-                    int cond = obj.getInt(Global.KEY_CODE);
+                    int code = obj.getInt(Global.KEY_CODE);
                     String id = null;
-                    if (cond == Global.CODE_SUCCESS) {
+                    String name = null;
+                    if (code == Global.CODE_SUCCESS) {
                         id = obj.getString(Global.KEY_USER_ID);
+                        try {
+                            name = obj.getString(Global.KEY_USER_NAME);
+                        } catch (Exception e) {
+                            Log.e(TAG, "이름 없음");
+                        }
                     }
-                    processLoginRes(cond, id);
+                    processLoginRes(code, id, name);
                 } catch (Exception e) {
                     Log.e(TAG, "로그인 응답 오류 = " + e.getMessage());
                 }
@@ -111,10 +118,48 @@ public class SocketIO {
                     Log.e(TAG, "프로필 받아오기 오류 = " + e.getMessage());
                 }
             }
+        }).on(Global.KEY_POST_NOTICE, new Emitter.Listener() {                  // 글쓰기 응답
+            @Override
+            public void call(Object... args) {
+                try {
+                    JSONObject obj = (JSONObject) args[0];
+                    int code = obj.getInt(Global.KEY_CODE);
+                    Log.d(TAG," 글쓰기 응답 ");
+                } catch (Exception e) {
+                    Log.e(TAG, "글쓰기 응답 오류 = " + e.getMessage());
+                }
+            }
+        }).on(Global.KEY_SET_NAME, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    JSONObject obj = (JSONObject) args[0];
+                    int code = obj.getInt(Global.KEY_CODE);
+                    String name = obj.getString(Global.KEY_USER_NAME);
+                    processSetName(code, name);
+                    Log.d(TAG," 닉네임 설정 응답 ");
+                } catch (Exception e) {
+                    Log.e(TAG, "닉네임 설정 응답 오류 = " + e.getMessage());
+                }
+            }
         });
 
         socket.open();
         socket.connect();
+    }
+
+
+    /**
+     * TODO: 닉네임 설정 응답
+     * @param code : 응답코드
+     * @param name : 닉네임
+     * */
+    private void processSetName(int code, String name) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_SET_NAME);
+        intent.putExtra(Global.KEY_CODE, code);
+        intent.putExtra(Global.KEY_USER_NAME, name);
+        context.startActivity(intent);
     }
 
 
@@ -127,6 +172,7 @@ public class SocketIO {
         intent.putExtra(Global.KEY_COMMAND, Global.KEY_SIGN_UP);
         intent.putExtra(Global.KEY_CODE, code);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
 
@@ -137,12 +183,13 @@ public class SocketIO {
      *             SUCCESS(1) = 성공
      * @param id : 자동로그인용 id
      * */
-    private void processLoginRes(int code, String id) {
+    private void processLoginRes(int code, String id, String name) {
         Log.d(TAG, "로그인 응답");
         Intent intent = new Intent(context, LoginActivity.class);
         intent.putExtra(Global.KEY_COMMAND, Global.KEY_LOGIN);
         intent.putExtra(Global.KEY_CODE, code);
         intent.putExtra(Global.KEY_USER_ID, id);
+        intent.putExtra(Global.KEY_USER_NAME, name);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
@@ -232,6 +279,41 @@ public class SocketIO {
             socket.emit(Global.KEY_READ_NOTICE, obj);
         } catch (Exception e) {
             Log.e(TAG, "readNotice 에러 = " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * TODO: 글쓰기
+     * @param id : 아이디
+     * @param content : 내용
+     * @param imageList : 이미지
+     * */
+    public void postNotice(String id, String content, ArrayList<Bitmap> imageList) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put(Global.KEY_CONTENT, content);
+            obj.put(Global.KEY_IMAGE, imageList);
+            obj.put(Global.KEY_USER_ID, id);
+            socket.emit(Global.KEY_POST_NOTICE, obj);
+        } catch (Exception e) {
+
+        }
+    }
+
+
+    /**
+     * TODO: 닉네임 설정
+     * @param id : 아이디
+     * @param name : 닉네임
+     * */
+    public void setName(String id, String name) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put(Global.KEY_USER_NAME, name);
+            obj.put(Global.KEY_USER_ID, id);
+            socket.emit(Global.KEY_SET_NAME, obj);
+        } catch (Exception e) {
         }
     }
 }

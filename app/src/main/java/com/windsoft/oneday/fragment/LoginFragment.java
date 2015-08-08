@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.facebook.login.widget.LoginButton;
@@ -18,7 +19,6 @@ import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 import com.windsoft.oneday.Global;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
-import com.windsoft.oneday.activity.LoginActivity;
 import com.windsoft.oneday.login.FacebookLogin;
 import com.windsoft.oneday.login.NaverLogin;
 
@@ -44,7 +44,9 @@ public class LoginFragment extends Fragment {
     private OAuthLoginButton naverBtn;      // 네이버 로그인 버튼
     private Button submit;                  // 로그인 버튼
 
-    private Button signUpBtn;               // 회원가입 버튼
+    private ImageButton signUpBtn;               // 회원가입 버튼
+    private ImageButton findIdBtn;               // 아이디 찾기 버튼
+    private ImageButton findPwBtn;               // 비밀번호 찾기 버튼
 
     private OnLoginHandler sender;
 
@@ -89,7 +91,9 @@ public class LoginFragment extends Fragment {
         idInput = (EditText) rootView.findViewById(R.id.fragment_login_id);
         pwInput = (EditText) rootView.findViewById(R.id.fragment_login_pw);
 
-        signUpBtn = (Button) rootView.findViewById(R.id.fragment_login_sign_up);
+        signUpBtn = (ImageButton) rootView.findViewById(R.id.fragment_login_sign_up);
+        findIdBtn = (ImageButton) rootView.findViewById(R.id.fragment_login_find_id);
+        findPwBtn = (ImageButton) rootView.findViewById(R.id.fragment_login_find_pw);
 
         setListener();      // 리스너 부착
 

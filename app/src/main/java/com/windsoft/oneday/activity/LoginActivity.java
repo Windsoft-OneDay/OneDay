@@ -82,8 +82,9 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
             } else if (command.equals(Global.KEY_LOGIN)) {
                 int code = intent.getIntExtra(Global.KEY_CODE, -1);
                 String id = intent.getStringExtra(Global.KEY_USER_ID);
+                String name = intent.getStringExtra(Global.KEY_USER_NAME);
                 if (code != -1)
-                    processLogin(code, id);
+                    processLogin(code, id, name);
             }
         }
 
@@ -98,7 +99,7 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
      *             SUCCESS = 성공
      * @param id : 아이디
      * */
-    private void processLogin(int code, String id) {
+    private void processLogin(int code, String id, String name) {
         if (code == Global.CODE_LOGIN_NO_ID) {                      // 로그인 실패 시
             Snackbar.with(getApplicationContext())      // 스낵바 띄우기
                     .text(R.string.sign_up_null)
@@ -107,9 +108,20 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
         } else if (code == Global.CODE_SUCCESS) {            // 로그인 성공 시
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);     // 메인 액티비티로 이동
             intent.putExtra(Global.KEY_USER_ID, id);
+            intent.putExtra(Global.KEY_USER_NAME, name);
             startActivity(intent);
             finish();
 
+            setAutoLogin(id);
+        }
+    }
+
+
+    private void setAutoLogin(String id) {
+        String curId = Global.pref.getString(Global.KEY_USER_ID, null);
+        String curPw = Global.pref.getString(Global.KEY_USER_PW, null);
+
+        if (curId == null && curPw == null) {                       // 저장된 정보가 없다면
             Global.editor = Global.pref.edit();                     // 자동로그인 데이터 설정
             Global.editor.putString(Global.KEY_USER_ID, id);
             Global.editor.putString(Global.KEY_USER_PW, pw);

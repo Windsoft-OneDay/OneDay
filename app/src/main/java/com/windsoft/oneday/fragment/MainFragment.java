@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
+import com.windsoft.oneday.Global;
 import com.windsoft.oneday.R;
 import com.windsoft.oneday.adapter.MainAdapter;
 import com.windsoft.oneday.model.NoticeModel;
@@ -29,7 +29,26 @@ public class MainFragment extends Fragment {
 
     private ArrayList<NoticeModel> noticeList;
 
+    private String id;
+
     public MainFragment() {
+    }
+
+
+    public static MainFragment newInstance(String id) {
+        MainFragment fragment = new MainFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Global.KEY_USER_ID, id);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        id = bundle.getString(Global.KEY_USER_ID);
     }
 
 

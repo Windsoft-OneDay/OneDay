@@ -29,19 +29,19 @@ public class ProfileFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private String id;
-    private static final String KEY_ID = "id";
 
     private ProfileAdapter adapter;
+
+    public ProfileFragment() {
+    }
+
 
     public static ProfileFragment newInstance(String id) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(KEY_ID, id);
+        bundle.putString(Global.KEY_USER_ID, id);
         fragment.setArguments(bundle);
         return fragment;
-    }
-
-    public ProfileFragment() {
     }
 
 
@@ -49,7 +49,7 @@ public class ProfileFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        id = bundle.getString(KEY_ID);
+        id = bundle.getString(Global.KEY_USER_ID);
     }
 
     @Nullable

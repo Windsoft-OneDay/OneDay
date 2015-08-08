@@ -17,6 +17,9 @@ public class Global {
     public static final String KEY_GET_PROFILE = "profile";
     public static final String KEY_SET_NAME = "setName";
     public static final String KEY_READ_NOTICE = "readNotice";
+    public static final String KEY_POST_NOTICE = "postNotice";
+    public static final String KEY_CONTENT = "content";
+    public static final String KEY_IMAGE = "image";
     public static final String KEY_COUNT = "count";
     public static final String KEY_KEY_WORD = "keyWord";
 
@@ -46,4 +49,7 @@ public class Global {
     public static final int CODE_SET_NAME_FAIL = 303;
     public static final int CODE_LOGIN_NO_ID = 304;
     public static final int CODE_LOGIN_ERR = 305;
+    public static final int CODE_POST_ERR = 306;
+    public static final int CODE_NAME_ALREADY = 307;
+    public static final int CODE_USER_ADD_NOTICE = 308;             // 사용자 DB에 글 목록 추가 에러
 }

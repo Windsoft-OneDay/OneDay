@@ -3,9 +3,11 @@ package com.windsoft.oneday;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class OneDayService extends Service {
@@ -47,9 +49,18 @@ public class OneDayService extends Service {
 
                     if (id != null && pw != null)
                         socketIO.signUp(id, pw, mail, calendar.getTime());
-                } else if (command.equals(Global.KEY_GET_PROFILE)) {
+                } else if (command.equals(Global.KEY_GET_PROFILE)) {                // 프로필 요청
                     String id = intent.getStringExtra(Global.KEY_USER_ID);
                     socketIO.getProfile(id);
+                } else if (command.equals(Global.KEY_POST_NOTICE)) {                // 글쓰기
+                    String id = intent.getStringExtra(Global.KEY_USER_ID);
+                    String content = intent.getStringExtra(Global.KEY_CONTENT);
+                    ArrayList<Bitmap> imageList = intent.getParcelableArrayListExtra(Global.KEY_IMAGE);
+                    socketIO.postNotice(id, content, imageList);
+                } else if (command.equals(Global.KEY_SET_NAME)) {                   // 닉네임 설정
+                    String id = intent.getStringExtra(Global.KEY_USER_ID);
+                    String name = intent.getStringExtra(Global.KEY_USER_NAME);
+                    socketIO.setName(id, name);
                 }
             }
         }

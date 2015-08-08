@@ -8,16 +8,22 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
+import com.nispok.snackbar.Snackbar;
+import com.windsoft.oneday.Global;
+import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by ironFactory on 2015-08-04.
@@ -32,11 +38,31 @@ public class WriteFragment extends Fragment {
     private LinearLayout choicePictureContainer;            // 사진 고르기 버튼
 
     private String content;
+    private ArrayList<Bitmap> imageList = new ArrayList<>();
 
     private static final int TAKE_CAMERA = 0;
     private static final int TAKE_GALLERY = 1;
 
+    private String id;
+
     public WriteFragment() {
+    }
+
+
+    public static WriteFragment newInstance(String id) {
+        WriteFragment fragment = new WriteFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Global.KEY_USER_ID, id);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        id = bundle.getString(Global.KEY_USER_ID);
     }
 
 
@@ -108,51 +134,71 @@ public class WriteFragment extends Fragment {
     }
 
 
-    private void addPhoto(Bitmap bitmap) {
+    private void addPhoto(Bitmap image) {
+        int width = getActivity().getResources().getDimensionPixelSize(R.dimen.image_width);
         int height = getActivity().getResources().getDimensionPixelSize(R.dimen.image_height);
         int margin = getActivity().getResources().getDimensionPixelSize(R.dimen.base_margin);
         int btnWidth = getActivity().getResources().getDimensionPixelSize(R.dimen.btn_small);
         int btnHeight = getActivity().getResources().getDimensionPixelSize(R.dimen.btn_small);
 
+        final Bitmap bitmap = Bitmap.createScaledBitmap(image, width, height, false);
+        imageList.add(bitmap);
 
-        RelativeLayout layout = new RelativeLayout(getActivity());
-        layout.setGravity(RelativeLayout.CENTER_VERTICAL | RelativeLayout.CENTER_HORIZONTAL);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                height
+        final FrameLayout layout = new FrameLayout(getActivity());
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
         );
+        params.gravity = Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL;
         layout.setLayoutParams(params);
+        layout.setPadding(0, margin, 0, margin);
 
         ImageView imageView = new ImageView(getActivity());
-        params = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        params = new FrameLayout.LayoutParams(
+                width,
                 height
         );
-        params.setMargins(margin, margin, margin, margin);
         imageView.setLayoutParams(params);
         imageView.setImageBitmap(bitmap);
         layout.addView(imageView);
 
         final ImageButton imageButton = new ImageButton(getActivity());
-        params = new RelativeLayout.LayoutParams(
+        params = new FrameLayout.LayoutParams(
                 btnWidth,
                 btnHeight
         );
-        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        params.gravity = Gravity.TOP | Gravity.RIGHT;
         imageButton.setLayoutParams(params);
         imageButton.setBackgroundResource(R.drawable.splash);
-        imageButton.setTag(layout);
         layout.addView(imageButton);
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RelativeLayout relativeLayout = (RelativeLayout) imageButton.getTag();
-                pictureContainer.removeView(relativeLayout);
+                pictureContainer.removeView(layout);
+                imageList.remove(bitmap);
             }
         });
 
         pictureContainer.addView(layout);
+    }
+
+
+    public void post() {
+        content = contentInput.getText().toString();
+
+        if (content.length() == 0 && imageList.size() == 0) {                   // 아무것도 입력하지 않았을 때
+            Snackbar.with(getActivity())
+                    .text(R.string.fragment_write_no_msg)
+                    .show(getActivity());
+        } else {
+            Intent intent = new Intent(getActivity(), OneDayService.class);
+            intent.putExtra(Global.KEY_USER_ID, id);
+            intent.putExtra(Global.KEY_COMMAND, Global.KEY_POST_NOTICE);
+            intent.putExtra(Global.KEY_CONTENT, content);
+            intent.putParcelableArrayListExtra(Global.KEY_IMAGE, imageList);
+            getActivity().startService(intent);
+        }
     }
 }
