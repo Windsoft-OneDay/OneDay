@@ -3,10 +3,8 @@ package com.windsoft.oneday.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.marshalchen.ultimaterecyclerview.UltimateRecyclerviewViewHolder;
 import com.windsoft.oneday.Global;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
@@ -105,10 +102,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final NoticeModel notice = noticeList.get(position);
-        Bitmap profileImage = decodeImage(notice.getProfileImage());
-        long time = System.currentTimeMillis() - notice.getDate().getTime();
+        holder.imageContainer.removeAllViews();
 
-        holder.profileImage.setImageBitmap(profileImage);
+        if (notice.getProfileImage() == null) {
+
+        } else {
+            Bitmap profileImage = Global.decodeImage(notice.getProfileImage());
+            holder.profileImage.setImageBitmap(profileImage);
+        }
+
+        long time = System.currentTimeMillis() - notice.getDate().getTime();
         holder.name.setText(notice.getName());
         holder.time.setText(getTime(time));
         holder.menu.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +140,20 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                 setBadColor(holder, position);
             }
         });
+
+        Log.d(TAG, "position = " + position);
+        for (int i = 0; i < notice.getImageList().size(); i++) {
+            ImageView imageView = new ImageView(context);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            imageView.setLayoutParams(params);
+
+            Bitmap bitmap = Global.decodeImage(notice.getImageList().get(i));
+            imageView.setImageBitmap(bitmap);
+            holder.imageContainer.addView(imageView);
+        }
     }
 
 
@@ -157,11 +174,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     public void setItem(ArrayList<NoticeModel> noticeList) {
         notifyDataSetChanged();
+        Log.d(TAG, "size = " + noticeList.size());
         this.noticeList = noticeList;
-
-        for (int i = 0; i < noticeList.size(); i++) {
-            Log.d(TAG, "content = " + noticeList.get(i).getContent());
-        }
     }
 
 
@@ -180,13 +194,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     }
 
 
-    public static Bitmap decodeImage(String str) {
-        byte[] array = Base64.decode(str, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(array, 0, array.length);
-    }
-
-
-    public static class ViewHolder extends UltimateRecyclerviewViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView profileImage;
         TextView name;
@@ -199,6 +207,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         LinearLayout goodLayout;
         LinearLayout badLayout;
         LinearLayout commentLayout;
+        LinearLayout imageContainer;
         TextView good;
         TextView bad;
         TextView comment;
@@ -226,7 +235,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             goodBtn = (ImageButton) itemView.findViewById(R.id.card_notice_good_btn);
             badBtn = (ImageButton) itemView.findViewById(R.id.card_notice_bad_btn);
             commentBtn = (ImageButton) itemView.findViewById(R.id.card_notice_comment_btn);
-
+            imageContainer = (LinearLayout) itemView.findViewById(R.id.card_notice_image_container);
         }
     }
 }

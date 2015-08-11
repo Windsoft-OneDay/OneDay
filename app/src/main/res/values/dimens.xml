@@ -10,9 +10,11 @@
     <!--기본 설정-->
     <dimen name="base_margin">16dp</dimen>
     <dimen name="small_margin">8dp</dimen>
+    <dimen name="smallest_margin">4dp</dimen>
 
     <dimen name="base_padding">16dp</dimen>
     <dimen name="small_padding">8dp</dimen>
+    <dimen name="smallest_padding">4dp</dimen>
 
     <!--글씨 크기-->
     <dimen name="font_big_size">36sp</dimen>
@@ -20,6 +22,7 @@
     <dimen name="font_small_size">16sp</dimen>
 
     <!--버튼 크기-->
+    <dimen name="btn_icon">24dp</dimen>
     <dimen name="btn_small">48dp</dimen>
     <dimen name="btn_large">72dp</dimen>
 

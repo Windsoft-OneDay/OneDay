@@ -6,9 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.windsoft.oneday.Global;
 import com.windsoft.oneday.R;
 import com.windsoft.oneday.model.NoticeModel;
 
@@ -56,8 +59,8 @@ public class ProfileAdapter extends RecyclerView.Adapter {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sub_header_profile, parent, false);
             return new SubHeaderViewHolder(view);
         } else if (viewType == BODY) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_profile, parent, false);
-            return new MainAdapter.ViewHolder(view);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_notice, parent, false);
+            return new ViewHolder(view);
         }
         return null;
     }
@@ -75,7 +78,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
             final NoticeModel notice = noticeList.get(POSITION);
             final MainAdapter.ViewHolder viewHolder = ((MainAdapter.ViewHolder) holder);
             long time = System.currentTimeMillis() - notice.getDate().getTime();
-            viewHolder.profileImage.setImageBitmap(MainAdapter.decodeImage(notice.getProfileImage()));
+            viewHolder.profileImage.setImageBitmap(Global.decodeImage(notice.getProfileImage()));
             viewHolder.name.setText(notice.getName());
             viewHolder.time.setText(getTime(time));
             viewHolder.menu.setOnClickListener(new View.OnClickListener() {
@@ -183,6 +186,51 @@ public class ProfileAdapter extends RecyclerView.Adapter {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.header_profile_image);
             name = (TextView) itemView.findViewById(R.id.header_profile_name);
+        }
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView profileImage;
+        TextView name;
+        TextView time;
+        ImageButton menu;
+        TextView content;
+        TextView goodNum;
+        TextView badNum;
+        TextView commentNum;
+        LinearLayout goodLayout;
+        LinearLayout badLayout;
+        LinearLayout commentLayout;
+        LinearLayout imageContainer;
+        TextView good;
+        TextView bad;
+        TextView comment;
+        ImageButton goodBtn;
+        ImageButton badBtn;
+        ImageButton commentBtn;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            profileImage = (ImageView) itemView.findViewById(R.id.card_notice_profile_image);
+            name = (TextView) itemView.findViewById(R.id.card_notice_profile_name);
+            time = (TextView) itemView.findViewById(R.id.card_notice_profile_time);
+            menu = (ImageButton) itemView.findViewById(R.id.card_notice_profile_menu);
+            content = (TextView) itemView.findViewById(R.id.card_notice_content);
+            goodNum = (TextView) itemView.findViewById(R.id.card_notice_good_num);
+            badNum = (TextView) itemView.findViewById(R.id.card_notice_bad_num);
+            commentNum = (TextView) itemView.findViewById(R.id.card_notice_comment_num);
+            goodLayout = (LinearLayout) itemView.findViewById(R.id.card_notice_good_layout);
+            badLayout = (LinearLayout) itemView.findViewById(R.id.card_notice_bad_layout);
+            commentLayout = (LinearLayout) itemView.findViewById(R.id.card_notice_comment_layout);
+            good = (TextView) itemView.findViewById(R.id.card_notice_good_text);
+            bad = (TextView) itemView.findViewById(R.id.card_notice_bad_text);
+            comment = (TextView) itemView.findViewById(R.id.card_notice_comment_text);
+            goodBtn = (ImageButton) itemView.findViewById(R.id.card_notice_good_btn);
+            badBtn = (ImageButton) itemView.findViewById(R.id.card_notice_bad_btn);
+            commentBtn = (ImageButton) itemView.findViewById(R.id.card_notice_comment_btn);
+            imageContainer = (LinearLayout) itemView.findViewById(R.id.card_notice_image_container);
         }
     }
 

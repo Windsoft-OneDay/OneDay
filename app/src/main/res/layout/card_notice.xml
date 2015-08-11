@@ -29,45 +29,49 @@
                     android:id="@+id/card_notice_profile_image"
                     android:layout_width="@dimen/btn_small"
                     android:layout_height="match_parent"
-                    android:background="#FFFF00"
                     android:layout_margin="@dimen/small_margin"/>
 
 
-                <TextView
-                    android:id="@+id/card_notice_profile_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/primary_text_default_material_light"
-                    android:textSize="@dimen/font_small_size"/>
-
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="right">
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/card_notice_profile_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/primary_text_default_material_light"
+                        android:textSize="@dimen/font_small_size"
+                        android:text="1"/>
 
 
                     <TextView
                         android:id="@+id/card_notice_profile_time"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
                         android:textColor="@color/primary_text_default_material_light"
-                        android:textSize="@dimen/font_small_size"/>
-
-
-
-                    <ImageButton
-                        android:id="@+id/card_notice_profile_menu"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/splash"/>
+                        android:textSize="@dimen/font_small_size"
+                        android:text="2"/>
 
 
                 </LinearLayout>
+
+
+                <ImageButton
+                    android:id="@+id/card_notice_profile_menu"
+                    android:layout_width="@dimen/btn_small"
+                    android:layout_height="@dimen/btn_small"
+                    android:background="@android:color/transparent"
+                    android:layout_marginRight="@dimen/base_margin"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/splash"/>
 
             </LinearLayout>
 
@@ -82,8 +86,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/primary_text_default_material_light"
+                android:minHeight="100dp"
                 android:textSize="@dimen/font_small_size"/>
 
+
+
+            <LinearLayout
+                android:id="@+id/card_notice_image_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+            </LinearLayout>
 
 
             <LinearLayout

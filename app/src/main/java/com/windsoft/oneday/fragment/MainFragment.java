@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public class MainFragment extends Fragment {
     private MainAdapter adapter;
 
     private String id;
+    private int count;
 
     public MainFragment() {
     }
@@ -73,14 +75,25 @@ public class MainFragment extends Fragment {
         noticeList = new ArrayList<>();
         adapter = new MainAdapter(getActivity(), noticeList, id);
         recyclerView.setAdapter(adapter);
-        recyclerView.enableLoadmore();
         recyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {           // swipe refresh
             @Override
             public void onRefresh() {
-                adapter.readNotice(0);
+                Log.d(TAG, "onRefresh count = " + count);
+                count = 0;
+                readNotice(count);
             }
         });
-        adapter.readNotice(0);
+        count = 0;
+        readNotice(count);
+        recyclerView.enableLoadmore();
+        recyclerView.reenableLoadmore();
+        recyclerView.setOnLoadMoreListener(new UltimateRecyclerView.OnLoadMoreListener() {
+            @Override
+            public void loadMore(int i, int i1) {
+                Log.d(TAG, "loadMore count = " + count);
+                readNotice(count);
+            }
+        });
     }
 
 
@@ -89,7 +102,18 @@ public class MainFragment extends Fragment {
     }
 
 
+    public void addData(ArrayList<NoticeModel> noticeList) {
+        adapter.addItem(noticeList);
+    }
+
+
     public void readNotice(int count) {
         adapter.readNotice(count);
+        this.count = count + 1;
+    }
+
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }

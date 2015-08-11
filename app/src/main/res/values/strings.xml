@@ -33,6 +33,9 @@
     <!-- 글 읽기 에러 -->
     <string name="read_err">글을 받아오지 못했습니다\n 잠시 후 다시 시도해 주십시오</string>
 
+    <!-- 모든 글 읽어 옴 -->
+    <string name="read_not_enough">더 이상 글이 없습니다.</string>
+
 
     <string name="success">성공했습니다</string>
     <string name="post">등록되었습니다</string>

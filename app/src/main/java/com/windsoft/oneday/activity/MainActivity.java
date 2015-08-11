@@ -245,23 +245,33 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
                         processPost(code);
                 } else if (command.equals(Global.KEY_READ_NOTICE)) {
                     int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                    int count = intent.getIntExtra(Global.KEY_COUNT, -1);
                     ArrayList<NoticeModel> noticeList = (ArrayList<NoticeModel>) intent.getSerializableExtra(Global.KEY_NOTICE);
 
-                    if (code != -1)
-                        processReadNotice(code, noticeList);
+                    if (code != -1 || count != -1)
+                        processReadNotice(code, noticeList, count);
                 }
             }
         }
     }
 
 
-    private void processReadNotice(int code, ArrayList<NoticeModel> noticeList) {
+    private void processReadNotice(int code, ArrayList<NoticeModel> noticeList, int count) {
         if (code == Global.CODE_READ_NOTCIE_FAIL) {
             Snackbar.with(this)
                     .text(R.string.read_err)
                     .show(this);
+        } else if (code == Global.CODE_NOT_ENOUGH_NOTICE) {
+            Snackbar.with(this)
+                    .text(R.string.read_not_enough)
+                    .show(this);
+
+            mainFragment.setCount(count - 1);
         } else if (code == Global.CODE_SUCCESS) {
-            mainFragment.setData(noticeList);
+            if (count == 0)
+                mainFragment.setData(noticeList);
+            else if (count > 0)
+                mainFragment.addData(noticeList);
         }
     }
 

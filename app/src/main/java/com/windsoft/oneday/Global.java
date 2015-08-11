@@ -1,6 +1,9 @@
 package com.windsoft.oneday;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 
 /**
  * Created by dongkyu Lee on 2015-08-02.
@@ -39,7 +42,7 @@ public class Global {
 
 
     public static final String PREF_KEY = "windsoft-oneday";
-    public static SharedPreferences pref;                     // �ڵ� �α���
+    public static SharedPreferences pref;
     public static SharedPreferences.Editor editor;
 
 
@@ -53,6 +56,12 @@ public class Global {
     public static final int CODE_POST_ERR = 306;
     public static final int CODE_NAME_ALREADY = 307;
     public static final int CODE_USER_ADD_NOTICE = 308;             // 사용자 DB에 글 목록 추가 에러
+    public static final int CODE_NOT_ENOUGH_NOTICE = 309;             // 글 db 부족
+
+    public static Bitmap decodeImage(String str) {
+        byte[] array = Base64.decode(str, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(array, 0, array.length);
+    }
 
 
 //    public static byte[] bitmapToByte(Bitmap bitmap) {

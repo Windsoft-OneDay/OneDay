@@ -130,7 +130,8 @@ public class SocketIO {
                         id = obj.getString(Global.KEY_USER_ID);
                         array = obj.getJSONArray(Global.KEY_NOTICE);
                     }
-                    processReadNotice(code, array, id);
+                    int count = obj.getInt(Global.KEY_COUNT);
+                    processReadNotice(code, array, id, count);
                 } catch (Exception e) {
                     Log.e(TAG, "글 받아오기 오류 = " + e.getMessage());
                 }
@@ -179,19 +180,20 @@ public class SocketIO {
     }
 
 
-    private void processReadNotice(int code, JSONArray array, String id) {
+    private void processReadNotice(int code, JSONArray array, String id, int count) {
         Log.d(TAG, "글 읽기 응답");
         ArrayList<NoticeModel> noticeList = new ArrayList<>();
 
-        for (int i = 0; i < array.length(); i++) {
-            try {
-                JSONObject obj = (JSONObject) array.get(i);
+        if (array != null) {
+            for (int i = 0; i < array.length(); i++) {
+                try {
+                    JSONObject obj = (JSONObject) array.get(i);
 
-                NoticeModel model = parsingNotice(obj, id);
-                noticeList.add(model);
-                Log.d(TAG, "content = " + model.getContent());
-            } catch (Exception e) {
-                Log.e(TAG, "notice 파싱 에러 = " + e.getMessage());
+                    NoticeModel model = parsingNotice(obj, id);
+                    noticeList.add(model);
+                } catch (Exception e) {
+                    Log.e(TAG, "notice 파싱 에러 = " + e.getMessage());
+                }
             }
         }
 
@@ -199,41 +201,33 @@ public class SocketIO {
         intent.putExtra(Global.KEY_COMMAND, Global.KEY_READ_NOTICE);
         intent.putExtra(Global.KEY_CODE, code);
         intent.putExtra(Global.KEY_NOTICE, noticeList);
+        intent.putExtra(Global.KEY_COUNT, count);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
 
     private NoticeModel parsingNotice(JSONObject object, String id) throws Exception{
-        Log.d(TAG, "object = " + object);
         String userImage = (String) object.get(KEY_USER_IMAGE);
-        Log.d(TAG, "userImage = " + userImage);
         String userId = (String) object.get(KEY_USER_ID);
-        Log.d(TAG, "userId = " + userId);
         String userName = (String) object.get(KEY_USER_NAME);
-        Log.d(TAG, "userName = " + userName);
         String content = (String) object.get(KEY_CONTENT);
-        Log.d(TAG, "content" + content);
         String dateStr = (String) object.get(KEY_DATE);
         Date date = getDate(dateStr);
 
         JSONArray imageArray = object.getJSONArray(KEY_IMAGE);
-        Log.d(TAG, "imageArray = " + imageArray);
         ArrayList<String> imageList = new ArrayList<>();
         for (int i = 0; i < imageArray.length(); i++) {
             imageList.add((String) imageArray.get(i));
         }
         ArrayList<CommentModel> commentList = new ArrayList<>();
         JSONArray commentArray = (JSONArray) object.get(KEY_COMMENT);
-        Log.d(TAG, "commentArray = " + commentArray);
 
         JSONObject goodObj = object.getJSONObject(KEY_GOOD);
         JSONObject badObj = object.getJSONObject(KEY_BAD);
 
         int goodInt = (int) goodObj.get(KEY_NUM);
         int badInt = (int) badObj.get(KEY_NUM);
-        Log.d(TAG, "goodInt = " + goodInt);
-        Log.d(TAG, "badInt = " + badInt);
 
         JSONArray goodArray = goodObj.getJSONArray(KEY_USER_ID);
         JSONArray badArray = badObj.getJSONArray(KEY_USER_ID);

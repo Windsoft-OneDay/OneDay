@@ -2,6 +2,8 @@ package com.windsoft.oneday.login;
 
 import android.app.Activity;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
@@ -64,6 +66,12 @@ public class NaverLogin {
 
     private void init() {
         loginButton = new OAuthLoginButton(activity);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(0, 20, 0, 0);
+        loginButton.setLayoutParams(params);
 
         naverModule = OAuthLogin.getInstance();
         naverModule.init(activity, ID, KEY, CLIENT_NAME, INTENT);
