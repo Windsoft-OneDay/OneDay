@@ -4,12 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-import com.github.nkzawa.socketio.client.Socket;
 import com.nispok.snackbar.Snackbar;
 import com.windsoft.oneday.Global;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
-import com.windsoft.oneday.SocketIO;
 import com.windsoft.oneday.fragment.LoginFragment;
 import com.windsoft.oneday.fragment.SignUpFragment;
 import com.windsoft.oneday.fragment.SplashFragment;
@@ -33,11 +31,6 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
     private SignUpFragment signUpFragment;                  //회원가입 프레그먼트
 
     private String pw;              // 자동로그인 패스워드
-
-    private boolean isLoginShowed = false;
-    private boolean isSplashShowed2sec = false;
-    private boolean isConnected = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,10 +79,35 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
                 String image = intent.getStringExtra(Global.KEY_USER_IMAGE);
                 if (code != -1)
                     processLogin(code, id, name, image);
+            } else if (command.equals(Global.KEY_SIGN_UP)) {                       // 회원가입 응답
+                int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                if (code != -1)
+                    processSignUp(code);
             }
         }
 
         super.onNewIntent(intent);
+    }
+
+
+    /**
+     * TODO: 회원가입 응답
+     * @param cond : 응답 코드
+     * */
+    private void processSignUp(int cond) {
+        if (cond == Global.CODE_ID_ALREADY) {                           // 아이디 이미 사용 시
+            Snackbar.with(getApplicationContext())
+                    .text(R.string.sign_up_id_already)
+                    .show(this);
+        } else if (cond == Global.CODE_SIGN_UP_FAIL) {                  // 회원가입 실패 시
+            Snackbar.with(getApplicationContext())
+                    .text(R.string.sign_up_fail)
+                    .show(this);
+        } else if (cond == Global.CODE_SUCCESS) {
+            Snackbar.with(getApplicationContext())
+                    .text(R.string.success)
+                    .show(this);
+        }
     }
 
 
@@ -137,14 +155,7 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
      * TODO: 서버와 연결되었을 때 실행
      * */
     private void processConnection() {
-        if (!isLoginShowed && isSplashShowed2sec) {
-            /*프래그먼트 변경 소스*/
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.activity_login_container, loginFragment)
-                    .commit();
-            isLoginShowed = true;
-        }
-        isConnected = true;
+        splashFragment.invisible();
     }
 
 
@@ -189,11 +200,6 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
     }
 
 
-    public void login (String id, String pw) {
-
-    }
-
-
     @Override
     public void onIntentSignUp() {
         // 회원가입 버튼 눌렀을 때
@@ -205,16 +211,9 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
 
     @Override
     public void onSplash() {                    // 스플레시 보이고 2초 뒤 실행
-        Socket socket = SocketIO.getSocket();
-        if (socket != null)
-            isConnected = socket.connected();
-        isSplashShowed2sec = true;
-        if (!isLoginShowed && isConnected) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.activity_login_container, loginFragment)
-                    .commit();
-            isLoginShowed = true;
-        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.activity_login_container, loginFragment)
+                .commit();
     }
 
 

@@ -26,6 +26,7 @@
 
     <!--닉네임 설정 에러-->
     <string name="set_name_already">해당 닉네임이 이미 사용 중 입니다</string>
+    <string name="set_name_fail">닉네임 설정에 실패했습니다 잠시 후 다시 시도해주세요</string>
 
     <!-- 글 쓰기 에러 -->
     <string name="post_err">글 쓰기에 실패햐였습니다.</string>
@@ -54,4 +55,8 @@
 
     <string name="fragment_write_take_picture">사진 찍기</string>
     <string name="fragment_write_choice_picture">사진 선택</string>
+
+    <string name="good">좋아요</string>
+    <string name="bad">싫어요</string>
+    <string name="comment">댓글</string>
 </resources>

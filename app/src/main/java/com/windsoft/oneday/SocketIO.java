@@ -34,6 +34,7 @@ public class SocketIO {
     public static final String KEY_GOOD = "good";
     public static final String KEY_BAD = "bad";
     public static final String KEY_NUM = "num";
+    public static final String KEY_NOTICE_ID = "noticeId";
 
     private static final String URL = "http://windsoft-oneday.herokuapp.com";
     private static final String TAG = "SocketIO";
@@ -88,6 +89,7 @@ public class SocketIO {
             public void call(Object... args) {
                 try {
                     JSONObject obj = (JSONObject) args[0];
+                    Log.d(TAG, "obj = " + obj);
                     int code = obj.getInt(Global.KEY_CODE);
                     String id = null;
                     String name = null;
@@ -95,11 +97,7 @@ public class SocketIO {
                     if (code == Global.CODE_SUCCESS) {
                         id = obj.getString(Global.KEY_USER_ID);
                         image = obj.getString(Global.KEY_USER_IMAGE);
-                        try {
-                            name = obj.getString(Global.KEY_USER_NAME);
-                        } catch (Exception e) {
-                            Log.e(TAG, "이름 없음");
-                        }
+                        name = obj.getString(Global.KEY_USER_NAME);
                     }
                     processLoginRes(code, id, name, image);
                 } catch (Exception e) {
@@ -166,7 +164,9 @@ public class SocketIO {
                 try {
                     JSONObject obj = (JSONObject) args[0];
                     int code = obj.getInt(Global.KEY_CODE);
-                    String name = obj.getString(Global.KEY_USER_NAME);
+                    String name = null;
+                    if (code == Global.CODE_SUCCESS)
+                        name = obj.getString(Global.KEY_USER_NAME);
                     processSetName(code, name);
                     Log.d(TAG, " 닉네임 설정 응답 ");
                 } catch (Exception e) {
@@ -213,6 +213,7 @@ public class SocketIO {
         String userName = (String) object.get(KEY_USER_NAME);
         String content = (String) object.get(KEY_CONTENT);
         String dateStr = (String) object.get(KEY_DATE);
+        String noticeId = (String) object.get(KEY_NOTICE_ID);
         Date date = getDate(dateStr);
 
         JSONArray imageArray = object.getJSONArray(KEY_IMAGE);
@@ -257,7 +258,7 @@ public class SocketIO {
         }
 
 
-        NoticeModel model = new NoticeModel(userId, userImage, userName, date, content, goodInt, badInt, commentList.size(), isGooded, isBaded, commentList, imageList);
+        NoticeModel model = new NoticeModel(userId, userImage, userName, date, content, goodInt, badInt, commentList.size(), isGooded, isBaded, commentList, imageList, noticeId);
         return model;
     }
 
@@ -329,7 +330,7 @@ public class SocketIO {
      * @param code : 회원가입 성공 여부
      * */
     private void processSignUp(int code) {
-        Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(context.getApplicationContext(), LoginActivity.class);
         intent.putExtra(Global.KEY_COMMAND, Global.KEY_SIGN_UP);
         intent.putExtra(Global.KEY_CODE, code);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -483,6 +484,30 @@ public class SocketIO {
             obj.put(Global.KEY_USER_NAME, name);
             obj.put(Global.KEY_USER_ID, id);
             socket.emit(Global.KEY_SET_NAME, obj);
+        } catch (Exception e) {
+        }
+    }
+
+
+    public void goodCheck(boolean flag, String userId, String noticeId) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put(Global.KEY_FLAG, flag);
+            obj.put(Global.KEY_USER_ID, userId);
+            obj.put(Global.KEY_NOTICE_ID, noticeId);
+            socket.emit(Global.KEY_GOOD, obj);
+        } catch (Exception e) {
+        }
+    }
+
+
+    public void badCheck(boolean flag, String userId, String noticeId) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put(Global.KEY_FLAG, flag);
+            obj.put(Global.KEY_USER_ID, userId);
+            obj.put(Global.KEY_NOTICE_ID, noticeId);
+            socket.emit(Global.KEY_BAD, obj);
         } catch (Exception e) {
         }
     }

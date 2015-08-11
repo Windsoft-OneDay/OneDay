@@ -11,6 +11,7 @@ public class NoticeModel implements Serializable {
 
     private String profileImage;
     private String id;
+    private String noticeId;
     private String name;
     private Date date;
     private String content;
@@ -24,7 +25,7 @@ public class NoticeModel implements Serializable {
     private ArrayList<String> imageList;
 
 
-    public NoticeModel(String id, String profileImage, String name, Date date, String content, int goodNum, int badNum, int commentNum, boolean isCheckedGood, boolean isCheckedBad, ArrayList<CommentModel> commentList, ArrayList<String> imageList) {
+    public NoticeModel(String id, String profileImage, String name, Date date, String content, int goodNum, int badNum, int commentNum, boolean isCheckedGood, boolean isCheckedBad, ArrayList<CommentModel> commentList, ArrayList<String> imageList, String noticeId) {
         this.id = id;
         this.profileImage = profileImage;
         this.name = name;
@@ -36,9 +37,14 @@ public class NoticeModel implements Serializable {
         this.isCheckedGood = isCheckedGood;
         this.isCheckedBad = isCheckedBad;
         this.commentList = commentList;
+        this.noticeId = noticeId;
         this.imageList = imageList;
     }
 
+
+    public String getNoticeId() {
+        return noticeId;
+    }
 
     public String getId() {
         return id;

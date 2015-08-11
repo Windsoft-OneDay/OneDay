@@ -211,6 +211,7 @@ public class WriteFragment extends Fragment {
                 intent.putExtra(Global.KEY_IMAGE + i, ImageBase64.encodeTobase64(this.imageList.get(i)));
             }
             getActivity().startService(intent);
+            Log.e(TAG,"보냄");
         }
     }
 

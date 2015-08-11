@@ -3,4 +3,10 @@
 
     <color name="text_white">#FFFFFF</color>
 
+    <!-- 주컬러 -->
+    <color name="main">#689f38</color>
+
+    <color name="gray">#888888</color>
+    <color name="trans_gray">#55888888</color>
+
 </resources>

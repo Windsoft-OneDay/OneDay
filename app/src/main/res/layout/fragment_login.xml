@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:orientation="vertical"
-    android:background="@drawable/login_background">
+    android:background="@color/main">
 
 
 
@@ -109,6 +109,7 @@
                     android:textSize="16sp"
                     android:textColor="#ff000000"
                     android:textColorHint="#cccccc"
+                    android:inputType="textPassword"
                     android:layout_marginLeft="@dimen/base_margin"
                     android:background="@android:color/transparent"/>
 

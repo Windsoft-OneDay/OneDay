@@ -9,6 +9,8 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/smallest_margin"
+        android:layout_marginRight="@dimen/smallest_margin"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         app:cardCornerRadius="4dp">
 
@@ -66,25 +68,34 @@
 
                 <ImageButton
                     android:id="@+id/card_notice_profile_menu"
-                    android:layout_width="@dimen/btn_small"
-                    android:layout_height="@dimen/btn_small"
+                    android:layout_width="@dimen/btn_icon"
+                    android:layout_height="@dimen/btn_icon"
                     android:background="@android:color/transparent"
                     android:layout_marginRight="@dimen/base_margin"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/splash"/>
+                    android:src="@drawable/ic_expand_more_black_24dp"/>
 
             </LinearLayout>
 
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="1dp" />
+                android:layout_height="1dp"
+                android:background="@color/trans_gray"/>
+
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/trans_gray"/>
 
 
             <TextView
                 android:id="@+id/card_notice_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/base_padding"
                 android:textColor="@color/primary_text_default_material_light"
                 android:minHeight="100dp"
                 android:textSize="@dimen/font_small_size"/>
@@ -95,6 +106,7 @@
                 android:id="@+id/card_notice_image_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
 
@@ -104,13 +116,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/card_profile"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
 
                 <ImageView
                     android:layout_width="@dimen/btn_small"
                     android:layout_height="@dimen/btn_small"
-                    android:background="@drawable/splash"/>
+                    android:src="@drawable/ic_thumb_up_black_24dp"
+                    android:scaleType="center"/>
 
 
                 <TextView
@@ -125,7 +139,8 @@
                 <ImageView
                     android:layout_width="@dimen/btn_small"
                     android:layout_height="@dimen/btn_small"
-                    android:background="@drawable/splash"/>
+                    android:src="@drawable/ic_thumb_down_black_24dp"
+                    android:scaleType="center"/>
 
 
                 <TextView
@@ -140,7 +155,8 @@
                 <ImageView
                     android:layout_width="@dimen/btn_small"
                     android:layout_height="@dimen/btn_small"
-                    android:background="@drawable/splash"/>
+                    android:scaleType="center"
+                    android:src="@drawable/ic_insert_comment_black_24dp"/>
 
 
                 <TextView
@@ -155,17 +171,20 @@
             </LinearLayout>
 
 
+
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@drawable/splash"/>
+                android:background="@color/trans_gray"/>
 
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/card_profile"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="3">
 
 
                 <LinearLayout
@@ -179,7 +198,9 @@
                     <ImageButton
                         android:id="@+id/card_notice_good_btn"
                         android:layout_width="@dimen/btn_small"
-                        android:layout_height="@dimen/btn_small" />
+                        android:layout_height="@dimen/btn_small"
+                        android:src="@drawable/ic_thumb_up_black_24dp"
+                        android:background="@android:color/transparent"/>
 
 
                     <TextView
@@ -188,6 +209,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:textColor="@color/primary_text_default_material_light"
+                        android:text="@string/good"
                         android:textSize="@dimen/font_small_size"/>
 
 
@@ -207,7 +229,9 @@
                     <ImageButton
                         android:id="@+id/card_notice_bad_btn"
                         android:layout_width="@dimen/btn_small"
-                        android:layout_height="@dimen/btn_small" />
+                        android:layout_height="@dimen/btn_small"
+                        android:src="@drawable/ic_thumb_down_black_24dp"
+                        android:background="@android:color/transparent"/>
 
 
                     <TextView
@@ -216,6 +240,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:textColor="@color/primary_text_default_material_light"
+                        android:text="@string/bad"
                         android:textSize="@dimen/font_small_size"/>
 
 
@@ -235,7 +260,9 @@
                     <ImageButton
                         android:id="@+id/card_notice_comment_btn"
                         android:layout_width="@dimen/btn_small"
-                        android:layout_height="@dimen/btn_small" />
+                        android:layout_height="@dimen/btn_small"
+                        android:src="@drawable/ic_insert_comment_black_24dp"
+                        android:background="@android:color/transparent"/>
 
 
                     <TextView
@@ -244,6 +271,8 @@
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:textColor="@color/primary_text_default_material_light"
+                        android:text="@string/comment"
+                        android:layout_marginRight="@dimen/small_margin"
                         android:textSize="@dimen/font_small_size"/>
 
 
@@ -254,7 +283,15 @@
             </LinearLayout>
 
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/card_notice_comment_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+
         </LinearLayout>
+
 
     </android.support.v7.widget.CardView>
 

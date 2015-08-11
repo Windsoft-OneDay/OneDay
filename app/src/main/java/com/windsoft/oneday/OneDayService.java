@@ -55,8 +55,8 @@ public class OneDayService extends Service {
                     String id = intent.getStringExtra(Global.KEY_USER_ID);
                     String name = intent.getStringExtra(Global.KEY_USER_NAME);
                     String content = intent.getStringExtra(Global.KEY_CONTENT);
-                    ArrayList<String> imageList = new ArrayList<>();
                     String userImage = intent.getStringExtra(Global.KEY_USER_IMAGE);
+                    ArrayList<String> imageList = new ArrayList<>();
 
                     String image;
                     int i = 0;
@@ -64,6 +64,7 @@ public class OneDayService extends Service {
                         i++;
                         imageList.add(image);
                     }
+                    Log.e(TAG,"받음");
 
                     socketIO.postNotice(id, content, imageList, name, userImage);
                 } else if (command.equals(Global.KEY_SET_NAME)) {                   // 닉네임 설정
@@ -75,6 +76,16 @@ public class OneDayService extends Service {
                     String id = intent.getStringExtra(Global.KEY_USER_ID);
                     if (count != -1)
                         socketIO.readNotice(count, id);
+                } else if (command.equals(Global.KEY_GOOD)) {
+                    boolean flag = intent.getBooleanExtra(Global.KEY_FLAG, false);
+                    String userId = intent.getStringExtra(Global.KEY_USER_ID);
+                    String noticeId = intent.getStringExtra(Global.KEY_NOTICE_ID);
+                    socketIO.goodCheck(flag, userId, noticeId);
+                } else if (command.equals(Global.KEY_BAD)) {
+                    boolean flag = intent.getBooleanExtra(Global.KEY_FLAG, false);
+                    String userId = intent.getStringExtra(Global.KEY_USER_ID);
+                    String noticeId = intent.getStringExtra(Global.KEY_NOTICE_ID);
+                    socketIO.badCheck(flag, userId, noticeId);
                 }
             }
         }

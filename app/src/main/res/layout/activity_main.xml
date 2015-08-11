@@ -8,12 +8,15 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/activity_main_toolbar"
         android:layout_width="match_parent"
+        android:background="@color/main"
         android:layout_height="@dimen/abc_action_bar_default_height_material">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/main"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
 
@@ -29,6 +32,7 @@
                 android:id="@+id/activity_main_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:layout_weight="1"/>
 
 
@@ -51,9 +55,9 @@
         android:id="@+id/activity_main_materialTabHost"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        app:iconColor="#FFFFFF"
-        app:primaryColor="#FF0000"
-        app:accentColor="#00FFFF"
+        app:iconColor="@color/gray"
+        app:primaryColor="@color/text_white"
+        app:accentColor="@color/main"
         app:hasIcons="true"/>
 
     <android.support.v4.view.ViewPager

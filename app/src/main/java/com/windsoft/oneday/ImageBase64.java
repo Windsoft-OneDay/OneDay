@@ -24,7 +24,7 @@ public class ImageBase64 {
     public static String encodeTobase64(Bitmap image) {
 
         ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG,100, baos);
+        image.compress(Bitmap.CompressFormat.JPEG,80, baos);
         byte [] b=baos.toByteArray();
         String temp=null;
         try{
@@ -32,7 +32,7 @@ public class ImageBase64 {
             temp= Base64.encodeToString(b, Base64.DEFAULT);
         }catch(Exception e){
             e.printStackTrace();
-        }catch(OutOfMemoryError e){
+        }catch(OutOfMemoryError e) {
             baos=new  ByteArrayOutputStream();
             image.compress(Bitmap.CompressFormat.JPEG,50, baos);
             b=baos.toByteArray();

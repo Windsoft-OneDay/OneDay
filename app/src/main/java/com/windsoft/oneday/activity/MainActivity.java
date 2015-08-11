@@ -115,8 +115,14 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
 
     private void setViewPager() {
         final MaterialTabHost tab = (MaterialTabHost) findViewById(R.id.activity_main_materialTabHost);
+        Drawable[] imageList = {
+                getResources().getDrawable(R.drawable.ic_format_quote_black_24dp),
+                getResources().getDrawable(R.drawable.ic_border_color_black_24dp),
+                getResources().getDrawable(R.drawable.ic_perm_identity_black_24dp),
+                getResources().getDrawable(R.drawable.ic_settings_black_24dp)
+        };
         for (int i = 0; i < 4; i++) {
-            Drawable image = getResources().getDrawable(R.drawable.splash);
+            Drawable image = imageList[i];
             tab.addTab(tab.newTab()
                     .setIcon(image)
                     .setTabListener(new MaterialTabListener() {
@@ -159,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
         }
 
         viewPager = (ViewPager) findViewById(R.id.activity_main_pager);
+        viewPager.setOffscreenPageLimit(4);
         OneDayAdapter adapter = new OneDayAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -230,11 +237,7 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
         if (intent != null) {
             String command = intent.getStringExtra(Global.KEY_COMMAND);
             if (command != null) {
-                if (command.equals(Global.KEY_SIGN_UP)) {                       // 회원가입 응답
-                    int code = intent.getIntExtra(Global.KEY_CODE, -1);
-                    if (code != -1)
-                        processSignUp(code);
-                } else if (command.equals(Global.KEY_SET_NAME)) {
+                if (command.equals(Global.KEY_SET_NAME)) {
                     int code = intent.getIntExtra(Global.KEY_CODE, -1);
                     String name = intent.getStringExtra(Global.KEY_USER_NAME);
                     if (code != -1)
@@ -304,26 +307,13 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
             Snackbar.with(getApplicationContext())
                     .text(R.string.set_name_already)
                     .show(this);
+        } else if (code == Global.CODE_SET_NAME_FAIL) {
+            Snackbar.with(getApplicationContext())
+                    .text(R.string.set_name_fail)
+                    .show(this);
         } else if (code == Global.CODE_SUCCESS) {               // 성공 했다면
             dialog.dismiss();
             mainFragment.readNotice(0);
-        }
-    }
-
-
-    /**
-     * TODO: 회원가입 응답
-     * @param cond : 응답 코드
-     * */
-    private void processSignUp(int cond) {
-        if (cond == Global.CODE_ID_ALREADY) {                           // 아이디 이미 사용 시
-            Snackbar.with(getApplicationContext())
-                    .text(R.string.sign_up_id_already)
-                    .show(this);
-        } else if (cond == Global.CODE_SIGN_UP_FAIL) {                  // 회원가입 실패 시
-            Snackbar.with(getApplicationContext())
-                    .text(R.string.sign_up_fail)
-                    .show(this);
         }
     }
 

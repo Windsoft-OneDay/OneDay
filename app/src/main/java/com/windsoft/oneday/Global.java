@@ -25,6 +25,9 @@ public class Global {
     public static final String KEY_IMAGE = "image";
     public static final String KEY_COUNT = "count";
     public static final String KEY_KEY_WORD = "keyWord";
+    public static final String KEY_GOOD = "good";
+    public static final String KEY_BAD = "bad";
+    public static final String KEY_FLAG = "flag";
 
     public static final String VALUE_CONNECT = "connection";
 
@@ -33,6 +36,7 @@ public class Global {
     public static final int ONE_DAY = 2;
 
     public static final String KEY_USER_ID = "userId";
+    public static final String KEY_NOTICE_ID = "noticeId";
     public static final String KEY_USER_NAME = "userName";
     public static final String KEY_USER_PW = "userPw";
     public static final String KEY_USER_MAIL = "userMail";

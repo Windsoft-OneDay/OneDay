@@ -3,7 +3,6 @@ package com.windsoft.oneday.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -73,28 +72,32 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     private void setGoodColor(ViewHolder holder, int position) {
         boolean isCheckedGood = noticeList.get(position).isCheckedGood();
+        int color;
         if (isCheckedGood) {            // 좋아요 눌러져 있다면
-            holder.good.setTextColor(Color.BLACK);
+            color = context.getResources().getColor(R.color.main);
             holder.goodBtn.setImageResource(R.drawable.splash);
         } else {
-            holder.good.setTextColor(Color.RED);
-            holder.goodBtn.setImageResource(R.drawable.splash);
+            color = context.getResources().getColor(R.color.gray);
+            holder.goodBtn.setImageResource(R.drawable.ic_thumb_up_black_24dp);
         }
 
+        holder.good.setTextColor(color);
         noticeList.get(position).setIsCheckedGood(!noticeList.get(position).isCheckedGood());                // 반대로 바꿈
     }
 
 
     private void setBadColor(ViewHolder holder, int position) {
         boolean isCheckedBad = noticeList.get(position).isCheckedBad();
+        int color;
         if (isCheckedBad) {            // 좋아요 눌러져 있다면
-            holder.bad.setTextColor(Color.BLACK);
+            color = context.getResources().getColor(R.color.main);
             holder.badBtn.setImageResource(R.drawable.splash);
         } else {
-            holder.bad.setTextColor(Color.RED);
-            holder.badBtn.setImageResource(R.drawable.splash);
+            color = context.getResources().getColor(R.color.gray);
+            holder.badBtn.setImageResource(R.drawable.ic_thumb_down_black_24dp);
         }
 
+        holder.bad.setTextColor(color);
         noticeList.get(position).setIsCheckedBad(!noticeList.get(position).isCheckedGood());                // 반대로 바꿈
     }
 
@@ -129,7 +132,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         holder.goodLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                noticeList.get(position).setIsCheckedGood(!noticeList.get(position).isCheckedGood());
                 setGoodColor(holder, position);
+                goodCheck(noticeList.get(position).isCheckedGood(), notice.getNoticeId());
             }
         });
 
@@ -137,7 +142,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         holder.badLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                noticeList.get(position).setIsCheckedBad(!noticeList.get(position).isCheckedBad());
                 setBadColor(holder, position);
+                badCheck(noticeList.get(position).isCheckedBad(), notice.getNoticeId());
             }
         });
 
@@ -154,6 +161,34 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             imageView.setImageBitmap(bitmap);
             holder.imageContainer.addView(imageView);
         }
+    }
+
+
+    /**
+     * TODO: 좋아요 버튼 클릭
+     * @param flag : 좋아요, 좋아요 취소
+     * */
+    private void goodCheck(boolean flag, String noticeId) {
+        Intent intent = new Intent(context, OneDayService.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_GOOD);
+        intent.putExtra(Global.KEY_FLAG, flag);
+        intent.putExtra(Global.KEY_USER_ID, id);
+        intent.putExtra(Global.KEY_NOTICE, noticeId);
+        context.startService(intent);
+    }
+
+
+    /**
+     * TODO: 싫어요 버튼 클릭
+     * @param flag : 싫어요, 싫어요 취소
+     * */
+    private void badCheck(boolean flag, String noticeId) {
+        Intent intent = new Intent(context, OneDayService.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_BAD);
+        intent.putExtra(Global.KEY_FLAG, flag);
+        intent.putExtra(Global.KEY_USER_ID, id);
+        intent.putExtra(Global.KEY_NOTICE, noticeId);
+        context.startService(intent);
     }
 
 
