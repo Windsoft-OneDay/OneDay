@@ -34,6 +34,7 @@ public class Global {
     public static final String KEY_USER_PW = "userPw";
     public static final String KEY_USER_MAIL = "userMail";
     public static final String KEY_USER_BIRTH = "userBirth";
+    public static final String KEY_USER_IMAGE = "userImage";
     public static final String KEY_NOTICE = "notice";
 
 
@@ -52,4 +53,16 @@ public class Global {
     public static final int CODE_POST_ERR = 306;
     public static final int CODE_NAME_ALREADY = 307;
     public static final int CODE_USER_ADD_NOTICE = 308;             // 사용자 DB에 글 목록 추가 에러
+
+
+//    public static byte[] bitmapToByte(Bitmap bitmap) {
+//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+//        return outputStream.toByteArray();
+//    }
+//
+//
+//    public static String byteToBase64(byte[] array) {
+//        return Base64.encodeToString(array, Base64.DEFAULT);
+//    }
 }

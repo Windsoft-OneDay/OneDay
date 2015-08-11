@@ -2,7 +2,6 @@ package com.windsoft.oneday;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -10,17 +9,31 @@ import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 import com.windsoft.oneday.activity.LoginActivity;
 import com.windsoft.oneday.activity.MainActivity;
+import com.windsoft.oneday.model.CommentModel;
 import com.windsoft.oneday.model.NoticeModel;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
  * Created by ironFactory on 2015-08-03.
  */
 public class SocketIO {
+
+    public static final String KEY_USER_ID = "user_id";
+    public static final String KEY_USER_IMAGE = "user_img";
+    public static final String KEY_USER_NAME = "name";
+    public static final String KEY_CONTENT = "content";
+    public static final String KEY_DATE = "date";
+    public static final String KEY_IMAGE = "img";
+    public static final String KEY_COMMENT = "comment";
+    public static final String KEY_GOOD = "good";
+    public static final String KEY_BAD = "bad";
+    public static final String KEY_NUM = "num";
 
     private static final String URL = "http://windsoft-oneday.herokuapp.com";
     private static final String TAG = "SocketIO";
@@ -78,15 +91,17 @@ public class SocketIO {
                     int code = obj.getInt(Global.KEY_CODE);
                     String id = null;
                     String name = null;
+                    String image = null;
                     if (code == Global.CODE_SUCCESS) {
                         id = obj.getString(Global.KEY_USER_ID);
+                        image = obj.getString(Global.KEY_USER_IMAGE);
                         try {
                             name = obj.getString(Global.KEY_USER_NAME);
                         } catch (Exception e) {
                             Log.e(TAG, "이름 없음");
                         }
                     }
-                    processLoginRes(code, id, name);
+                    processLoginRes(code, id, name, image);
                 } catch (Exception e) {
                     Log.e(TAG, "로그인 응답 오류 = " + e.getMessage());
                 }
@@ -105,7 +120,20 @@ public class SocketIO {
         }).on(Global.KEY_READ_NOTICE, new Emitter.Listener() {                  // 게시글 읽어오기 응답
             @Override
             public void call(Object... args) {
+                try {
+                    JSONObject obj = (JSONObject) args[0];
+                    int code = obj.getInt(Global.KEY_CODE);
+                    String id = null;
+                    JSONArray array = null;
 
+                    if (code == Global.CODE_SUCCESS) {
+                        id = obj.getString(Global.KEY_USER_ID);
+                        array = obj.getJSONArray(Global.KEY_NOTICE);
+                    }
+                    processReadNotice(code, array, id);
+                } catch (Exception e) {
+                    Log.e(TAG, "글 받아오기 오류 = " + e.getMessage());
+                }
             }
         }).on(Global.KEY_GET_PROFILE, new Emitter.Listener() {
             @Override
@@ -114,6 +142,7 @@ public class SocketIO {
                     JSONObject obj = (JSONObject) args[0];
                     Log.d(TAG, "notice list = " + obj.get(Global.KEY_NOTICE));
                     ArrayList<NoticeModel> noticeList = (ArrayList<NoticeModel>) obj.get(Global.KEY_NOTICE);
+
                 } catch (Exception e) {
                     Log.e(TAG, "프로필 받아오기 오류 = " + e.getMessage());
                 }
@@ -124,7 +153,8 @@ public class SocketIO {
                 try {
                     JSONObject obj = (JSONObject) args[0];
                     int code = obj.getInt(Global.KEY_CODE);
-                    Log.d(TAG," 글쓰기 응답 ");
+                    processPost(code);
+                    Log.d(TAG, " 글쓰기 응답 ");
                 } catch (Exception e) {
                     Log.e(TAG, "글쓰기 응답 오류 = " + e.getMessage());
                 }
@@ -137,7 +167,7 @@ public class SocketIO {
                     int code = obj.getInt(Global.KEY_CODE);
                     String name = obj.getString(Global.KEY_USER_NAME);
                     processSetName(code, name);
-                    Log.d(TAG," 닉네임 설정 응답 ");
+                    Log.d(TAG, " 닉네임 설정 응답 ");
                 } catch (Exception e) {
                     Log.e(TAG, "닉네임 설정 응답 오류 = " + e.getMessage());
                 }
@@ -146,6 +176,142 @@ public class SocketIO {
 
         socket.open();
         socket.connect();
+    }
+
+
+    private void processReadNotice(int code, JSONArray array, String id) {
+        Log.d(TAG, "글 읽기 응답");
+        ArrayList<NoticeModel> noticeList = new ArrayList<>();
+
+        for (int i = 0; i < array.length(); i++) {
+            try {
+                JSONObject obj = (JSONObject) array.get(i);
+
+                NoticeModel model = parsingNotice(obj, id);
+                noticeList.add(model);
+                Log.d(TAG, "content = " + model.getContent());
+            } catch (Exception e) {
+                Log.e(TAG, "notice 파싱 에러 = " + e.getMessage());
+            }
+        }
+
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_READ_NOTICE);
+        intent.putExtra(Global.KEY_CODE, code);
+        intent.putExtra(Global.KEY_NOTICE, noticeList);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+
+    private NoticeModel parsingNotice(JSONObject object, String id) throws Exception{
+        Log.d(TAG, "object = " + object);
+        String userImage = (String) object.get(KEY_USER_IMAGE);
+        Log.d(TAG, "userImage = " + userImage);
+        String userId = (String) object.get(KEY_USER_ID);
+        Log.d(TAG, "userId = " + userId);
+        String userName = (String) object.get(KEY_USER_NAME);
+        Log.d(TAG, "userName = " + userName);
+        String content = (String) object.get(KEY_CONTENT);
+        Log.d(TAG, "content" + content);
+        String dateStr = (String) object.get(KEY_DATE);
+        Date date = getDate(dateStr);
+
+        JSONArray imageArray = object.getJSONArray(KEY_IMAGE);
+        Log.d(TAG, "imageArray = " + imageArray);
+        ArrayList<String> imageList = new ArrayList<>();
+        for (int i = 0; i < imageArray.length(); i++) {
+            imageList.add((String) imageArray.get(i));
+        }
+        ArrayList<CommentModel> commentList = new ArrayList<>();
+        JSONArray commentArray = (JSONArray) object.get(KEY_COMMENT);
+        Log.d(TAG, "commentArray = " + commentArray);
+
+        JSONObject goodObj = object.getJSONObject(KEY_GOOD);
+        JSONObject badObj = object.getJSONObject(KEY_BAD);
+
+        int goodInt = (int) goodObj.get(KEY_NUM);
+        int badInt = (int) badObj.get(KEY_NUM);
+        Log.d(TAG, "goodInt = " + goodInt);
+        Log.d(TAG, "badInt = " + badInt);
+
+        JSONArray goodArray = goodObj.getJSONArray(KEY_USER_ID);
+        JSONArray badArray = badObj.getJSONArray(KEY_USER_ID);
+
+        boolean isGooded = false;
+        boolean isBaded = false;
+
+        for (int i = 0; i < goodArray.length(); i++) {
+            String curId = goodArray.getString(i);
+            if (id.equals(curId)) {
+                isGooded = true;
+                break;
+            }
+        }
+
+        for (int i = 0; i < goodArray.length(); i++) {
+            String curId = badArray.getString(i);
+            if (id.equals(curId)) {
+                isBaded = true;
+                break;
+            }
+        }
+
+        for (int i = 0; i < commentArray.length(); i++) {
+            JSONObject commentObj = commentArray.getJSONObject(i);
+            commentList.add(parsingComment(commentObj));
+        }
+
+
+        NoticeModel model = new NoticeModel(userId, userImage, userName, date, content, goodInt, badInt, commentList.size(), isGooded, isBaded, commentList, imageList);
+        return model;
+    }
+
+
+    private Date getDate(String str) {
+        float time = context.getResources().getInteger(R.integer.time);
+        Log.d(TAG, "time = " + time);
+
+        int year = Integer.parseInt(str.substring(0, 4));
+        int month = Integer.parseInt(str.substring(5, 7));
+        int day = Integer.parseInt(str.substring(8, 10));
+        int hour = Integer.parseInt(str.substring(11, 13)) + (int) time;
+        int min = Integer.parseInt(str.substring(14, 16));
+        int sec = Integer.parseInt(str.substring(17, 19));
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(0);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, min);
+        calendar.set(Calendar.SECOND, sec);
+        return calendar.getTime();
+    }
+
+
+    private CommentModel parsingComment(JSONObject object) throws Exception{
+        String id = (String) object.get(KEY_USER_ID);
+        String name = (String) object.get(KEY_USER_NAME);
+        String content = (String) object.get(KEY_CONTENT);
+        String image = (String) object.get(KEY_USER_IMAGE);
+
+        CommentModel model = new CommentModel(id, name, image, content);
+        return model;
+    }
+
+
+    /**
+     * TODO: 글쓰기 응답
+     * @param code : 응답 코드
+     * */
+    private void processPost(int code) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_POST_NOTICE);
+        intent.putExtra(Global.KEY_CODE, code);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
 
@@ -159,6 +325,7 @@ public class SocketIO {
         intent.putExtra(Global.KEY_COMMAND, Global.KEY_SET_NAME);
         intent.putExtra(Global.KEY_CODE, code);
         intent.putExtra(Global.KEY_USER_NAME, name);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
@@ -183,13 +350,14 @@ public class SocketIO {
      *             SUCCESS(1) = 성공
      * @param id : 자동로그인용 id
      * */
-    private void processLoginRes(int code, String id, String name) {
+    private void processLoginRes(int code, String id, String name, String image) {
         Log.d(TAG, "로그인 응답");
         Intent intent = new Intent(context, LoginActivity.class);
         intent.putExtra(Global.KEY_COMMAND, Global.KEY_LOGIN);
         intent.putExtra(Global.KEY_CODE, code);
         intent.putExtra(Global.KEY_USER_ID, id);
         intent.putExtra(Global.KEY_USER_NAME, name);
+        intent.putExtra(Global.KEY_USER_IMAGE, image);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
@@ -255,10 +423,11 @@ public class SocketIO {
      * TODO: 게시글 읽어오기
      * @param count : 몇 번째 리스트를 가져올건지 결정
      * */
-    public void readNotice(int count) {
+    public void readNotice(int count, String id) {
         try {
             JSONObject obj = new JSONObject();
             obj.put(Global.KEY_COUNT, count);
+            obj.put(Global.KEY_USER_ID, id);
             socket.emit(Global.KEY_READ_NOTICE, obj);
         } catch (Exception e) {
             Log.e(TAG, "readNotice 에러 = " + e.getMessage());
@@ -271,7 +440,7 @@ public class SocketIO {
      * @param count : 몇 번째 리스트를 가져올건지 결정
      * @param keyWord : 검색 키워드
      * */
-    public void readNotice(int count, String keyWord) {
+    public void readNotice(int count, String id, String keyWord) {
         try {
             JSONObject obj = new JSONObject();
             obj.put(Global.KEY_COUNT, count);
@@ -289,12 +458,18 @@ public class SocketIO {
      * @param content : 내용
      * @param imageList : 이미지
      * */
-    public void postNotice(String id, String content, ArrayList<Bitmap> imageList, String name) {
+    public void postNotice(String id, String content, ArrayList<String> imageList, String name, String userImage) {
         try {
+            Log.d(TAG, "postNotice()");
             JSONObject obj = new JSONObject();
+            JSONArray array = new JSONArray();
+            for (int i = 0; i < imageList.size(); i++) {
+                array.put(imageList.get(i));
+            }
             obj.put(Global.KEY_CONTENT, content);
-            obj.put(Global.KEY_IMAGE, imageList);
+            obj.put(Global.KEY_IMAGE, array);
             obj.put(Global.KEY_USER_ID, id);
+            obj.put(Global.KEY_USER_IMAGE, userImage);
             obj.put(Global.KEY_USER_NAME, name);
             socket.emit(Global.KEY_POST_NOTICE, obj);
         } catch (Exception e) {

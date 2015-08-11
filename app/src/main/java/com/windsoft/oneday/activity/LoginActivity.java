@@ -83,8 +83,9 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
                 int code = intent.getIntExtra(Global.KEY_CODE, -1);
                 String id = intent.getStringExtra(Global.KEY_USER_ID);
                 String name = intent.getStringExtra(Global.KEY_USER_NAME);
+                String image = intent.getStringExtra(Global.KEY_USER_IMAGE);
                 if (code != -1)
-                    processLogin(code, id, name);
+                    processLogin(code, id, name, image);
             }
         }
 
@@ -98,8 +99,9 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
      *             NULL = 실패
      *             SUCCESS = 성공
      * @param id : 아이디
+     * @param image : 프로필 사진
      * */
-    private void processLogin(int code, String id, String name) {
+    private void processLogin(int code, String id, String name, String image) {
         if (code == Global.CODE_LOGIN_NO_ID) {                      // 로그인 실패 시
             Snackbar.with(getApplicationContext())      // 스낵바 띄우기
                     .text(R.string.sign_up_null)
@@ -109,6 +111,7 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);     // 메인 액티비티로 이동
             intent.putExtra(Global.KEY_USER_ID, id);
             intent.putExtra(Global.KEY_USER_NAME, name);
+            intent.putExtra(Global.KEY_USER_IMAGE, image);
             startActivity(intent);
             finish();
 

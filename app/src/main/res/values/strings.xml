@@ -27,8 +27,15 @@
     <!--닉네임 설정 에러-->
     <string name="set_name_already">해당 닉네임이 이미 사용 중 입니다</string>
 
+    <!-- 글 쓰기 에러 -->
+    <string name="post_err">글 쓰기에 실패햐였습니다.</string>
+
+    <!-- 글 읽기 에러 -->
+    <string name="read_err">글을 받아오지 못했습니다\n 잠시 후 다시 시도해 주십시오</string>
+
 
     <string name="success">성공했습니다</string>
+    <string name="post">등록되었습니다</string>
 
 
 

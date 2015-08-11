@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,8 @@ public class MainFragment extends Fragment {
     private UltimateRecyclerView recyclerView;
 
     private ArrayList<NoticeModel> noticeList;
+
+    private MainAdapter adapter;
 
     private String id;
 
@@ -70,20 +71,25 @@ public class MainFragment extends Fragment {
         recyclerView.setLayoutManager(manager);
 
         noticeList = new ArrayList<>();
-        MainAdapter adapter = new MainAdapter(getActivity(), noticeList);
+        adapter = new MainAdapter(getActivity(), noticeList, id);
         recyclerView.setAdapter(adapter);
         recyclerView.enableLoadmore();
         recyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {           // swipe refresh
             @Override
             public void onRefresh() {
-                Log.d(TAG, "Swipe Refresh");
+                adapter.readNotice(0);
             }
         });
-        showDialog();
+        adapter.readNotice(0);
     }
 
 
-    private void showDialog() {
+    public void setData(ArrayList<NoticeModel> noticeList) {
+        adapter.setItem(noticeList);
+    }
 
+
+    public void readNotice(int count) {
+        adapter.readNotice(count);
     }
 }

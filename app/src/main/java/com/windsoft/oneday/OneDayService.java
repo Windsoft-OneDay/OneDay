@@ -3,7 +3,6 @@ package com.windsoft.oneday;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -28,7 +27,7 @@ public class OneDayService extends Service {
 
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(final Intent intent, int flags, int startId) {
         if (intent != null) {
             String command = intent.getStringExtra(Global.KEY_COMMAND);
             if (command != null) {
@@ -56,16 +55,29 @@ public class OneDayService extends Service {
                     String id = intent.getStringExtra(Global.KEY_USER_ID);
                     String name = intent.getStringExtra(Global.KEY_USER_NAME);
                     String content = intent.getStringExtra(Global.KEY_CONTENT);
-                    ArrayList<Bitmap> imageList = intent.getParcelableArrayListExtra(Global.KEY_IMAGE);
-                    socketIO.postNotice(id, content, imageList, name);
+                    ArrayList<String> imageList = new ArrayList<>();
+                    String userImage = intent.getStringExtra(Global.KEY_USER_IMAGE);
+
+                    String image;
+                    int i = 0;
+                    while ((image = intent.getStringExtra(Global.KEY_IMAGE + i)) != null) {
+                        i++;
+                        imageList.add(image);
+                    }
+
+                    socketIO.postNotice(id, content, imageList, name, userImage);
                 } else if (command.equals(Global.KEY_SET_NAME)) {                   // 닉네임 설정
                     String id = intent.getStringExtra(Global.KEY_USER_ID);
                     String name = intent.getStringExtra(Global.KEY_USER_NAME);
                     socketIO.setName(id, name);
+                } else if (command.equals(Global.KEY_READ_NOTICE)) {                // 글 읽기 요청
+                    int count = intent.getIntExtra(Global.KEY_COUNT, -1);
+                    String id = intent.getStringExtra(Global.KEY_USER_ID);
+                    if (count != -1)
+                        socketIO.readNotice(count, id);
                 }
             }
         }
-
 
         return super.onStartCommand(intent, flags, startId);
     }

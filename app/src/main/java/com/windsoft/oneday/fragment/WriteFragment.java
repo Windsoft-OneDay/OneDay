@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 
 import com.nispok.snackbar.Snackbar;
 import com.windsoft.oneday.Global;
+import com.windsoft.oneday.ImageBase64;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
 
@@ -45,16 +46,18 @@ public class WriteFragment extends Fragment {
 
     private String id;
     private String name;
+    private String image;
 
     public WriteFragment() {
     }
 
 
-    public static WriteFragment newInstance(String id, String name) {
+    public static WriteFragment newInstance(String id, String name, String image) {
         WriteFragment fragment = new WriteFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Global.KEY_USER_ID, id);
         bundle.putString(Global.KEY_USER_NAME, name);
+        bundle.putString(Global.KEY_USER_IMAGE, image);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -66,6 +69,7 @@ public class WriteFragment extends Fragment {
         Bundle bundle = getArguments();
         id = bundle.getString(Global.KEY_USER_ID);
         name = bundle.getString(Global.KEY_USER_NAME);
+        image = bundle.getString(Global.KEY_USER_IMAGE);
     }
 
 
@@ -197,12 +201,26 @@ public class WriteFragment extends Fragment {
                     .show(getActivity());
         } else {
             Intent intent = new Intent(getActivity(), OneDayService.class);
+            intent.putExtra(Global.KEY_COMMAND, Global.KEY_POST_NOTICE);
             intent.putExtra(Global.KEY_USER_ID, id);
             intent.putExtra(Global.KEY_USER_NAME, name);
-            intent.putExtra(Global.KEY_COMMAND, Global.KEY_POST_NOTICE);
+            intent.putExtra(Global.KEY_USER_IMAGE, image);
             intent.putExtra(Global.KEY_CONTENT, content);
-            intent.putParcelableArrayListExtra(Global.KEY_IMAGE, imageList);
+
+            for (int i = 0; i < this.imageList.size(); i++) {
+                intent.putExtra(Global.KEY_IMAGE + i, ImageBase64.encodeTobase64(this.imageList.get(i)));
+            }
             getActivity().startService(intent);
         }
+    }
+
+
+    /**
+     * TODO: 모든 내용 지우기
+     * */
+    public void removeAll() {
+        contentInput.setText("");
+        imageList.clear();
+        pictureContainer.removeAllViews();
     }
 }

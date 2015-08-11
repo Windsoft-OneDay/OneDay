@@ -1,8 +1,13 @@
 package com.windsoft.oneday.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerviewViewHolder;
+import com.windsoft.oneday.Global;
+import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
 import com.windsoft.oneday.model.NoticeModel;
 
@@ -27,10 +34,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     private ArrayList<NoticeModel> noticeList;
     private Context context;
+    private String id;
 
-    public MainAdapter(Context context, ArrayList<NoticeModel> noticeList) {
+    public MainAdapter(Context context, ArrayList<NoticeModel> noticeList, String id) {
         this.context = context;
         this.noticeList = noticeList;
+        this.id = id;
     }
 
 
@@ -93,26 +102,15 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     }
 
 
-    private void setCommentColor(ViewHolder holder, int position) {
-        boolean isCommented = noticeList.get(position).isCommented();
-        if (isCommented) {            // 좋아요 눌러져 있다면
-            holder.comment.setTextColor(Color.BLACK);
-            holder.commentBtn.setImageResource(R.drawable.splash);
-        } else {
-            holder.comment.setTextColor(Color.RED);
-            holder.commentBtn.setImageResource(R.drawable.splash);
-        }
-
-        noticeList.get(position).setIsCommented(!noticeList.get(position).isCommented());                // 반대로 바꿈
-    }
-
-
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final NoticeModel notice = noticeList.get(position);
-        holder.profileImage.setImageBitmap(notice.getProfileImage());
+        Bitmap profileImage = decodeImage(notice.getProfileImage());
+        long time = System.currentTimeMillis() - notice.getDate().getTime();
+
+        holder.profileImage.setImageBitmap(profileImage);
         holder.name.setText(notice.getName());
-        holder.time.setText(getTime(notice.getTime()));
+        holder.time.setText(getTime(time));
         holder.menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,9 +118,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             }
         });
         holder.content.setText(notice.getContent());
-        holder.goodNum.setText(notice.getGoodNum());
-        holder.badNum.setText(notice.getBadNum());
-        holder.commentNum.setText(notice.getCommentNum());
+        holder.goodNum.setText(String.valueOf(notice.getGoodNum()));
+        holder.badNum.setText(String.valueOf(notice.getBadNum()));
+        holder.commentNum.setText(String.valueOf(notice.getCommentNum()));
 
         setGoodColor(holder, position);
         holder.goodLayout.setOnClickListener(new View.OnClickListener() {
@@ -137,14 +135,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 setBadColor(holder, position);
-            }
-        });
-
-        setCommentColor(holder, position);
-        holder.commentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setCommentColor(holder, position);
             }
         });
     }
@@ -166,8 +156,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
 
     public void setItem(ArrayList<NoticeModel> noticeList) {
-        this.noticeList = noticeList;
         notifyDataSetChanged();
+        this.noticeList = noticeList;
+
+        for (int i = 0; i < noticeList.size(); i++) {
+            Log.d(TAG, "content = " + noticeList.get(i).getContent());
+        }
     }
 
 
@@ -175,6 +169,22 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     public int getItemCount() {
         return noticeList.size();
     }
+
+
+    public void readNotice(int count) {
+        Intent intent = new Intent(context, OneDayService.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_READ_NOTICE);
+        intent.putExtra(Global.KEY_COUNT, count);
+        intent.putExtra(Global.KEY_USER_ID, id);
+        context.startService(intent);
+    }
+
+
+    public static Bitmap decodeImage(String str) {
+        byte[] array = Base64.decode(str, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(array, 0, array.length);
+    }
+
 
     public static class ViewHolder extends UltimateRecyclerviewViewHolder {
 

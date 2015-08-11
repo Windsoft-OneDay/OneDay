@@ -24,6 +24,9 @@ import com.windsoft.oneday.fragment.MainFragment;
 import com.windsoft.oneday.fragment.ProfileFragment;
 import com.windsoft.oneday.fragment.SettingFragment;
 import com.windsoft.oneday.fragment.WriteFragment;
+import com.windsoft.oneday.model.NoticeModel;
+
+import java.util.ArrayList;
 
 import it.neokree.materialtabs.MaterialTab;
 import it.neokree.materialtabs.MaterialTabHost;
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
 
     private String id;
     private String name;
+    private String image;
 
 
     @Override
@@ -64,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
         Intent intent = getIntent();
         id = intent.getStringExtra(Global.KEY_USER_ID);
         name = intent.getStringExtra(Global.KEY_USER_NAME);
+        image = intent.getStringExtra(Global.KEY_USER_IMAGE);
 
         if (name == null || name.length() == 0)
             setName();
@@ -79,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
 
     private void init() {
         mainFragment = MainFragment.newInstance(id);
-        writeFragment = WriteFragment.newInstance(id, name);
+        writeFragment = WriteFragment.newInstance(id, name, image);
         profileFragment = ProfileFragment.newInstance(id);
         settingFragment = SettingFragment.newInstance(id);
 
@@ -234,8 +239,47 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
                     String name = intent.getStringExtra(Global.KEY_USER_NAME);
                     if (code != -1)
                         processSetName(code, name);
+                } else if (command.equals(Global.KEY_POST_NOTICE)) {
+                    int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                    if (code != -1)
+                        processPost(code);
+                } else if (command.equals(Global.KEY_READ_NOTICE)) {
+                    int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                    ArrayList<NoticeModel> noticeList = (ArrayList<NoticeModel>) intent.getSerializableExtra(Global.KEY_NOTICE);
+
+                    if (code != -1)
+                        processReadNotice(code, noticeList);
                 }
             }
+        }
+    }
+
+
+    private void processReadNotice(int code, ArrayList<NoticeModel> noticeList) {
+        if (code == Global.CODE_READ_NOTCIE_FAIL) {
+            Snackbar.with(this)
+                    .text(R.string.read_err)
+                    .show(this);
+        } else if (code == Global.CODE_SUCCESS) {
+            mainFragment.setData(noticeList);
+        }
+    }
+
+
+    /**
+     * TODO: 글쓰기 응답
+     * @param code : 응답 코드
+     * */
+    private void processPost(int code) {
+        if (code == Global.CODE_POST_ERR || code == Global.CODE_USER_ADD_NOTICE) {                         // 글쓰기 실패 || 사용자 DB에 글 추가 에러
+            Snackbar.with(getApplicationContext())
+                    .text(R.string.post_err)
+                    .show(this);
+        } else if (code == Global.CODE_SUCCESS) {                                           // 성공
+            writeFragment.removeAll();
+            Snackbar.with(getApplicationContext())
+                    .text(R.string.post)
+                    .show(this);
         }
     }
 
@@ -252,6 +296,7 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
                     .show(this);
         } else if (code == Global.CODE_SUCCESS) {               // 성공 했다면
             dialog.dismiss();
+            mainFragment.readNotice(0);
         }
     }
 

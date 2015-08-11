@@ -1,74 +1,58 @@
 package com.windsoft.oneday.model;
 
-import android.graphics.Bitmap;
-
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by ironFactory on 2015-08-04.
  */
-public class NoticeModel {
+public class NoticeModel implements Serializable {
 
-    private Bitmap profileImage;
+    private String profileImage;
+    private String id;
     private String name;
-    private long time;
+    private Date date;
     private String content;
     private int goodNum;
     private int badNum;
     private int commentNum;
     private boolean isCheckedGood;
     private boolean isCheckedBad;
-    private boolean isCommented;
 
-    private ArrayList<String> commentName;
-    private ArrayList<Bitmap> commentProfileImage;
-    private ArrayList<String> commentContent;
+    private ArrayList<CommentModel> commentList;
+    private ArrayList<String> imageList;
 
-    public NoticeModel(Bitmap profileImage, String name, long time, String content, int goodNum, int badNum, int commentNum, ArrayList<String> commentName, ArrayList<Bitmap> commentProfileImage, ArrayList<String> commentContent, boolean isCheckedGood, boolean isCheckedBad, boolean isCommented) {
+
+    public NoticeModel(String id, String profileImage, String name, Date date, String content, int goodNum, int badNum, int commentNum, boolean isCheckedGood, boolean isCheckedBad, ArrayList<CommentModel> commentList, ArrayList<String> imageList) {
+        this.id = id;
         this.profileImage = profileImage;
         this.name = name;
-        this.time = time;
+        this.date = date;
         this.content = content;
         this.goodNum = goodNum;
         this.badNum = badNum;
         this.commentNum = commentNum;
-        this.commentName = commentName;
-        this.commentProfileImage = commentProfileImage;
-        this.commentContent = commentContent;
         this.isCheckedGood = isCheckedGood;
         this.isCheckedBad = isCheckedBad;
-        this.isCommented = isCommented;
+        this.commentList = commentList;
+        this.imageList = imageList;
     }
 
-    public boolean isCheckedGood() {
-        return isCheckedGood;
+
+    public String getId() {
+        return id;
     }
 
-    public void setIsCheckedGood(boolean isCheckedGood) {
-        this.isCheckedGood = isCheckedGood;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public boolean isCheckedBad() {
-        return isCheckedBad;
-    }
-
-    public void setIsCheckedBad(boolean isCheckedBad) {
-        this.isCheckedBad = isCheckedBad;
-    }
-
-    public boolean isCommented() {
-        return isCommented;
-    }
-
-    public void setIsCommented(boolean isCommented) {
-        this.isCommented = isCommented;
-    }
-
-    public Bitmap getProfileImage() {
+    public String getProfileImage() {
         return profileImage;
     }
 
-    public void setProfileImage(Bitmap profileImage) {
+    public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
     }
 
@@ -80,12 +64,12 @@ public class NoticeModel {
         this.name = name;
     }
 
-    public long getTime() {
-        return time;
+    public Date getDate() {
+        return date;
     }
 
-    public void setTime(long time) {
-        this.time = time;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getContent() {
@@ -120,27 +104,35 @@ public class NoticeModel {
         this.commentNum = commentNum;
     }
 
-    public ArrayList<String> getCommentName() {
-        return commentName;
+    public boolean isCheckedGood() {
+        return isCheckedGood;
     }
 
-    public void setCommentName(ArrayList<String> commentName) {
-        this.commentName = commentName;
+    public void setIsCheckedGood(boolean isCheckedGood) {
+        this.isCheckedGood = isCheckedGood;
     }
 
-    public ArrayList<Bitmap> getCommentProfileImage() {
-        return commentProfileImage;
+    public boolean isCheckedBad() {
+        return isCheckedBad;
     }
 
-    public void setCommentProfileImage(ArrayList<Bitmap> commentProfileImage) {
-        this.commentProfileImage = commentProfileImage;
+    public void setIsCheckedBad(boolean isCheckedBad) {
+        this.isCheckedBad = isCheckedBad;
     }
 
-    public ArrayList<String> getCommentContent() {
-        return commentContent;
+    public ArrayList<CommentModel> getCommentList() {
+        return commentList;
     }
 
-    public void setCommentContent(ArrayList<String> commentContent) {
-        this.commentContent = commentContent;
+    public void setCommentList(ArrayList<CommentModel> commentList) {
+        this.commentList = commentList;
+    }
+
+    public ArrayList<String> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(ArrayList<String> imageList) {
+        this.imageList = imageList;
     }
 }

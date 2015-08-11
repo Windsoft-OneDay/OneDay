@@ -74,9 +74,10 @@ public class ProfileAdapter extends RecyclerView.Adapter {
             final int POSITION = position + 2;
             final NoticeModel notice = noticeList.get(POSITION);
             final MainAdapter.ViewHolder viewHolder = ((MainAdapter.ViewHolder) holder);
-            viewHolder.profileImage.setImageBitmap(notice.getProfileImage());
+            long time = System.currentTimeMillis() - notice.getDate().getTime();
+            viewHolder.profileImage.setImageBitmap(MainAdapter.decodeImage(notice.getProfileImage()));
             viewHolder.name.setText(notice.getName());
-            viewHolder.time.setText(getTime(notice.getTime()));
+            viewHolder.time.setText(getTime(time));
             viewHolder.menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -101,14 +102,6 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     setBadColor(viewHolder, POSITION);
-                }
-            });
-
-            setCommentColor(viewHolder, POSITION);
-            viewHolder.commentLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setCommentColor(viewHolder, POSITION);
                 }
             });
         }
@@ -164,20 +157,6 @@ public class ProfileAdapter extends RecyclerView.Adapter {
         }
 
         noticeList.get(position).setIsCheckedBad(!noticeList.get(position).isCheckedGood());                // 반대로 바꿈
-    }
-
-
-    private void setCommentColor(MainAdapter.ViewHolder holder, int position) {
-        boolean isCommented = noticeList.get(position).isCommented();
-        if (isCommented) {            // 좋아요 눌러져 있다면
-            holder.comment.setTextColor(Color.BLACK);
-            holder.commentBtn.setImageResource(R.drawable.splash);
-        } else {
-            holder.comment.setTextColor(Color.RED);
-            holder.commentBtn.setImageResource(R.drawable.splash);
-        }
-
-        noticeList.get(position).setIsCommented(!noticeList.get(position).isCommented());                // 반대로 바꿈
     }
 
 
