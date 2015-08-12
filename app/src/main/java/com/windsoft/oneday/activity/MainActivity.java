@@ -116,10 +116,10 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
     private void setViewPager() {
         final MaterialTabHost tab = (MaterialTabHost) findViewById(R.id.activity_main_materialTabHost);
         Drawable[] imageList = {
-                getResources().getDrawable(R.drawable.ic_format_quote_black_24dp),
-                getResources().getDrawable(R.drawable.ic_border_color_black_24dp),
-                getResources().getDrawable(R.drawable.ic_perm_identity_black_24dp),
-                getResources().getDrawable(R.drawable.ic_settings_black_24dp)
+                getResources().getDrawable(R.drawable.newspeed_icon),
+                getResources().getDrawable(R.drawable.write_icon),
+                getResources().getDrawable(R.drawable.find_id_icon),
+                getResources().getDrawable(R.drawable.setting_icon)
         };
         for (int i = 0; i < 4; i++) {
             Drawable image = imageList[i];
@@ -253,8 +253,42 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
 
                     if (code != -1 || count != -1)
                         processReadNotice(code, noticeList, count);
+                } else if (command.equals(Global.KEY_GOOD)) {
+                    int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                    boolean flag = intent.getBooleanExtra(Global.KEY_FLAG, false);
+                    int position = intent.getIntExtra(Global.KEY_POSITION, -1);
+                    if (code != -1 && position != -1)
+                        processGood(code, flag, position);
+                } else if (command.equals(Global.KEY_BAD)) {
+                    int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                    boolean flag = intent.getBooleanExtra(Global.KEY_FLAG, false);
+                    int position = intent.getIntExtra(Global.KEY_POSITION, -1);
+                    if (code != -1 && position != -1)
+                        processBad(code, flag, position);
                 }
             }
+        }
+    }
+
+
+    private void processGood(int code, boolean flag, int position) {
+        if (code != Global.CODE_SUCCESS) {                      // 실패 시
+            Snackbar.with(this)
+                    .text(R.string.fail_again)
+                    .show(this);
+
+            mainFragment.failGood(flag, position);
+        }
+    }
+
+
+    private void processBad(int code, boolean flag, int position) {
+        if (code != Global.CODE_SUCCESS) {                      // 실패 시
+            Snackbar.with(this)
+                    .text(R.string.fail_again)
+                    .show(this);
+
+            mainFragment.failBad(flag, position);
         }
     }
 

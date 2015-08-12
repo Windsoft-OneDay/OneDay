@@ -33,8 +33,7 @@ public class SocketIO {
     public static final String KEY_COMMENT = "comment";
     public static final String KEY_GOOD = "good";
     public static final String KEY_BAD = "bad";
-    public static final String KEY_NUM = "num";
-    public static final String KEY_NOTICE_ID = "noticeId";
+    public static final String KEY_NOTICE_ID = "notice_id";
 
     private static final String URL = "http://windsoft-oneday.herokuapp.com";
     private static final String TAG = "SocketIO";
@@ -173,10 +172,60 @@ public class SocketIO {
                     Log.e(TAG, "닉네임 설정 응답 오류 = " + e.getMessage());
                 }
             }
+        }).on(Global.KEY_GOOD, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    JSONObject obj = (JSONObject) args[0];
+                    int code = obj.getInt(Global.KEY_CODE);
+                    boolean flag = obj.getBoolean(Global.KEY_FLAG);
+                    int position = obj.getInt(Global.KEY_POSITION);
+                    processGood(code, flag, position);
+                    Log.d(TAG, "좋아요 응답");
+                } catch (Exception e) {
+                    Log.e(TAG, "좋아요 오류 = " + e.getMessage());
+                }
+            }
+        }).on(Global.KEY_BAD, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    JSONObject obj = (JSONObject) args[0];
+                    int code = obj.getInt(Global.KEY_CODE);
+                    boolean flag = obj.getBoolean(Global.KEY_FLAG);
+                    int position = obj.getInt(Global.KEY_POSITION);
+                    processBad(code, flag, position);
+                    Log.d(TAG, "싫어요 응답");
+                } catch (Exception e) {
+                    Log.e(TAG, "싫어요 오류 = " + e.getMessage());
+                }
+            }
         });
 
         socket.open();
         socket.connect();
+    }
+
+
+    private void processGood(int code, boolean flag, int position) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_GOOD);
+        intent.putExtra(Global.KEY_CODE, code);
+        intent.putExtra(Global.KEY_FLAG, flag);
+        intent.putExtra(Global.KEY_POSITION, position);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+
+    private void processBad(int code, boolean flag, int position) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_BAD);
+        intent.putExtra(Global.KEY_CODE, code);
+        intent.putExtra(Global.KEY_FLAG, flag);
+        intent.putExtra(Global.KEY_POSITION, position);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
 
@@ -209,6 +258,10 @@ public class SocketIO {
 
     private NoticeModel parsingNotice(JSONObject object, String id) throws Exception{
         String userImage = (String) object.get(KEY_USER_IMAGE);
+        if (userImage.equals("null")) {
+            Log.d(TAG, "userImage = null");
+            userImage = null;
+        }
         String userId = (String) object.get(KEY_USER_ID);
         String userName = (String) object.get(KEY_USER_NAME);
         String content = (String) object.get(KEY_CONTENT);
@@ -227,16 +280,16 @@ public class SocketIO {
         JSONObject goodObj = object.getJSONObject(KEY_GOOD);
         JSONObject badObj = object.getJSONObject(KEY_BAD);
 
-        int goodInt = (int) goodObj.get(KEY_NUM);
-        int badInt = (int) badObj.get(KEY_NUM);
-
         JSONArray goodArray = goodObj.getJSONArray(KEY_USER_ID);
         JSONArray badArray = badObj.getJSONArray(KEY_USER_ID);
+
+        int goodInt = goodArray.length();
+        int badInt = badArray.length();
 
         boolean isGooded = false;
         boolean isBaded = false;
 
-        for (int i = 0; i < goodArray.length(); i++) {
+        for (int i = 0; i < goodInt; i++) {
             String curId = goodArray.getString(i);
             if (id.equals(curId)) {
                 isGooded = true;
@@ -244,7 +297,7 @@ public class SocketIO {
             }
         }
 
-        for (int i = 0; i < goodArray.length(); i++) {
+        for (int i = 0; i < badInt; i++) {
             String curId = badArray.getString(i);
             if (id.equals(curId)) {
                 isBaded = true;
@@ -265,17 +318,16 @@ public class SocketIO {
 
     private Date getDate(String str) {
         float time = context.getResources().getInteger(R.integer.time);
-        Log.d(TAG, "time = " + time);
 
         int year = Integer.parseInt(str.substring(0, 4));
-        int month = Integer.parseInt(str.substring(5, 7));
+        int month = Integer.parseInt(str.substring(5, 7)) - 1;
         int day = Integer.parseInt(str.substring(8, 10));
         int hour = Integer.parseInt(str.substring(11, 13)) + (int) time;
         int min = Integer.parseInt(str.substring(14, 16));
         int sec = Integer.parseInt(str.substring(17, 19));
 
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(0);
+        calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, day);
@@ -489,24 +541,26 @@ public class SocketIO {
     }
 
 
-    public void goodCheck(boolean flag, String userId, String noticeId) {
+    public void goodCheck(boolean flag, String userId, String noticeId, int position) {
         try {
             JSONObject obj = new JSONObject();
             obj.put(Global.KEY_FLAG, flag);
             obj.put(Global.KEY_USER_ID, userId);
             obj.put(Global.KEY_NOTICE_ID, noticeId);
+            obj.put(Global.KEY_POSITION, position);
             socket.emit(Global.KEY_GOOD, obj);
         } catch (Exception e) {
         }
     }
 
 
-    public void badCheck(boolean flag, String userId, String noticeId) {
+    public void badCheck(boolean flag, String userId, String noticeId, int position) {
         try {
             JSONObject obj = new JSONObject();
             obj.put(Global.KEY_FLAG, flag);
             obj.put(Global.KEY_USER_ID, userId);
             obj.put(Global.KEY_NOTICE_ID, noticeId);
+            obj.put(Global.KEY_POSITION, position);
             socket.emit(Global.KEY_BAD, obj);
         } catch (Exception e) {
         }

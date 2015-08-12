@@ -169,6 +169,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:src="@drawable/find_id_icon"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:padding="@dimen/base_padding"
                 android:id="@+id/fragment_login_find_id"/>
 
 
@@ -193,6 +197,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:src="@drawable/find_password_icon"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:padding="@dimen/base_padding"
                 android:id="@+id/fragment_login_find_pw"/>
 
 
@@ -217,6 +225,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:src="@drawable/sign_up_icon"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:padding="@dimen/base_padding"
                 android:id="@+id/fragment_login_sign_up"/>
 
 

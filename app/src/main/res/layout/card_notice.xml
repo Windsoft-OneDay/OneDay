@@ -31,6 +31,7 @@
                     android:id="@+id/card_notice_profile_image"
                     android:layout_width="@dimen/btn_small"
                     android:layout_height="match_parent"
+                    android:scaleType="centerInside"
                     android:layout_margin="@dimen/small_margin"/>
 
 
@@ -73,7 +74,7 @@
                     android:background="@android:color/transparent"
                     android:layout_marginRight="@dimen/base_margin"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_expand_more_black_24dp"/>
+                    android:src="@drawable/menu_icon"/>
 
             </LinearLayout>
 
@@ -123,8 +124,9 @@
                 <ImageView
                     android:layout_width="@dimen/btn_small"
                     android:layout_height="@dimen/btn_small"
-                    android:src="@drawable/ic_thumb_up_black_24dp"
-                    android:scaleType="center"/>
+                    android:src="@drawable/good_icon"
+                    android:padding="@dimen/base_padding"
+                    android:scaleType="centerCrop"/>
 
 
                 <TextView
@@ -132,15 +134,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:textColor="@color/primary_text_default_material_light"
-                    android:textSize="@dimen/font_small_size"/>
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/font_smallest_size"/>
 
 
                 <ImageView
                     android:layout_width="@dimen/btn_small"
                     android:layout_height="@dimen/btn_small"
-                    android:src="@drawable/ic_thumb_down_black_24dp"
-                    android:scaleType="center"/>
+                    android:src="@drawable/bad_icon"
+                    android:padding="@dimen/base_padding"
+                    android:scaleType="centerCrop"/>
 
 
                 <TextView
@@ -148,15 +151,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:textColor="@color/primary_text_default_material_light"
-                    android:textSize="@dimen/font_small_size"/>
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/font_smallest_size"/>
 
 
                 <ImageView
                     android:layout_width="@dimen/btn_small"
                     android:layout_height="@dimen/btn_small"
-                    android:scaleType="center"
-                    android:src="@drawable/ic_insert_comment_black_24dp"/>
+                    android:scaleType="centerCrop"
+                    android:padding="@dimen/base_padding"
+                    android:src="@drawable/comment_icon"/>
 
 
                 <TextView
@@ -164,8 +168,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:textColor="@color/primary_text_default_material_light"
-                    android:textSize="@dimen/font_small_size"/>
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/font_smallest_size"/>
 
 
             </LinearLayout>
@@ -182,7 +186,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/card_profile"
+                android:layout_height="@dimen/btn_small"
                 android:orientation="horizontal"
                 android:weightSum="3">
 
@@ -195,11 +199,13 @@
                     android:gravity="center_vertical|center_horizontal">
 
 
-                    <ImageButton
+                    <ImageView
                         android:id="@+id/card_notice_good_btn"
                         android:layout_width="@dimen/btn_small"
                         android:layout_height="@dimen/btn_small"
-                        android:src="@drawable/ic_thumb_up_black_24dp"
+                        android:src="@drawable/good_icon"
+                        android:padding="@dimen/base_padding"
+                        android:scaleType="centerCrop"
                         android:background="@android:color/transparent"/>
 
 
@@ -210,7 +216,7 @@
                         android:gravity="center_vertical"
                         android:textColor="@color/primary_text_default_material_light"
                         android:text="@string/good"
-                        android:textSize="@dimen/font_small_size"/>
+                        android:textSize="@dimen/font_smallest_size"/>
 
 
 
@@ -226,11 +232,13 @@
                     android:gravity="center_horizontal|center_vertical">
 
 
-                    <ImageButton
+                    <ImageView
                         android:id="@+id/card_notice_bad_btn"
                         android:layout_width="@dimen/btn_small"
                         android:layout_height="@dimen/btn_small"
-                        android:src="@drawable/ic_thumb_down_black_24dp"
+                        android:src="@drawable/bad_icon"
+                        android:padding="@dimen/base_padding"
+                        android:scaleType="centerCrop"
                         android:background="@android:color/transparent"/>
 
 
@@ -241,7 +249,7 @@
                         android:gravity="center_vertical"
                         android:textColor="@color/primary_text_default_material_light"
                         android:text="@string/bad"
-                        android:textSize="@dimen/font_small_size"/>
+                        android:textSize="@dimen/font_smallest_size"/>
 
 
 
@@ -257,11 +265,13 @@
                     android:gravity="center_vertical|center_horizontal">
 
 
-                    <ImageButton
+                    <ImageView
                         android:id="@+id/card_notice_comment_btn"
                         android:layout_width="@dimen/btn_small"
                         android:layout_height="@dimen/btn_small"
-                        android:src="@drawable/ic_insert_comment_black_24dp"
+                        android:src="@drawable/comment_icon"
+                        android:padding="@dimen/base_padding"
+                        android:scaleType="centerCrop"
                         android:background="@android:color/transparent"/>
 
 
@@ -270,10 +280,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:textColor="@color/primary_text_default_material_light"
+                        android:textColor="@color/gray"
                         android:text="@string/comment"
                         android:layout_marginRight="@dimen/small_margin"
-                        android:textSize="@dimen/font_small_size"/>
+                        android:textSize="@dimen/font_smallest_size"/>
 
 
 

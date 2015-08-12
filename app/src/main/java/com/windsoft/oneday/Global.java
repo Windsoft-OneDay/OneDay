@@ -43,6 +43,7 @@ public class Global {
     public static final String KEY_USER_BIRTH = "userBirth";
     public static final String KEY_USER_IMAGE = "userImage";
     public static final String KEY_NOTICE = "notice";
+    public static final String KEY_POSITION = "position";
 
 
     public static final String PREF_KEY = "windsoft-oneday";
@@ -61,6 +62,8 @@ public class Global {
     public static final int CODE_NAME_ALREADY = 307;
     public static final int CODE_USER_ADD_NOTICE = 308;             // 사용자 DB에 글 목록 추가 에러
     public static final int CODE_NOT_ENOUGH_NOTICE = 309;             // 글 db 부족
+    public static final int CODE_UPDATE_NOTICE = 310;             // 좋아요, 싫어요 클릭 시 noticeDB 수정 에러
+    public static final int CODE_UPDATE_USER = 311;             // 좋아요, 싫어요 클릭 시 userDB 수정 에러
 
     public static Bitmap decodeImage(String str) {
         byte[] array = Base64.decode(str, Base64.DEFAULT);

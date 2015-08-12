@@ -20,6 +20,7 @@
     <dimen name="font_big_size">36sp</dimen>
     <dimen name="font_middle_size">26sp</dimen>
     <dimen name="font_small_size">16sp</dimen>
+    <dimen name="font_smallest_size">12sp</dimen>
 
     <!--버튼 크기-->
     <dimen name="btn_icon">24dp</dimen>

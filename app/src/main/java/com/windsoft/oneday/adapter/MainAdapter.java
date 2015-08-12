@@ -3,6 +3,9 @@ package com.windsoft.oneday.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import com.windsoft.oneday.model.NoticeModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by ironFactory on 2015-08-04.
@@ -27,15 +31,31 @@ import java.util.Calendar;
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     private static final String TAG = "MainAdapter";
+    private static final int MIN3 = 1000 * 60 * 3;
 
     private ArrayList<NoticeModel> noticeList;
     private Context context;
     private String id;
 
+    private ArrayList<TimeThread> threadList = new ArrayList<>();
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            ViewHolder holder = (ViewHolder) msg.obj;
+            Bundle bundle = msg.getData();
+            String time = bundle.getString("time");
+            holder.time.setText(time);
+        }
+    };
+
     public MainAdapter(Context context, ArrayList<NoticeModel> noticeList, String id) {
         this.context = context;
         this.noticeList = noticeList;
         this.id = id;
+
     }
 
 
@@ -47,13 +67,18 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
 
     private String getTime(long time) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(time);
+        final int DAY = 1000 * 60 * 60 * 24;
+        final int HOUR = 1000 * 60 * 60;
+        final int MIN = 1000 * 60;
+        final int SEC = 1000;
 
-        int day = calendar.get(Calendar.DATE);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int min = calendar.get(Calendar.MINUTE);
-        int sec = calendar.get(Calendar.SECOND);
+        int day = (int) time / DAY;
+        time = time - (day * DAY);
+        int hour = (int) time / HOUR;
+        time = time - (hour * HOUR);
+        int min = (int) time / MIN;
+        time = time - (min * MIN);
+        int sec = (int) time / SEC;
 
         StringBuffer sb = new StringBuffer();
 
@@ -63,42 +88,56 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             sb.append(hour + "시간 ");
         if (min != 0)
             sb.append(min + "분 ");
-        if (sec != 0)
-            sb.append(sec + "초");
+        sb.append(sec + "초");
 
         return sb.toString();
     }
 
 
-    private void setGoodColor(ViewHolder holder, int position) {
-        boolean isCheckedGood = noticeList.get(position).isCheckedGood();
+    private void setGood(ViewHolder holder, int position) {
+        NoticeModel notice = noticeList.get(position);
+        boolean isCheckedGood = notice.isCheckedGood();
         int color;
-        if (isCheckedGood) {            // 좋아요 눌러져 있다면
-            color = context.getResources().getColor(R.color.main);
-            holder.goodBtn.setImageResource(R.drawable.splash);
-        } else {
-            color = context.getResources().getColor(R.color.gray);
-            holder.goodBtn.setImageResource(R.drawable.ic_thumb_up_black_24dp);
-        }
 
+        if (isCheckedGood) {                                // 좋아요
+            color = context.getResources().getColor(R.color.main);
+            holder.goodBtn.setImageResource(R.drawable.good_icon_main_color);
+        } else {                                            // 좋아요 취소
+            color = context.getResources().getColor(R.color.gray);
+            holder.goodBtn.setImageResource(R.drawable.good_icon);
+        }
         holder.good.setTextColor(color);
-        noticeList.get(position).setIsCheckedGood(!noticeList.get(position).isCheckedGood());                // 반대로 바꿈
     }
 
 
-    private void setBadColor(ViewHolder holder, int position) {
-        boolean isCheckedBad = noticeList.get(position).isCheckedBad();
+    private void setBad(ViewHolder holder, int position) {
+        NoticeModel notice = noticeList.get(position);
+        boolean isCheckedBad = notice.isCheckedBad();
         int color;
-        if (isCheckedBad) {            // 좋아요 눌러져 있다면
-            color = context.getResources().getColor(R.color.main);
-            holder.badBtn.setImageResource(R.drawable.splash);
-        } else {
-            color = context.getResources().getColor(R.color.gray);
-            holder.badBtn.setImageResource(R.drawable.ic_thumb_down_black_24dp);
-        }
 
+        if (isCheckedBad) {                                // 싫어요
+            color = context.getResources().getColor(R.color.main);
+            holder.badBtn.setImageResource(R.drawable.bad_icon_main_color);
+        } else {                                            // 싫어요 취소
+            color = context.getResources().getColor(R.color.gray);
+            holder.badBtn.setImageResource(R.drawable.bad_icon);
+        }
         holder.bad.setTextColor(color);
-        noticeList.get(position).setIsCheckedBad(!noticeList.get(position).isCheckedGood());                // 반대로 바꿈
+    }
+
+
+    private void setComment(ViewHolder holder) {
+        int isCommentListVisible = holder.commentList.getVisibility();
+        int color;
+
+        if (isCommentListVisible == View.VISIBLE) {                                // 보여지고 있다면
+            color = context.getResources().getColor(R.color.main);
+            holder.commentBtn.setImageResource(R.drawable.comment_icon_main_color);
+        } else {                                            // 싫어요 취소
+            color = context.getResources().getColor(R.color.gray);
+            holder.commentBtn.setImageResource(R.drawable.comment_icon);
+        }
+        holder.comment.setTextColor(color);
     }
 
 
@@ -106,15 +145,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final NoticeModel notice = noticeList.get(position);
         holder.imageContainer.removeAllViews();
-
         if (notice.getProfileImage() == null) {
-
+            holder.profileImage.setImageResource(R.drawable.base_profile);
+            Log.d(TAG, "null");
         } else {
             Bitmap profileImage = Global.decodeImage(notice.getProfileImage());
             holder.profileImage.setImageBitmap(profileImage);
+            Log.d(TAG, "not");
         }
 
-        long time = System.currentTimeMillis() - notice.getDate().getTime();
+        final long time = getTime(notice.getDate(), notice.getGoodNum(), notice.getBadNum());
         holder.name.setText(notice.getName());
         holder.time.setText(getTime(time));
         holder.menu.setOnClickListener(new View.OnClickListener() {
@@ -128,27 +168,36 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         holder.badNum.setText(String.valueOf(notice.getBadNum()));
         holder.commentNum.setText(String.valueOf(notice.getCommentNum()));
 
-        setGoodColor(holder, position);
+        final TimeThread thread = new TimeThread(time, holder);                                 // 시간 초 스레드 생성
+
+        setGood(holder, position);
         holder.goodLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                noticeList.get(position).setIsCheckedGood(!noticeList.get(position).isCheckedGood());
-                setGoodColor(holder, position);
-                goodCheck(noticeList.get(position).isCheckedGood(), notice.getNoticeId());
+                noticeList.get(position).setIsCheckedGood(!noticeList.get(position).isCheckedGood());                // 반대로 바꿈
+                setGood(holder, position);
+                goodCheck(noticeList.get(position).isCheckedGood(), notice.getNoticeId(), position, holder, thread, time);
             }
         });
 
-        setBadColor(holder, position);
+        setBad(holder, position);
         holder.badLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 noticeList.get(position).setIsCheckedBad(!noticeList.get(position).isCheckedBad());
-                setBadColor(holder, position);
-                badCheck(noticeList.get(position).isCheckedBad(), notice.getNoticeId());
+                setBad(holder, position);
+                badCheck(noticeList.get(position).isCheckedBad(), notice.getNoticeId(), position, holder, thread, time);
             }
         });
 
-        Log.d(TAG, "position = " + position);
+        setComment(holder);
+        holder.commentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setComment(holder);
+            }
+        });
+
         for (int i = 0; i < notice.getImageList().size(); i++) {
             ImageView imageView = new ImageView(context);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -161,6 +210,78 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             imageView.setImageBitmap(bitmap);
             holder.imageContainer.addView(imageView);
         }
+        thread.start();
+        threadList.add(thread);
+    }
+
+
+    public class TimeThread extends Thread {
+
+        private long time;
+        private ViewHolder holder;
+        private boolean setTime = false;
+
+
+        public TimeThread(long time, ViewHolder holder) {
+            this.time = time;
+            this.holder = holder;
+        }
+
+
+        public void setTime(long time) {
+            this.time = time;
+            setTime = true;
+        }
+
+
+        @Override
+        public void run() {
+            long curTime;
+            curTime = time;
+
+            try {
+                while (!Thread.currentThread().isInterrupted() && curTime != 0) {
+                    Message msg = new Message();
+                    Bundle bundle = new Bundle();
+                    String time = getTime(curTime);
+                    bundle.putString("time", time);
+                    msg.setData(bundle);
+                    msg.obj = holder;
+                    handler.sendMessage(msg);
+                    curTime = curTime - 1000;
+
+                    if (setTime) {
+                        curTime = this.time;
+                        setTime = false;
+                    }
+
+                    Thread.sleep(1000);
+                }
+            } catch (InterruptedException e) {
+                interrupt();
+                Log.e(TAG, "interrupt Exception");
+            } catch (Exception e) {
+                Log.e(TAG, "sleep 에러 = " + e.getMessage());
+            }
+        }
+    }
+
+
+    private long getTime(Date date, int goodNum, int badNum) {
+        final int GOOD = 1000 * 60 * 3;                     // 3분 더하기
+        final int BAD = - 1000 * 60 * 3;                     // 3분 빼기
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+
+        Calendar curCalendar = Calendar.getInstance();
+        curCalendar.setTimeInMillis(System.currentTimeMillis());
+
+        Log.d(TAG, "result = " + (calendar.getTimeInMillis() - System.currentTimeMillis()));
+
+        return (calendar.getTimeInMillis() - System.currentTimeMillis()) + (goodNum * GOOD) + (badNum * BAD);
     }
 
 
@@ -168,12 +289,25 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
      * TODO: 좋아요 버튼 클릭
      * @param flag : 좋아요, 좋아요 취소
      * */
-    private void goodCheck(boolean flag, String noticeId) {
+    private void goodCheck(boolean flag, String noticeId, int position, ViewHolder holder, TimeThread thread, long time) {
+        if (flag) {                             // 좋아요
+            int curGoodNum = noticeList.get(position).getGoodNum();
+            noticeList.get(position).setGoodNum(curGoodNum + 1);
+            holder.goodNum.setText(String.valueOf(curGoodNum + 1));
+            time = time + MIN3;
+        } else {                                // 좋아요 취소
+            int curGoodNum = noticeList.get(position).getGoodNum();
+            noticeList.get(position).setGoodNum(curGoodNum - 1);
+            holder.goodNum.setText(String.valueOf(curGoodNum - 1));
+        }
+        thread.setTime(time);
+
         Intent intent = new Intent(context, OneDayService.class);
         intent.putExtra(Global.KEY_COMMAND, Global.KEY_GOOD);
         intent.putExtra(Global.KEY_FLAG, flag);
         intent.putExtra(Global.KEY_USER_ID, id);
-        intent.putExtra(Global.KEY_NOTICE, noticeId);
+        intent.putExtra(Global.KEY_POSITION, position);
+        intent.putExtra(Global.KEY_NOTICE_ID, noticeId);
         context.startService(intent);
     }
 
@@ -182,13 +316,41 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
      * TODO: 싫어요 버튼 클릭
      * @param flag : 싫어요, 싫어요 취소
      * */
-    private void badCheck(boolean flag, String noticeId) {
+    private void badCheck(boolean flag, String noticeId, int position, ViewHolder holder, TimeThread thread, long time) {
+        if (flag) {                             // 싫어요
+            int curBadNum = noticeList.get(position).getBadNum();
+            noticeList.get(position).setBadNum(curBadNum + 1);
+            holder.badNum.setText(String.valueOf(curBadNum + 1));
+            time = time - MIN3;
+        } else {                                // 싫어요 취소
+            int curBadNum = noticeList.get(position).getBadNum();
+            noticeList.get(position).setBadNum(curBadNum - 1);
+            holder.badNum.setText(String.valueOf(curBadNum - 1));
+        }
+
+        thread.setTime(time);
+
         Intent intent = new Intent(context, OneDayService.class);
         intent.putExtra(Global.KEY_COMMAND, Global.KEY_BAD);
         intent.putExtra(Global.KEY_FLAG, flag);
         intent.putExtra(Global.KEY_USER_ID, id);
-        intent.putExtra(Global.KEY_NOTICE, noticeId);
+        intent.putExtra(Global.KEY_NOTICE_ID, noticeId);
+        intent.putExtra(Global.KEY_POSITION, position);
         context.startService(intent);
+    }
+
+
+    public void failGood(boolean flag, int position) {
+        noticeList.get(position).setIsCheckedGood(!flag);
+        noticeList.get(position).setGoodNum(noticeList.get(position).getGoodNum() - 1);
+        notifyDataSetChanged();
+    }
+
+
+    public void failBad(boolean flag, int position) {
+        noticeList.get(position).setIsCheckedBad(!flag);
+        noticeList.get(position).setBadNum(noticeList.get(position).getBadNum() - 1);
+        notifyDataSetChanged();
     }
 
 
@@ -208,8 +370,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
 
     public void setItem(ArrayList<NoticeModel> noticeList) {
+        for (int i = 0; i < threadList.size(); i++) {
+            threadList.get(i).interrupt();
+        }
+        threadList.clear();
+
         notifyDataSetChanged();
-        Log.d(TAG, "size = " + noticeList.size());
         this.noticeList = noticeList;
     }
 
@@ -246,9 +412,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         TextView good;
         TextView bad;
         TextView comment;
-        ImageButton goodBtn;
-        ImageButton badBtn;
-        ImageButton commentBtn;
+        ImageView goodBtn;
+        ImageView badBtn;
+        ImageView commentBtn;
+        RecyclerView commentList;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -267,10 +434,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             good = (TextView) itemView.findViewById(R.id.card_notice_good_text);
             bad = (TextView) itemView.findViewById(R.id.card_notice_bad_text);
             comment = (TextView) itemView.findViewById(R.id.card_notice_comment_text);
-            goodBtn = (ImageButton) itemView.findViewById(R.id.card_notice_good_btn);
-            badBtn = (ImageButton) itemView.findViewById(R.id.card_notice_bad_btn);
-            commentBtn = (ImageButton) itemView.findViewById(R.id.card_notice_comment_btn);
+            goodBtn = (ImageView) itemView.findViewById(R.id.card_notice_good_btn);
+            badBtn = (ImageView) itemView.findViewById(R.id.card_notice_bad_btn);
+            commentBtn = (ImageView) itemView.findViewById(R.id.card_notice_comment_btn);
             imageContainer = (LinearLayout) itemView.findViewById(R.id.card_notice_image_container);
+            commentList = (RecyclerView) itemView.findViewById(R.id.card_notice_comment_list);
         }
     }
 }

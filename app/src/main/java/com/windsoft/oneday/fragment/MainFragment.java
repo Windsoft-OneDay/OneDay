@@ -78,8 +78,8 @@ public class MainFragment extends Fragment {
         recyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {           // swipe refresh
             @Override
             public void onRefresh() {
-                Log.d(TAG, "onRefresh count = " + count);
                 count = 0;
+                Log.d(TAG, "onRefresh count = " + count);
                 readNotice(count);
             }
         });
@@ -115,5 +115,15 @@ public class MainFragment extends Fragment {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+
+    public void failGood(boolean flag, int position) {
+        adapter.failGood(flag, position);
+    }
+
+
+    public void failBad(boolean flag, int position) {
+        adapter.failBad(flag, position);
     }
 }

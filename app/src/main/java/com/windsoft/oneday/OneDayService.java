@@ -80,12 +80,16 @@ public class OneDayService extends Service {
                     boolean flag = intent.getBooleanExtra(Global.KEY_FLAG, false);
                     String userId = intent.getStringExtra(Global.KEY_USER_ID);
                     String noticeId = intent.getStringExtra(Global.KEY_NOTICE_ID);
-                    socketIO.goodCheck(flag, userId, noticeId);
+                    int position = intent.getIntExtra(Global.KEY_POSITION, -1);
+                    if (position != -1)
+                        socketIO.goodCheck(flag, userId, noticeId, position);
                 } else if (command.equals(Global.KEY_BAD)) {
                     boolean flag = intent.getBooleanExtra(Global.KEY_FLAG, false);
                     String userId = intent.getStringExtra(Global.KEY_USER_ID);
                     String noticeId = intent.getStringExtra(Global.KEY_NOTICE_ID);
-                    socketIO.badCheck(flag, userId, noticeId);
+                    int position = intent.getIntExtra(Global.KEY_POSITION, -1);
+                    if (position != -1)
+                        socketIO.badCheck(flag, userId, noticeId, position);
                 }
             }
         }
