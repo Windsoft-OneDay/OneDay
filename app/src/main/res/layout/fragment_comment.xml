@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_notice_card_view"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/smallest_margin"
+        android:layout_marginRight="@dimen/smallest_margin"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardCornerRadius="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/fragment_comment_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/smallest_margin"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                app:cardCornerRadius="8dp"
+                app:cardBackgroundColor="#FFFFFF">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/smallest_padding"
+                    android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:layout_width="@dimen/btn_icon"
+                        android:layout_height="@dimen/btn_icon"
+                        android:background="@android:color/transparent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/comment_icon"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/small_margin"/>
+
+
+                    <EditText
+                        android:id="@+id/fragment_comment_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:hint="@string/comment_input"
+                        android:textSize="16sp"
+                        android:textColor="#ff000000"
+                        android:textColorHint="#cccccc"
+                        android:layout_marginLeft="@dimen/base_margin"
+                        android:background="@android:color/transparent"/>
+
+
+                    <ImageButton
+                        android:id="@+id/fragment_comment_input_submit"
+                        android:layout_width="@dimen/btn_small"
+                        android:layout_height="@dimen/btn_small" />
+
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>

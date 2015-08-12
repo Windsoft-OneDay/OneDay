@@ -200,10 +200,37 @@ public class SocketIO {
                     Log.e(TAG, "싫어요 오류 = " + e.getMessage());
                 }
             }
+        }).on(Global.KEY_COMMENT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    JSONObject obj = (JSONObject) args[0];
+                    int code = obj.getInt(Global.KEY_CODE);
+                    String comment = obj.getString(Global.KEY_COMMENT);
+                    String noticeId = obj.getString(Global.KEY_NOTICE_ID);
+                    int position = obj.getInt(Global.KEY_POSITION);
+                    processComment(code, comment, position, noticeId);
+                    Log.d(TAG, "댓글 응답");
+                } catch (Exception e) {
+                    Log.e(TAG, "댓글 오류 = " + e.getMessage());
+                }
+            }
         });
 
         socket.open();
         socket.connect();
+    }
+
+
+    private void processComment(int code, String comment, int position, String noticeId) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(Global.KEY_CODE, code);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_COMMENT);
+        intent.putExtra(Global.KEY_COMMENT, comment);
+        intent.putExtra(Global.KEY_POSITION, position);
+        intent.putExtra(Global.KEY_NOTICE_ID, noticeId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
 
@@ -339,13 +366,19 @@ public class SocketIO {
 
 
     private CommentModel parsingComment(JSONObject object) throws Exception{
+        Log.d(TAG, "object = " + object);
+
         String id = (String) object.get(KEY_USER_ID);
         String name = (String) object.get(KEY_USER_NAME);
         String content = (String) object.get(KEY_CONTENT);
-        String image = (String) object.get(KEY_USER_IMAGE);
+        String image = null;
+        try {
+            image = (String) object.get(KEY_USER_IMAGE);
+        } catch (Exception e) {
+            Log.e(TAG, "이미지 파싱에러 = " + e.getMessage());
+        }
 
-        CommentModel model = new CommentModel(id, name, image, content);
-        return model;
+        return new CommentModel(id, name, image, content);
     }
 
 
@@ -562,6 +595,20 @@ public class SocketIO {
             obj.put(Global.KEY_NOTICE_ID, noticeId);
             obj.put(Global.KEY_POSITION, position);
             socket.emit(Global.KEY_BAD, obj);
+        } catch (Exception e) {
+        }
+    }
+
+
+    public void comment(String id, String noticeId,  String comment, String name, int position) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put(Global.KEY_USER_ID, id);
+            obj.put(Global.KEY_NOTICE_ID, noticeId);
+            obj.put(Global.KEY_COMMENT, comment);
+            obj.put(Global.KEY_USER_NAME, name);
+            obj.put(Global.KEY_POSITION, position);
+            socket.emit(Global.KEY_COMMENT, obj);
         } catch (Exception e) {
         }
     }

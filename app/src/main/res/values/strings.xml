@@ -61,4 +61,6 @@
     <string name="good">좋아요</string>
     <string name="bad">싫어요</string>
     <string name="comment">댓글</string>
+
+    <string name="comment_input">댓글을 입력하세요</string>
 </resources>

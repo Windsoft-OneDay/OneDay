@@ -206,9 +206,9 @@ public class ProfileAdapter extends RecyclerView.Adapter {
         TextView good;
         TextView bad;
         TextView comment;
-        ImageButton goodBtn;
-        ImageButton badBtn;
-        ImageButton commentBtn;
+        ImageView goodBtn;
+        ImageView badBtn;
+        ImageView commentBtn;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -227,9 +227,9 @@ public class ProfileAdapter extends RecyclerView.Adapter {
             good = (TextView) itemView.findViewById(R.id.card_notice_good_text);
             bad = (TextView) itemView.findViewById(R.id.card_notice_bad_text);
             comment = (TextView) itemView.findViewById(R.id.card_notice_comment_text);
-            goodBtn = (ImageButton) itemView.findViewById(R.id.card_notice_good_btn);
-            badBtn = (ImageButton) itemView.findViewById(R.id.card_notice_bad_btn);
-            commentBtn = (ImageButton) itemView.findViewById(R.id.card_notice_comment_btn);
+            goodBtn = (ImageView) itemView.findViewById(R.id.card_notice_good_btn);
+            badBtn = (ImageView) itemView.findViewById(R.id.card_notice_bad_btn);
+            commentBtn = (ImageView) itemView.findViewById(R.id.card_notice_comment_btn);
             imageContainer = (LinearLayout) itemView.findViewById(R.id.card_notice_image_container);
         }
     }

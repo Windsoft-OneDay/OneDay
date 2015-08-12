@@ -1,9 +1,11 @@
 package com.windsoft.oneday.model;
 
+import java.io.Serializable;
+
 /**
  * Created by ironFactory on 2015-08-10.
  */
-public class CommentModel {
+public class CommentModel implements Serializable {
 
     private String id;
     private String name;

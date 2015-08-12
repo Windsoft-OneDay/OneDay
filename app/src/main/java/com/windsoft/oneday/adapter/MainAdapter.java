@@ -19,6 +19,8 @@ import android.widget.TextView;
 import com.windsoft.oneday.Global;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
+import com.windsoft.oneday.activity.MainActivity;
+import com.windsoft.oneday.model.CommentModel;
 import com.windsoft.oneday.model.NoticeModel;
 
 import java.util.ArrayList;
@@ -36,6 +38,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     private ArrayList<NoticeModel> noticeList;
     private Context context;
     private String id;
+    private String name;
+    private String image;
 
     private ArrayList<TimeThread> threadList = new ArrayList<>();
 
@@ -51,11 +55,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         }
     };
 
-    public MainAdapter(Context context, ArrayList<NoticeModel> noticeList, String id) {
+    public MainAdapter(Context context, ArrayList<NoticeModel> noticeList, String id, String name, String image) {
         this.context = context;
         this.noticeList = noticeList;
         this.id = id;
-
+        this.name = name;
+        this.image = image;
     }
 
 
@@ -86,9 +91,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             sb.append(day + "일 ");
         if (hour != 0)
             sb.append(hour + "시간 ");
-        if (min != 0)
-            sb.append(min + "분 ");
-        sb.append(sec + "초");
+        sb.append(min + "분 ");
 
         return sb.toString();
     }
@@ -126,18 +129,26 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     }
 
 
-    private void setComment(ViewHolder holder) {
-        int isCommentListVisible = holder.commentList.getVisibility();
-        int color;
+    private void setComment(NoticeModel notice) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_SHOW_COMMENT);
+        intent.putExtra(Global.KEY_NOTICE, notice);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
 
-        if (isCommentListVisible == View.VISIBLE) {                                // 보여지고 있다면
-            color = context.getResources().getColor(R.color.main);
-            holder.commentBtn.setImageResource(R.drawable.comment_icon_main_color);
-        } else {                                            // 싫어요 취소
-            color = context.getResources().getColor(R.color.gray);
-            holder.commentBtn.setImageResource(R.drawable.comment_icon);
-        }
-        holder.comment.setTextColor(color);
+//        int isCommentListVisible = holder.commentList.getVisibility();
+//        int color;
+//
+//        if (isCommentListVisible == View.GONE) {                                // 보여지고 있다면
+//            color = context.getResources().getColor(R.color.main);
+//            holder.commentBtn.setImageResource(R.drawable.comment_icon_main_color);
+//            holder.commentList.setVisibility(View.VISIBLE);
+//        } else {                                            // 댓글 취소
+//            color = context.getResources().getColor(R.color.gray);
+//            holder.commentBtn.setImageResource(R.drawable.comment_icon);
+//            holder.commentList.setVisibility(View.GONE);
+//        }
+//        holder.comment.setTextColor(color);
     }
 
 
@@ -147,11 +158,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         holder.imageContainer.removeAllViews();
         if (notice.getProfileImage() == null) {
             holder.profileImage.setImageResource(R.drawable.base_profile);
-            Log.d(TAG, "null");
         } else {
             Bitmap profileImage = Global.decodeImage(notice.getProfileImage());
             holder.profileImage.setImageBitmap(profileImage);
-            Log.d(TAG, "not");
         }
 
         final long time = getTime(notice.getDate(), notice.getGoodNum(), notice.getBadNum());
@@ -190,11 +199,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             }
         });
 
-        setComment(holder);
         holder.commentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setComment(holder);
+                setComment(noticeList.get(position));
             }
         });
 
@@ -278,8 +286,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
         Calendar curCalendar = Calendar.getInstance();
         curCalendar.setTimeInMillis(System.currentTimeMillis());
-
-        Log.d(TAG, "result = " + (calendar.getTimeInMillis() - System.currentTimeMillis()));
 
         return (calendar.getTimeInMillis() - System.currentTimeMillis()) + (goodNum * GOOD) + (badNum * BAD);
     }
@@ -395,6 +401,19 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     }
 
 
+    public void addComment(String comment, String noticeId) {
+        notifyDataSetChanged();
+        Log.d(TAG, "noticeId = " + noticeId);
+        for (int i = 0; i < noticeList.size(); i++) {
+            if (noticeList.get(i).getNoticeId().equals(noticeId)) {
+                noticeList.get(i).getCommentList().add(new CommentModel(id, name, image, comment));
+                noticeList.get(i).setCommentNum(noticeList.get(i).getCommentNum() + 1);
+                break;
+            }
+        }
+    }
+
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView profileImage;
@@ -415,7 +434,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         ImageView goodBtn;
         ImageView badBtn;
         ImageView commentBtn;
-        RecyclerView commentList;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -438,7 +456,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             badBtn = (ImageView) itemView.findViewById(R.id.card_notice_bad_btn);
             commentBtn = (ImageView) itemView.findViewById(R.id.card_notice_comment_btn);
             imageContainer = (LinearLayout) itemView.findViewById(R.id.card_notice_image_container);
-            commentList = (RecyclerView) itemView.findViewById(R.id.card_notice_comment_list);
         }
     }
 }

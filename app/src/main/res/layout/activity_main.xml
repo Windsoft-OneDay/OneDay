@@ -51,19 +51,36 @@
     </android.support.v7.widget.Toolbar>
 
 
-    <it.neokree.materialtabs.MaterialTabHost
-        android:id="@+id/activity_main_materialTabHost"
+    <FrameLayout
+        android:id="@+id/activity_main_container"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        app:iconColor="@color/gray"
-        app:primaryColor="@color/text_white"
-        app:accentColor="@color/main"
-        app:hasIcons="true"/>
+        android:layout_height="match_parent">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/activity_main_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <it.neokree.materialtabs.MaterialTabHost
+                android:id="@+id/activity_main_materialTabHost"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                app:iconColor="@color/gray"
+                app:primaryColor="@color/text_white"
+                app:accentColor="@color/main"
+                app:hasIcons="true"/>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/activity_main_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+
+    </FrameLayout>
 
 
 </LinearLayout>

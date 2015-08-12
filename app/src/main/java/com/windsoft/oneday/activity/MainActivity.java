@@ -20,6 +20,7 @@ import com.windsoft.oneday.Global;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
 import com.windsoft.oneday.SetNameDialog;
+import com.windsoft.oneday.fragment.CommentFragment;
 import com.windsoft.oneday.fragment.MainFragment;
 import com.windsoft.oneday.fragment.ProfileFragment;
 import com.windsoft.oneday.fragment.SettingFragment;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
     private WriteFragment writeFragment;
     private ProfileFragment profileFragment;
     private SettingFragment settingFragment;
+    private CommentFragment commentFragment;
 
     private Toolbar toolbar;
     private Button submit;
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
 
 
     private void init() {
-        mainFragment = MainFragment.newInstance(id);
+        mainFragment = MainFragment.newInstance(id, name, image);
         writeFragment = WriteFragment.newInstance(id, name, image);
         profileFragment = ProfileFragment.newInstance(id);
         settingFragment = SettingFragment.newInstance(id);
@@ -265,9 +267,43 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
                     int position = intent.getIntExtra(Global.KEY_POSITION, -1);
                     if (code != -1 && position != -1)
                         processBad(code, flag, position);
+                } else if (command.equals(Global.KEY_COMMENT)) {                                // 댓글 달기 응답
+                    int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                    String comment = intent.getStringExtra(Global.KEY_COMMENT);
+                    int position = intent.getIntExtra(Global.KEY_POSITION, -1);
+                    String noticeId = intent.getStringExtra(Global.KEY_NOTICE_ID);
+                    if (code != -1)
+                        processComment(code, comment, position, noticeId);
+                } else if (command.equals(Global.KEY_SHOW_COMMENT)) {                           // 댓글 창 보이기
+                    NoticeModel notice = (NoticeModel) intent.getSerializableExtra(Global.KEY_NOTICE);
+                    processShowComment(notice);
                 }
             }
         }
+    }
+
+
+    private void processShowComment(NoticeModel notice) {
+        commentFragment = CommentFragment.createInstance(notice, id, name, image);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.activity_main_container, commentFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+
+    private void processComment(int code, String comment, int position, String noticeId) {
+        if (code != Global.CODE_SUCCESS) {
+            Snackbar.with(this)
+                    .text(R.string.fail_again)
+                    .show(this);
+
+            commentFragment.failComment(comment, position);
+        } else {
+            mainFragment.addComment(comment, noticeId);
+        }
+
+        Log.d(TAG, "comment code = " + code);
     }
 
 

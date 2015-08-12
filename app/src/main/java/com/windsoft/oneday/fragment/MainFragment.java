@@ -32,16 +32,20 @@ public class MainFragment extends Fragment {
     private MainAdapter adapter;
 
     private String id;
+    private String name;
+    private String image;
     private int count;
 
     public MainFragment() {
     }
 
 
-    public static MainFragment newInstance(String id) {
+    public static MainFragment newInstance(String id, String name, String image) {
         MainFragment fragment = new MainFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Global.KEY_USER_ID, id);
+        bundle.putString(Global.KEY_USER_NAME, name);
+        bundle.putString(Global.KEY_USER_IMAGE, image);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -52,6 +56,8 @@ public class MainFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         id = bundle.getString(Global.KEY_USER_ID);
+        name = bundle.getString(Global.KEY_USER_NAME);
+        image = bundle.getString(Global.KEY_USER_IMAGE);
     }
 
 
@@ -73,7 +79,7 @@ public class MainFragment extends Fragment {
         recyclerView.setLayoutManager(manager);
 
         noticeList = new ArrayList<>();
-        adapter = new MainAdapter(getActivity(), noticeList, id);
+        adapter = new MainAdapter(getActivity(), noticeList, id, name, image);
         recyclerView.setAdapter(adapter);
         recyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {           // swipe refresh
             @Override
@@ -125,5 +131,10 @@ public class MainFragment extends Fragment {
 
     public void failBad(boolean flag, int position) {
         adapter.failBad(flag, position);
+    }
+
+
+    public void addComment(String comment, String noticeId) {
+        adapter.addComment(comment, noticeId);
     }
 }

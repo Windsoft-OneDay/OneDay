@@ -90,6 +90,13 @@ public class OneDayService extends Service {
                     int position = intent.getIntExtra(Global.KEY_POSITION, -1);
                     if (position != -1)
                         socketIO.badCheck(flag, userId, noticeId, position);
+                } else if (command.equals(Global.KEY_COMMENT)) {
+                    String id = intent.getStringExtra(Global.KEY_USER_ID);
+                    String noticeId = intent.getStringExtra(Global.KEY_NOTICE_ID);
+                    String comment = intent.getStringExtra(Global.KEY_COMMENT);
+                    String name = intent.getStringExtra(Global.KEY_USER_NAME);
+                    int position = intent.getIntExtra(Global.KEY_POSITION, -1);
+                    socketIO.comment(id, noticeId, comment, name, position);
                 }
             }
         }

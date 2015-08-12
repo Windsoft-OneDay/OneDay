@@ -36,4 +36,7 @@
 
     <!-- 카드뷰 크기-->
     <dimen name="card_profile">60dp</dimen>
+
+    <!-- 댓글 창 크기-->
+    <dimen name="comment_height">300dp</dimen>
 </resources>

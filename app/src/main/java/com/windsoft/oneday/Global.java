@@ -28,6 +28,8 @@ public class Global {
     public static final String KEY_GOOD = "good";
     public static final String KEY_BAD = "bad";
     public static final String KEY_FLAG = "flag";
+    public static final String KEY_COMMENT = "comment";
+    public static final String KEY_SHOW_COMMENT = "showComment";
 
     public static final String VALUE_CONNECT = "connection";
 
@@ -44,6 +46,7 @@ public class Global {
     public static final String KEY_USER_IMAGE = "userImage";
     public static final String KEY_NOTICE = "notice";
     public static final String KEY_POSITION = "position";
+    public static final String KEY_COMMENT_POSITION = "commentPosition";
 
 
     public static final String PREF_KEY = "windsoft-oneday";
@@ -62,8 +65,10 @@ public class Global {
     public static final int CODE_NAME_ALREADY = 307;
     public static final int CODE_USER_ADD_NOTICE = 308;             // 사용자 DB에 글 목록 추가 에러
     public static final int CODE_NOT_ENOUGH_NOTICE = 309;             // 글 db 부족
-    public static final int CODE_UPDATE_NOTICE = 310;             // 좋아요, 싫어요 클릭 시 noticeDB 수정 에러
-    public static final int CODE_UPDATE_USER = 311;             // 좋아요, 싫어요 클릭 시 userDB 수정 에러
+    public static final int CODE_GOOD_BAD_UPDATE_NOTICE_ERR = 310;             // 좋아요, 싫어요 클릭 시 noticeDB 수정 에러
+    public static final int CODE_GOOD_BAD_UPDATE_USER_ERR = 311;             // 좋아요, 싫어요 클릭 시 userDB 수정 에러
+    public static final int CODE_COMMENT_UPDATE_USER_ERR = 312;             // 댓글 userDB 수정 에러
+    public static final int CODE_COMMENT_UPDATE_NOTICE_ERR = 313;             // 댓글 userDB 수정 에러
 
     public static Bitmap decodeImage(String str) {
         byte[] array = Base64.decode(str, Base64.DEFAULT);
