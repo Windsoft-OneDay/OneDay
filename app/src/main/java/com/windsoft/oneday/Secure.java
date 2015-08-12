@@ -16,6 +16,7 @@ public class Secure {
     public static final int SUCCESS = 2;
 
 
+
     /**
      * TODO: 특수문자 검사
      * */
