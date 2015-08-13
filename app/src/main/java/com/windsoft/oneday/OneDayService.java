@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+
 public class OneDayService extends Service {
 
     private static final String TAG = "OneDayService";
@@ -24,7 +27,7 @@ public class OneDayService extends Service {
 
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(final Intent intent, int flags, int startId) {
         if (intent != null) {
             String command = intent.getStringExtra(Global.KEY_COMMAND);
             if (command != null) {
@@ -35,16 +38,57 @@ public class OneDayService extends Service {
                     if (cond != -1)
                         socketIO.login(id, pw, cond);                    // 로그인 처리
 
-                } else if (command.equals(Global.KEY_SIGN_UP)) {
+                } else if (command.equals(Global.KEY_SIGN_UP)) {                // 회원가입
                     String id = intent.getStringExtra(Global.KEY_USER_ID);
                     String pw = intent.getStringExtra(Global.KEY_USER_PW);
+                    String mail = intent.getStringExtra(Global.KEY_USER_MAIL);
+                    long birth = intent.getLongExtra(Global.KEY_USER_BIRTH, 0);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(birth);
 
                     if (id != null && pw != null)
-                        socketIO.signUp(id, pw);
+                        socketIO.signUp(id, pw, mail, calendar.getTime());
+                } else if (command.equals(Global.KEY_GET_PROFILE)) {                // 프로필 요청
+                    String id = intent.getStringExtra(Global.KEY_USER_ID);
+                    socketIO.getProfile(id);
+                } else if (command.equals(Global.KEY_POST_NOTICE)) {                // 글쓰기
+                    String id = intent.getStringExtra(Global.KEY_USER_ID);
+                    String name = intent.getStringExtra(Global.KEY_USER_NAME);
+                    String content = intent.getStringExtra(Global.KEY_CONTENT);
+                    String userImage = intent.getStringExtra(Global.KEY_USER_IMAGE);
+                    ArrayList<String> imageList = new ArrayList<>();
+
+                    String image;
+                    int i = 0;
+                    while ((image = intent.getStringExtra(Global.KEY_IMAGE + i)) != null) {
+                        i++;
+                        imageList.add(image);
+                    }
+                    Log.e(TAG,"받음");
+
+                    socketIO.postNotice(id, content, imageList, name, userImage);
+                } else if (command.equals(Global.KEY_SET_NAME)) {                   // 닉네임 설정
+                    String id = intent.getStringExtra(Global.KEY_USER_ID);
+                    String name = intent.getStringExtra(Global.KEY_USER_NAME);
+                    socketIO.setName(id, name);
+                } else if (command.equals(Global.KEY_READ_NOTICE)) {                // 글 읽기 요청
+                    int count = intent.getIntExtra(Global.KEY_COUNT, -1);
+                    String id = intent.getStringExtra(Global.KEY_USER_ID);
+                    if (count != -1)
+                        socketIO.readNotice(count, id);
+                } else if (command.equals(Global.KEY_GOOD)) {
+                    boolean flag = intent.getBooleanExtra(Global.KEY_FLAG, false);
+                    String userId = intent.getStringExtra(Global.KEY_USER_ID);
+                    String noticeId = intent.getStringExtra(Global.KEY_NOTICE_ID);
+                    socketIO.goodCheck(flag, userId, noticeId);
+                } else if (command.equals(Global.KEY_BAD)) {
+                    boolean flag = intent.getBooleanExtra(Global.KEY_FLAG, false);
+                    String userId = intent.getStringExtra(Global.KEY_USER_ID);
+                    String noticeId = intent.getStringExtra(Global.KEY_NOTICE_ID);
+                    socketIO.badCheck(flag, userId, noticeId);
                 }
             }
         }
-
 
         return super.onStartCommand(intent, flags, startId);
     }

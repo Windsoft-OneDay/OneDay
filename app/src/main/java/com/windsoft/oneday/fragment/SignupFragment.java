@@ -14,10 +14,14 @@ import com.nispok.snackbar.Snackbar;
 import com.windsoft.oneday.R;
 import com.windsoft.oneday.Secure;
 
+import java.util.Calendar;
+
 /**
  * Created by kim on 2015-08-04.
  */
-public class SignUpFragment extends Fragment {
+public class SignupFragment extends Fragment {
+    private static final String TAG = "SignnUpFragment";
+
     private NumberPicker year;
     private NumberPicker month;
     private NumberPicker day;
@@ -31,6 +35,7 @@ public class SignUpFragment extends Fragment {
     private String pwStr;
     private String mailStr;
     private String configStr;
+    private long birth;
 
     private OnSignUpHandler sender;
 
@@ -78,7 +83,15 @@ public class SignUpFragment extends Fragment {
 
                 if (idStr.length() > 0 && pwStr.length() > 0 && mailStr.length() > 0 && configStr.length() > 0) {
                     if (pwStr.equals(configStr)) {
-                        sendInfo(idStr, pwStr);
+                        Calendar calendar = Calendar.getInstance();
+
+                        calendar.setTimeInMillis(0);
+                        calendar.set(Calendar.YEAR, year.getValue());
+                        calendar.set(Calendar.MONTH, month.getValue() - 1);
+                        calendar.set(Calendar.DATE, day.getValue());
+
+                        birth = calendar.getTimeInMillis();
+                        sendInfo(idStr, pwStr, mailStr, birth);
                     } else {
                         Snackbar.with(getActivity())
                                 .text("비밀번호를 확인하세요.")
@@ -112,39 +125,50 @@ public class SignUpFragment extends Fragment {
                 }
 
 
-
             }
         });
 
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        int yearInt = calendar.get(Calendar.YEAR);
+
+
         year.setMinValue(1950);
-        year.setMaxValue(2015);
+        year.setMaxValue(yearInt);
+        year.setValue(1997);
         year.setWrapSelectorWheel(false);
 
         month.setMinValue(1);
         month.setMaxValue(12);
+        month.setValue(2);
         month.setWrapSelectorWheel(false);
+
+        day.setMinValue(1);
+        day.setMaxValue(31);
+        day.setValue(24);
+        day.setWrapSelectorWheel(false);
     }
 
 
     public interface OnSignUpHandler {
-        void onSignUp(String id, String pw);
+        void onSignUp(String id, String pw, String mail, long birth);
     }
 
 
-    private void sendInfo(String id, String pw) {
+    private void sendInfo(String id, String pw, String mail, long birth) {
         //비밀번호 난이도 검사
         int cond = Secure.checkPasswordSecureLevel(pw);
         if (cond == Secure.SUCCESS) {
-            sender.onSignUp(id, pw);              // 로그인 요청
+            sender.onSignUp(id, pw, mail, birth);              // 로그인 요청
         } else if (cond == Secure.NOT_ENOUGH_LETTER) {
             Snackbar.with(getActivity())
-                    .text(R.string.login_not_enough_letter)
+                    .text(R.string.sign_up_not_enough_letter)
                     .showAnimation(true)
                     .show(getActivity());
         } else if (cond == Secure.NO_SPECIAL_LETTER) {
             Snackbar.with(getActivity())
-                    .text(R.string.login_no_special_letter)
+                    .text(R.string.sign_up_no_special_letter)
                     .showAnimation(true)
                     .show(getActivity());
         }

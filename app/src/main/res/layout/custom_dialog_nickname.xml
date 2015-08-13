@@ -2,37 +2,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="1">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/custom_dialog_nickname_title"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"
-        android:background="#ff3ea6ff">
-    </LinearLayout>
-    <LinearLayout
+        android:layout_height="@dimen/abc_action_bar_default_height_material"
+        android:gravity="center_vertical"/>
+
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.4">
-        <FrameLayout
+        android:layout_height="@dimen/btn_large">
+
+        <ImageView
+            android:layout_width="@dimen/btn_small"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/base_margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/small_margin"/>
+
+
+        <EditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/btn_large"
             android:layout_marginLeft="@dimen/base_margin"
             android:layout_marginRight="@dimen/base_margin"
-            android:layout_marginTop="@dimen/btn_large">
-            <ImageView
-                android:layout_width="@dimen/btn_small"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/base_margin"/>
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="닉네임"
-                android:paddingLeft="@dimen/btn_large"/>
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:hint="네임"
+            android:id="@+id/custom_dialog_nickname_nickname"/>
+    </FrameLayout>
 
 
-        </FrameLayout>
-    </LinearLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/abc_action_bar_default_height_material"
+        android:id="@+id/custom_dialog_nickname_submit"/>
+
 
 </LinearLayout>

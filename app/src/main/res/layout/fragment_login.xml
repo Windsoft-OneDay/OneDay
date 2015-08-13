@@ -4,89 +4,228 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:orientation="vertical"
-    android:background="#ffffffff">
+    android:background="@color/main">
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="150dp"
-        android:weightSum="1">
+        android:layout_height="0dp"
+        android:layout_weight="1.4"></LinearLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="0.6">
-            <EditText
-                android:id="@+id/fragment_login_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="ID"
-                android:textSize="20sp"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="30dp"
-                android:textColor="#ff000000"
-                android:textColorHint="#ff000000"/>
-            <EditText
-                android:id="@+id/fragment_login_pw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="30dp"
-                android:hint="PASSWORD"
-                android:textSize="20sp"
-                android:textColor="#ff000000"
-                android:textColorHint="#ff000000"
-                android:password="true" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.4"
-            android:orientation="vertical">
-            <Button
-                android:id="@+id/fragment_login_submit"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Log in"
-                android:textSize="18sp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"/>
-        </LinearLayout>
-    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal"
-        android:weightSum="1">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/btn_small"
+            android:layout_marginRight="@dimen/btn_small"
+            android:layout_marginBottom="@dimen/smallest_margin"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:cardCornerRadius="8dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:padding="@dimen/smallest_padding"
+                android:orientation="horizontal">
+
+
+                <ImageView
+                    android:layout_width="@dimen/btn_icon"
+                    android:layout_height="@dimen/btn_icon"
+                    android:background="@android:color/transparent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/id_icon"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/small_margin"/>
+
+
+                <EditText
+                    android:id="@+id/fragment_login_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:hint="@string/activity_login_id"
+                    android:textSize="16sp"
+                    android:textColor="#ff000000"
+                    android:textColorHint="#cccccc"
+                    android:layout_marginLeft="@dimen/base_margin"
+                    android:background="@android:color/transparent"/>
+
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/btn_small"
+            android:layout_marginRight="@dimen/btn_small"
+            android:layout_marginBottom="@dimen/smallest_margin"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:cardCornerRadius="8dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:padding="@dimen/smallest_padding"
+                android:orientation="horizontal">
+
+
+                <ImageView
+                    android:layout_width="@dimen/btn_icon"
+                    android:layout_height="@dimen/btn_icon"
+                    android:background="@android:color/transparent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/password_icon"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/small_margin"/>
+
+
+                <EditText
+                    android:id="@+id/fragment_login_pw"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:hint="@string/activity_login_pw"
+                    android:textSize="16sp"
+                    android:textColor="#ff000000"
+                    android:textColorHint="#cccccc"
+                    android:inputType="textPassword"
+                    android:layout_marginLeft="@dimen/base_margin"
+                    android:background="@android:color/transparent"/>
+
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+
         <Button
-            android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:layout_weight="0.4"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="5dp"
-            android:text="회원가입"
+            android:id="@+id/fragment_login_submit"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/btn_small"
+            android:text="@string/activity_login_submit"
+            android:textColor="@color/text_white"
             android:textSize="18sp"
-            android:id="@+id/fragment_login_sign_up"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:layout_weight="0.6"
-            android:textSize="18sp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="5dp"
-            android:text="ID/PASSWORD 찾기"/>
+            android:layout_marginLeft="@dimen/btn_small"
+            android:layout_marginRight="@dimen/btn_small"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:background="@drawable/blank_button"/>
+
+
     </LinearLayout>
+
+
     <LinearLayout
         android:id="@+id/fragment_login_sns_container"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:layout_marginLeft="@dimen/btn_small"
+        android:layout_marginRight="@dimen/btn_small"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/base_margin"
+        android:gravity="center_horizontal|center_vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="26dp"
         android:orientation="horizontal"
+        android:layout_marginTop="@dimen/small_margin"
         android:weightSum="3">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/activity_main_login_height"
+            android:layout_marginLeft="@dimen/base_margin"
+            android:layout_marginRight="@dimen/base_margin"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/fragment_login_find_id"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_login_find_id"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/activity_main_login_height"
+            android:layout_marginLeft="@dimen/base_margin"
+            android:layout_marginRight="@dimen/base_margin"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/fragment_login_find_pw"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_login_find_pw"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/activity_main_login_height"
+            android:layout_marginLeft="@dimen/base_margin"
+            android:layout_marginRight="@dimen/base_margin"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/fragment_login_sign_up"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_login_sign_up"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

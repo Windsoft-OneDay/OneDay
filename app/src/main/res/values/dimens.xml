@@ -3,12 +3,18 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <!--로그인 액티비티-->
+    <dimen name="activity_main_login_height">100dp</dimen>
+
+
     <!--기본 설정-->
     <dimen name="base_margin">16dp</dimen>
     <dimen name="small_margin">8dp</dimen>
+    <dimen name="smallest_margin">4dp</dimen>
 
     <dimen name="base_padding">16dp</dimen>
     <dimen name="small_padding">8dp</dimen>
+    <dimen name="smallest_padding">4dp</dimen>
 
     <!--글씨 크기-->
     <dimen name="font_big_size">36sp</dimen>
@@ -16,8 +22,16 @@
     <dimen name="font_small_size">16sp</dimen>
 
     <!--버튼 크기-->
+    <dimen name="btn_icon">24dp</dimen>
     <dimen name="btn_small">48dp</dimen>
     <dimen name="btn_large">72dp</dimen>
+
+    <!-- 리스트뷰 헤더 -->
+    <dimen name="header">100dp</dimen>
+
+    <!-- 이미지 사이즈 -->
+    <dimen name="image_width">300dp</dimen>
+    <dimen name="image_height">350dp</dimen>
 
     <!-- 카드뷰 크기-->
     <dimen name="card_profile">60dp</dimen>

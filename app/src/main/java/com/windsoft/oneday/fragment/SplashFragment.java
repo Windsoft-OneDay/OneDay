@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.widget.LinearLayout;
 
 import com.windsoft.oneday.R;
@@ -20,6 +19,7 @@ import com.windsoft.oneday.R;
 public class SplashFragment extends Fragment {
 
     private OnSplashHandler sender;
+    private LinearLayout layout;
 
     public SplashFragment() {
     }
@@ -35,18 +35,21 @@ public class SplashFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_splash, container, false);
-        LinearLayout layout = (LinearLayout) view.findViewById(R.id.fragment_splash_container);
+        layout = (LinearLayout) view.findViewById(R.id.fragment_splash_container);
 
         AlphaAnimation visibleAnimation = new AlphaAnimation(0,2f);
         visibleAnimation.setDuration(1500);
+        layout.startAnimation(visibleAnimation);
+
+
+        return view;
+    }
+
+
+    public void invisible() {
         AlphaAnimation invisibleAnimation = new AlphaAnimation(2f,0);
         invisibleAnimation.setDuration(1500);
-        AnimationSet set = new AnimationSet(false);
-        set.addAnimation(visibleAnimation);
-        set.addAnimation(invisibleAnimation);
-        set.setDuration(3000);
-        layout.setAnimation(set);
-        set.setAnimationListener(new Animation.AnimationListener() {
+        invisibleAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
 
@@ -62,8 +65,7 @@ public class SplashFragment extends Fragment {
 
             }
         });
-
-        return view;
+        layout.startAnimation(invisibleAnimation);
     }
 
 

@@ -1,5 +1,6 @@
 package com.windsoft.oneday.activity;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,19 +8,31 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
+import com.nispok.snackbar.Snackbar;
+import com.windsoft.oneday.Global;
+import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
+import com.windsoft.oneday.SetNameDialog;
 import com.windsoft.oneday.fragment.MainFragment;
 import com.windsoft.oneday.fragment.ProfileFragment;
 import com.windsoft.oneday.fragment.SettingFragment;
 import com.windsoft.oneday.fragment.WriteFragment;
+import com.windsoft.oneday.model.NoticeModel;
+
+import java.util.ArrayList;
 
 import it.neokree.materialtabs.MaterialTab;
 import it.neokree.materialtabs.MaterialTabHost;
 import it.neokree.materialtabs.MaterialTabListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SetNameDialog.OnSetNameHandler {
 
     private final String TAG = "MainActivity";
 
@@ -31,24 +44,66 @@ public class MainActivity extends AppCompatActivity {
     private SettingFragment settingFragment;
 
     private Toolbar toolbar;
+    private Button submit;
+    private TextView title;
+    private SearchView searchView;
+    private SetNameDialog dialog;
+
+    private String id;
+    private String name;
+    private String image;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getArgument();
         init();
     }
 
 
-    private void init() {
-        mainFragment = new MainFragment();
-        writeFragment = new WriteFragment();
-        profileFragment = new ProfileFragment();
-        settingFragment = new SettingFragment();
+    private void getArgument() {
+        Intent intent = getIntent();
+        id = intent.getStringExtra(Global.KEY_USER_ID);
+        name = intent.getStringExtra(Global.KEY_USER_NAME);
+        image = intent.getStringExtra(Global.KEY_USER_IMAGE);
 
+        if (name == null || name.length() == 0)
+            setName();
+        Log.d(TAG, "name = " + name);
+    }
+
+
+    private void setName() {
+        dialog = new SetNameDialog(this);
+        dialog.show();
+    }
+
+
+    private void init() {
+        mainFragment = MainFragment.newInstance(id);
+        writeFragment = WriteFragment.newInstance(id, name, image);
+        profileFragment = ProfileFragment.newInstance(id);
+        settingFragment = SettingFragment.newInstance(id);
+
+        submit = (Button) findViewById(R.id.activity_main_submit);
+        title = (TextView) findViewById(R.id.activity_main_title);
+        searchView = (SearchView) findViewById(R.id.activity_main_search);
         setViewPager();
         setToolbar();
+        setListener();
+    }
+
+
+    private void setListener() {
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                writeFragment.post();
+            }
+        });
     }
 
 
@@ -60,14 +115,41 @@ public class MainActivity extends AppCompatActivity {
 
     private void setViewPager() {
         final MaterialTabHost tab = (MaterialTabHost) findViewById(R.id.activity_main_materialTabHost);
+        Drawable[] imageList = {
+                getResources().getDrawable(R.drawable.ic_format_quote_black_24dp),
+                getResources().getDrawable(R.drawable.ic_border_color_black_24dp),
+                getResources().getDrawable(R.drawable.ic_perm_identity_black_24dp),
+                getResources().getDrawable(R.drawable.ic_settings_black_24dp)
+        };
         for (int i = 0; i < 4; i++) {
-            Drawable image = getResources().getDrawable(R.drawable.splash);
+            Drawable image = imageList[i];
             tab.addTab(tab.newTab()
                     .setIcon(image)
                     .setTabListener(new MaterialTabListener() {
                         @Override
                         public void onTabSelected(MaterialTab materialTab) {
-                            viewPager.setCurrentItem(materialTab.getPosition());
+                            int position = materialTab.getPosition();
+                            viewPager.setCurrentItem(position);
+                            if (position == 0) {                        // 뉴스피드 탭
+                                searchView.setVisibility(View.VISIBLE);
+                                submit.setVisibility(View.GONE);
+                                title.setVisibility(View.GONE);
+                            } else if (position == 1) {                 // 글쓰기 탭
+                                searchView.setVisibility(View.GONE);
+                                submit.setVisibility(View.VISIBLE);
+                                title.setVisibility(View.VISIBLE);
+                                title.setText("글 쓰기");
+                            } else if (position == 2) {                 // 프로필 탭
+                                searchView.setVisibility(View.GONE);
+                                submit.setVisibility(View.GONE);
+                                title.setVisibility(View.VISIBLE);
+                                title.setText("프로필");
+                            } else if (position == 3) {                 // 설정 탭
+                                searchView.setVisibility(View.GONE);
+                                submit.setVisibility(View.GONE);
+                                title.setVisibility(View.VISIBLE);
+                                title.setText("설정");
+                            }
                         }
 
                         @Override
@@ -83,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         viewPager = (ViewPager) findViewById(R.id.activity_main_pager);
+        viewPager.setOffscreenPageLimit(4);
         OneDayAdapter adapter = new OneDayAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -90,6 +173,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 tab.setSelectedNavigationItem(position);
+                if (position == 0) {                        // 뉴스피드 탭
+                    searchView.setVisibility(View.VISIBLE);
+                    submit.setVisibility(View.GONE);
+                    title.setVisibility(View.GONE);
+                } else if (position == 1) {                 // 글쓰기 탭
+                    searchView.setVisibility(View.GONE);
+                    submit.setVisibility(View.VISIBLE);
+                    title.setVisibility(View.VISIBLE);
+                    title.setText("글 쓰기");
+                } else if (position == 2) {                 // 프로필 탭
+                    searchView.setVisibility(View.GONE);
+                    submit.setVisibility(View.GONE);
+                    title.setVisibility(View.VISIBLE);
+                    title.setText("프로필");
+                } else if (position == 3) {                 // 설정 탭
+                    searchView.setVisibility(View.GONE);
+                    submit.setVisibility(View.GONE);
+                    title.setVisibility(View.VISIBLE);
+                    title.setText("설정");
+                }
             }
         });
     }
@@ -127,4 +230,100 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent != null) {
+            String command = intent.getStringExtra(Global.KEY_COMMAND);
+            if (command != null) {
+                if (command.equals(Global.KEY_SET_NAME)) {
+                    int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                    String name = intent.getStringExtra(Global.KEY_USER_NAME);
+                    if (code != -1)
+                        processSetName(code, name);
+                } else if (command.equals(Global.KEY_POST_NOTICE)) {
+                    int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                    if (code != -1)
+                        processPost(code);
+                } else if (command.equals(Global.KEY_READ_NOTICE)) {
+                    int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                    int count = intent.getIntExtra(Global.KEY_COUNT, -1);
+                    ArrayList<NoticeModel> noticeList = (ArrayList<NoticeModel>) intent.getSerializableExtra(Global.KEY_NOTICE);
+
+                    if (code != -1 || count != -1)
+                        processReadNotice(code, noticeList, count);
+                }
+            }
+        }
+    }
+
+
+    private void processReadNotice(int code, ArrayList<NoticeModel> noticeList, int count) {
+        if (code == Global.CODE_READ_NOTCIE_FAIL) {
+            Snackbar.with(this)
+                    .text(R.string.read_err)
+                    .show(this);
+        } else if (code == Global.CODE_NOT_ENOUGH_NOTICE) {
+            Snackbar.with(this)
+                    .text(R.string.read_not_enough)
+                    .show(this);
+
+            mainFragment.setCount(count - 1);
+        } else if (code == Global.CODE_SUCCESS) {
+            if (count == 0)
+                mainFragment.setData(noticeList);
+            else if (count > 0)
+                mainFragment.addData(noticeList);
+        }
+    }
+
+
+    /**
+     * TODO: 글쓰기 응답
+     * @param code : 응답 코드
+     * */
+    private void processPost(int code) {
+        if (code == Global.CODE_POST_ERR || code == Global.CODE_USER_ADD_NOTICE) {                         // 글쓰기 실패 || 사용자 DB에 글 추가 에러
+            Snackbar.with(getApplicationContext())
+                    .text(R.string.post_err)
+                    .show(this);
+        } else if (code == Global.CODE_SUCCESS) {                                           // 성공
+            writeFragment.removeAll();
+            Snackbar.with(getApplicationContext())
+                    .text(R.string.post)
+                    .show(this);
+        }
+    }
+
+
+    /**
+     * TODO: 닉네임 설정 응답
+     * @param code : 응답 코드
+     * @param name : 닉네임
+     * */
+    private void processSetName(int code, String name) {
+        if (code == Global.CODE_NAME_ALREADY) {                 // 닉네임이 이미 사용 중이라면
+            Snackbar.with(getApplicationContext())
+                    .text(R.string.set_name_already)
+                    .show(this);
+        } else if (code == Global.CODE_SET_NAME_FAIL) {
+            Snackbar.with(getApplicationContext())
+                    .text(R.string.set_name_fail)
+                    .show(this);
+        } else if (code == Global.CODE_SUCCESS) {               // 성공 했다면
+            dialog.dismiss();
+            mainFragment.readNotice(0);
+        }
+    }
+
+
+    @Override
+    public void onSetName(String name) {
+        Intent intent = new Intent(MainActivity.this, OneDayService.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_SET_NAME);
+        intent.putExtra(Global.KEY_USER_NAME, name);
+        intent.putExtra(Global.KEY_USER_ID, id);
+        startService(intent);
+    }
 }
