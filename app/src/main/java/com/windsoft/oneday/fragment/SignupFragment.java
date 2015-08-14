@@ -19,7 +19,7 @@ import java.util.Calendar;
 /**
  * Created by kim on 2015-08-04.
  */
-public class SignUpFragment extends Fragment {
+public class SignupFragment extends Fragment {
     private static final String TAG = "SignnUpFragment";
 
     private NumberPicker year;

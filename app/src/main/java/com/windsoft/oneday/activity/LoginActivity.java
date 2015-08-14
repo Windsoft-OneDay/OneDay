@@ -9,7 +9,7 @@ import com.windsoft.oneday.Global;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
 import com.windsoft.oneday.fragment.LoginFragment;
-import com.windsoft.oneday.fragment.SignUpFragment;
+import com.windsoft.oneday.fragment.SignupFragment;
 import com.windsoft.oneday.fragment.SplashFragment;
 import com.windsoft.oneday.login.FacebookLogin;
 import com.windsoft.oneday.login.NaverLogin;
@@ -18,7 +18,7 @@ import com.windsoft.oneday.login.NaverLogin;
  * Created by dongkyu Lee on 2015-08-02.
  * */
 public class LoginActivity extends FragmentActivity implements FacebookLogin.OnFacebookLoginHandler, NaverLogin.OnNaverLoginHandler
-                , LoginFragment.OnLoginHandler, SplashFragment.OnSplashHandler, SignUpFragment.OnSignUpHandler{
+                , LoginFragment.OnLoginHandler, SplashFragment.OnSplashHandler, SignupFragment.OnSignUpHandler{
 
     private static final String TAG = "LoginActivity";
 
@@ -28,7 +28,7 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
     private LoginFragment loginFragment;                    // 로그인 프레그먼트
     private SplashFragment splashFragment;                    // 로그인 프레그먼트
 
-    private SignUpFragment signUpFragment;                  //회원가입 프레그먼트
+    private SignupFragment signUpFragment;                  //회원가입 프레그먼트
 
     private String pw;              // 자동로그인 패스워드
 
@@ -59,7 +59,7 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
                 .add(R.id.activity_login_container, splashFragment)
                 .commit();
 
-        signUpFragment = new SignUpFragment();
+        signUpFragment = new SignupFragment();
 
 
         // 자동 로그인 허용된 아이디 탐색

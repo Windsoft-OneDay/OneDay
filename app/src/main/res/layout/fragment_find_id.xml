@@ -1,0 +1,124 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1"
+    tools:context="com.windsoft.oneday.fragment.FindIdFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"></LinearLayout>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/btn_large"
+        android:layout_marginLeft="@dimen/btn_small"
+        android:layout_marginRight="@dimen/btn_small"
+        android:layout_marginBottom="@dimen/smallest_margin"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardCornerRadius="8dp"
+        app:cardBackgroundColor="#FFFFFF">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="@dimen/smallest_padding"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:layout_width="@dimen/btn_icon"
+                android:layout_height="@dimen/btn_icon"
+                android:background="@android:color/transparent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/id_icon"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/small_margin"/>
+
+
+            <EditText
+                android:id="@+id/fragment_find_id_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:hint="@string/fragment_find_id_name"
+                android:textSize="16sp"
+                android:textColor="#ff000000"
+                android:textColorHint="#cccccc"
+                android:layout_marginLeft="@dimen/base_margin"
+                android:background="@android:color/transparent"/>
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_margin"
+        android:layout_marginLeft="@dimen/btn_small"
+        android:layout_marginRight="@dimen/btn_small"
+        android:layout_marginBottom="@dimen/smallest_margin"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardCornerRadius="8dp"
+        app:cardBackgroundColor="#FFFFFF">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="@dimen/smallest_padding"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:layout_width="@dimen/btn_icon"
+                android:layout_height="@dimen/btn_icon"
+                android:background="@android:color/transparent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/id_icon"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/small_margin"/>
+
+
+            <EditText
+                android:id="@+id/fragment_find_id_mail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:hint="@string/fragment_find_id_mail"
+                android:textSize="16sp"
+                android:textColor="#ff000000"
+                android:textColorHint="#cccccc"
+                android:layout_marginLeft="@dimen/base_margin"
+                android:background="@android:color/transparent"/>
+
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+    <Button
+        android:id="@+id/fragment_btn_find_id"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_small"
+        android:text="@string/activity_login_find_id"
+        android:textColor="#ff333333"
+        android:textSize="18sp"
+        android:layout_marginTop="@dimen/btn_small"
+        android:layout_marginLeft="@dimen/btn_small"
+        android:layout_marginRight="@dimen/btn_small"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:background="@drawable/blank_button"/>
+
+
+
+</LinearLayout>
