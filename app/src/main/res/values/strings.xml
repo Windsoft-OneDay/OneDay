@@ -60,17 +60,28 @@
     <string name="good">좋아요</string>
     <string name="bad">싫어요</string>
     <string name="comment">댓글</string>
-<<<<<<< HEAD
 
     <string name="comment_input">댓글을 입력하세요</string>
-=======
     <string name="title_activity_find_id">FindIdActivity</string>
 
     <string name="fragment_find_id_name">이름</string>
     <string name="fragment_find_id_mail">메일</string>
 
 
-<!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
->>>>>>> origin/master
+
+    <string name="version">버전 : 1.0.0</string>
+    <string name="maker">제작자 : 이동규, 김지민, 이지수</string>
+    <string name="email">담당자 : wind.dong.dream@gmail.com</string>
+    <string name="school">상일미디어 고등학교</string>
+    <string name="logout">로그아웃</string>
+    <string name="sign_out">회원탈퇴</string>
+    <string name="gide">앱 이용 가이드</string>
+
+    <string name="goodBy">좋아요 순</string>
+    <string name="timeBy">최신 순</string>
+
+    <string name="sign_out_title">정말 탈퇴하시겠습니까?</string>
+    <string name="yes">예</string>
+    <string name="no">아니오</string>
 </resources>

@@ -225,10 +225,31 @@ public class SocketIO {
                     Log.e(TAG, "프로필 사진 변경 오류 = " + e.getMessage());
                 }
             }
+        }).on(Global.KEY_SIGN_OUT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    JSONObject obj = (JSONObject) args[0];
+                    int code = obj.getInt(Global.KEY_CODE);
+                    processSignOut(code);
+                    Log.d(TAG, "계정 삭제 변경 응답");
+                } catch (Exception e) {
+                    Log.e(TAG, "계정 삭제 에러 = " + e.getMessage());
+                }
+            }
         });
 
         socket.open();
         socket.connect();
+    }
+
+
+    private void processSignOut(int code) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_SIGN_OUT);
+        intent.putExtra(Global.KEY_CODE, code);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
 
@@ -264,8 +285,11 @@ public class SocketIO {
                     for (int j = 1; j < noticeList.size(); j++) {
                         NoticeModel curModel = noticeList.get(j);
                         String curNoticeId = curModel.getNoticeId();
+                        Log.d(TAG, "noticeId = " + noticeId);
+                        Log.d(TAG, "curNoticeId = " + curNoticeId);
                         if (noticeId.equals(curNoticeId)) {
                             noticeList.remove(j);
+                            j--;
                         }
                     }
                 }
@@ -678,6 +702,16 @@ public class SocketIO {
             obj.put(Global.KEY_USER_ID, id);
             obj.put(Global.KEY_USER_IMAGE, image);
             socket.emit(Global.KEY_SET_PHOTO, obj);
+        } catch (Exception e) {
+        }
+    }
+
+
+    public void signOut(String id) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put(Global.KEY_USER_ID, id);
+            socket.emit(Global.KEY_SIGN_OUT, obj);
         } catch (Exception e) {
         }
     }
