@@ -1,8 +1,11 @@
 package com.windsoft.oneday.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -17,6 +20,7 @@ import android.widget.TextView;
 
 import com.nispok.snackbar.Snackbar;
 import com.windsoft.oneday.Global;
+import com.windsoft.oneday.ImageBase64;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
 import com.windsoft.oneday.SetNameDialog;
@@ -36,6 +40,7 @@ import it.neokree.materialtabs.MaterialTabListener;
 public class MainActivity extends AppCompatActivity implements SetNameDialog.OnSetNameHandler {
 
     private final String TAG = "MainActivity";
+    private static final int TAKE_GALLERY = 10;
 
     private ViewPager viewPager;
 
@@ -72,9 +77,8 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
         name = intent.getStringExtra(Global.KEY_USER_NAME);
         image = intent.getStringExtra(Global.KEY_USER_IMAGE);
 
-        if (name == null || name.length() == 0)
+        if (name == null || name.length() == 0 || name.equals("null"))
             setName();
-        Log.d(TAG, "name = " + name);
     }
 
 
@@ -87,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
     private void init() {
         mainFragment = MainFragment.newInstance(id, name, image);
         writeFragment = WriteFragment.newInstance(id, name, image);
-        profileFragment = ProfileFragment.newInstance(id);
+        profileFragment = ProfileFragment.newInstance(id,name,image);
         settingFragment = SettingFragment.newInstance(id);
 
         submit = (Button) findViewById(R.id.activity_main_submit);
@@ -277,8 +281,67 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
                 } else if (command.equals(Global.KEY_SHOW_COMMENT)) {                           // 댓글 창 보이기
                     NoticeModel notice = (NoticeModel) intent.getSerializableExtra(Global.KEY_NOTICE);
                     processShowComment(notice);
+                } else if (command.equals(Global.KEY_GET_PROFILE)) {
+                    ArrayList<NoticeModel> noticeList = (ArrayList<NoticeModel>) intent.getSerializableExtra(Global.KEY_NOTICE);
+                    int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                    if (code != -1)
+                        processGetProfile(code, noticeList);
+                } else if (command.equals(Global.KEY_GET_PHOTO)) {
+                    Intent curIntent = new Intent();
+                    curIntent.setAction(Intent.ACTION_GET_CONTENT);
+                    curIntent.setType("image/*");
+                    startActivityForResult(curIntent, TAKE_GALLERY);
+                } else if (command.equals(Global.KEY_SET_PHOTO)) {
+                    int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                    if (code != -1)
+                        processSetPhoto(code);
                 }
             }
+        }
+    }
+
+
+    private void processSetPhoto(int code) {
+        if (code != Global.CODE_SUCCESS) {
+            Snackbar.with(this)
+                    .text(R.string.fail_again)
+                    .show(this);
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == TAKE_GALLERY) {
+            if (data != null) {
+                Uri uri = data.getData();
+                Bitmap bitmap = null;
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                } catch (Exception e) {
+                    Log.e(TAG, "갤러리 에러");
+                }
+
+                String image = ImageBase64.encodeTobase64(bitmap);
+                Intent intent = new Intent(this, OneDayService.class);
+                intent.putExtra(Global.KEY_COMMAND, Global.KEY_SET_PHOTO);
+                intent.putExtra(Global.KEY_USER_IMAGE, image);
+                intent.putExtra(Global.KEY_USER_ID, id);
+                startService(intent);
+                profileFragment.setImage(image);
+            }
+        }
+    }
+
+
+    private void processGetProfile(int code, ArrayList<NoticeModel> noticeList) {
+        Log.d(TAG, "getProfile = code = " + code);
+        if (code != Global.CODE_SUCCESS) {
+            Snackbar.with(getApplicationContext())
+                    .text(R.string.fail_again)
+                    .show(this);
+        } else {
+            profileFragment.setData(noticeList);
         }
     }
 
@@ -384,6 +447,16 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
         } else if (code == Global.CODE_SUCCESS) {               // 성공 했다면
             dialog.dismiss();
             mainFragment.readNotice(0);
+            this.name = name;
+
+            if (commentFragment != null)
+                commentFragment.setName(name);
+
+            if (mainFragment != null)
+                mainFragment.setName(name);
+
+            if (writeFragment != null)
+                writeFragment.setName(name);
         }
     }
 

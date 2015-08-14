@@ -88,7 +88,6 @@ public class SocketIO {
             public void call(Object... args) {
                 try {
                     JSONObject obj = (JSONObject) args[0];
-                    Log.d(TAG, "obj = " + obj);
                     int code = obj.getInt(Global.KEY_CODE);
                     String id = null;
                     String name = null;
@@ -138,9 +137,8 @@ public class SocketIO {
             public void call(Object... args) {
                 try {
                     JSONObject obj = (JSONObject) args[0];
-                    Log.d(TAG, "notice list = " + obj.get(Global.KEY_NOTICE));
-                    ArrayList<NoticeModel> noticeList = (ArrayList<NoticeModel>) obj.get(Global.KEY_NOTICE);
-
+                    processProfile(obj);
+                    Log.d(TAG, "프로필 받아오기");
                 } catch (Exception e) {
                     Log.e(TAG, "프로필 받아오기 오류 = " + e.getMessage());
                 }
@@ -215,10 +213,74 @@ public class SocketIO {
                     Log.e(TAG, "댓글 오류 = " + e.getMessage());
                 }
             }
+        }).on(Global.KEY_SET_PHOTO, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    JSONObject obj = (JSONObject) args[0];
+                    int code = obj.getInt(Global.KEY_CODE);
+                    processSetPhoto(code);
+                    Log.d(TAG, "프로필 사진 변경 응답");
+                } catch (Exception e) {
+                    Log.e(TAG, "프로필 사진 변경 오류 = " + e.getMessage());
+                }
+            }
         });
 
         socket.open();
         socket.connect();
+    }
+
+
+    private void processSetPhoto(int code) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_SET_PHOTO);
+        intent.putExtra(Global.KEY_CODE, code);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+
+    private void processProfile(JSONObject obj) {
+        try {
+            int code = obj.getInt(Global.KEY_CODE);
+            ArrayList<NoticeModel> noticeList = new ArrayList<>();
+            if (code == Global.CODE_SUCCESS) {
+                String id = obj.getString(Global.KEY_USER_ID);
+
+                JSONArray array = (JSONArray) obj.get(Global.KEY_NOTICE);
+                Log.d(TAG, "array = " + array);
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject noticeObject = (JSONObject) array.get(i);
+                    Log.d(TAG, "noticeObject = " + noticeObject);
+                    noticeList.add(parsingNotice(noticeObject, id));
+                }
+
+
+                // 중복 제거
+                for (int i = 0; i < noticeList.size() - 1; i++) {
+                    NoticeModel model = noticeList.get(i);
+                    String noticeId = model.getNoticeId();
+                    for (int j = 1; j < noticeList.size(); j++) {
+                        NoticeModel curModel = noticeList.get(j);
+                        String curNoticeId = curModel.getNoticeId();
+                        if (noticeId.equals(curNoticeId)) {
+                            noticeList.remove(j);
+                        }
+                    }
+                }
+            }
+
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.putExtra(Global.KEY_COMMAND, Global.KEY_GET_PROFILE);
+            intent.putExtra(Global.KEY_NOTICE, noticeList);
+            intent.putExtra(Global.KEY_CODE, code);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+
+        } catch (Exception e) {
+            Log.e(TAG, "processProfile() 에러 = " + e.getMessage());
+        }
     }
 
 
@@ -304,11 +366,8 @@ public class SocketIO {
         ArrayList<CommentModel> commentList = new ArrayList<>();
         JSONArray commentArray = (JSONArray) object.get(KEY_COMMENT);
 
-        JSONObject goodObj = object.getJSONObject(KEY_GOOD);
-        JSONObject badObj = object.getJSONObject(KEY_BAD);
-
-        JSONArray goodArray = goodObj.getJSONArray(KEY_USER_ID);
-        JSONArray badArray = badObj.getJSONArray(KEY_USER_ID);
+        JSONArray goodArray = object.getJSONArray(KEY_GOOD);
+        JSONArray badArray = object.getJSONArray(KEY_BAD);
 
         int goodInt = goodArray.length();
         int badInt = badArray.length();
@@ -494,7 +553,6 @@ public class SocketIO {
             obj.put(Global.KEY_USER_ID, id);
             socket.emit(Global.KEY_GET_PROFILE, obj);
         } catch (Exception e) {
-
         }
     }
 
@@ -609,6 +667,17 @@ public class SocketIO {
             obj.put(Global.KEY_USER_NAME, name);
             obj.put(Global.KEY_POSITION, position);
             socket.emit(Global.KEY_COMMENT, obj);
+        } catch (Exception e) {
+        }
+    }
+
+
+    public void setImage(String image, String id) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put(Global.KEY_USER_ID, id);
+            obj.put(Global.KEY_USER_IMAGE, image);
+            socket.emit(Global.KEY_SET_PHOTO, obj);
         } catch (Exception e) {
         }
     }

@@ -48,12 +48,11 @@
     <string name="facebook_app_id">107117226304241</string>
     <string name="title_activity_main">MainActivity</string>
 
-    <string name="title_section1">글</string>
-    <string name="title_section2">글쓰기</string>
-    <string name="title_section3">내정보</string>
-    <string name="title_section4">설정</string>
-
-    <string name="card_main_menu_title"></string>
+    <string name="notice">글</string>
+    <string name="write">글쓰기</string>
+    <string name="profile">내 프로필</string>
+    <string name="setting">설정</string>
+    <string name="my_notice">내 글</string>
 
     <string name="fragment_write_take_picture">사진 찍기</string>
     <string name="fragment_write_choice_picture">사진 선택</string>

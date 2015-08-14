@@ -137,4 +137,10 @@ public class MainFragment extends Fragment {
     public void addComment(String comment, String noticeId) {
         adapter.addComment(comment, noticeId);
     }
+
+
+    public void setName(String name) {
+        this.name = name;
+        adapter.setName(name);
+    }
 }

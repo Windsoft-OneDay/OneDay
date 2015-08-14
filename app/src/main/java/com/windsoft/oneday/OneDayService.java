@@ -97,6 +97,10 @@ public class OneDayService extends Service {
                     String name = intent.getStringExtra(Global.KEY_USER_NAME);
                     int position = intent.getIntExtra(Global.KEY_POSITION, -1);
                     socketIO.comment(id, noticeId, comment, name, position);
+                } else if (command.equals(Global.KEY_SET_PHOTO)) {
+                    String image = intent.getStringExtra(Global.KEY_USER_IMAGE);
+                    String id = intent.getStringExtra(Global.KEY_USER_ID);
+                    socketIO.setImage(image, id);
                 }
             }
         }

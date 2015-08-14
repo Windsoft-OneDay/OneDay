@@ -30,6 +30,8 @@ public class Global {
     public static final String KEY_FLAG = "flag";
     public static final String KEY_COMMENT = "comment";
     public static final String KEY_SHOW_COMMENT = "showComment";
+    public static final String KEY_GET_PHOTO = "getPhoto";
+    public static final String KEY_SET_PHOTO = "setImage";
 
     public static final String VALUE_CONNECT = "connection";
 
@@ -69,6 +71,10 @@ public class Global {
     public static final int CODE_GOOD_BAD_UPDATE_USER_ERR = 311;             // 좋아요, 싫어요 클릭 시 userDB 수정 에러
     public static final int CODE_COMMENT_UPDATE_USER_ERR = 312;             // 댓글 userDB 수정 에러
     public static final int CODE_COMMENT_UPDATE_NOTICE_ERR = 313;             // 댓글 userDB 수정 에러
+    public static final int CODE_GET_PROFILE_FIND_USER_ERR = 314;             // 프로필 요청 userDB 검색 에러
+    public static final int CODE_GET_PROFILE_UPDATE_NOTICE_ERR = 315;             // 프로필 요청 noticeDB 검색 에러
+    public static final int CODE_SET_IMAGE_UPDATE_USER_ERR = 316;             // 프로필 사진 변경 요청 userDB 수정 에러
+    public static final int CODE_SET_IMAGE_UPDATE_NOTICE_ERR = 317;             // 프로필 사진 변경 요청 noticeDB 수정 에러
 
     public static Bitmap decodeImage(String str) {
         byte[] array = Base64.decode(str, Base64.DEFAULT);

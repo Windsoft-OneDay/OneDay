@@ -1,16 +1,16 @@
 package com.windsoft.oneday.fragment;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 import com.windsoft.oneday.Global;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
@@ -26,9 +26,11 @@ public class ProfileFragment extends Fragment {
 
     private static final String TAG = "ProfileFragment";
 
-    private RecyclerView recyclerView;
+    private UltimateRecyclerView recyclerView;
 
     private String id;
+    private String name;
+    private String image;
 
     private ProfileAdapter adapter;
 
@@ -36,10 +38,12 @@ public class ProfileFragment extends Fragment {
     }
 
 
-    public static ProfileFragment newInstance(String id) {
+    public static ProfileFragment newInstance(String id, String name, String image) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Global.KEY_USER_ID, id);
+        bundle.putString(Global.KEY_USER_NAME, name);
+        bundle.putString(Global.KEY_USER_IMAGE, image);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -50,6 +54,8 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         id = bundle.getString(Global.KEY_USER_ID);
+        name = bundle.getString(Global.KEY_USER_NAME);
+        image = bundle.getString(Global.KEY_USER_IMAGE);
     }
 
     @Nullable
@@ -64,24 +70,37 @@ public class ProfileFragment extends Fragment {
 
 
     private void init(View rootView) {
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_profile_recycler);
+        recyclerView = (UltimateRecyclerView) rootView.findViewById(R.id.fragment_profile_recycler);
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
 
-//        getProfile();
+        getProfile();
+    }
+
+
+    public void setImage(String image) {
+        this.image = image;
+        adapter.setImage(image);
     }
 
 
     /**
      * TODO: 데이터 설정
      * */
-    public void setData(ArrayList<NoticeModel> noticeList, Bitmap image, String name) {
+    public void setData(ArrayList<NoticeModel> noticeList) {
         if (adapter == null) {
-            adapter = new ProfileAdapter(noticeList, image, name);
+            adapter = new ProfileAdapter(getActivity(), noticeList, image, name, id);
             recyclerView.setAdapter(adapter);
+            recyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    getProfile();
+                }
+            });
+        } else {
+            adapter.setData(noticeList, image, name);
         }
-        adapter.setData(noticeList, image, name);
     }
 
 

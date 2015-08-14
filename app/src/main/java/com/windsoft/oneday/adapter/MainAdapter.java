@@ -3,6 +3,7 @@ package com.windsoft.oneday.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,16 +33,14 @@ import java.util.Date;
  */
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
-    private static final String TAG = "MainAdapter";
-    private static final int MIN3 = 1000 * 60 * 3;
+    private final String TAG = "MainAdapter";
+    private final int MIN3 = 1000 * 60 * 3;
 
     private ArrayList<NoticeModel> noticeList;
     private Context context;
     private String id;
     private String name;
     private String image;
-
-    private ArrayList<TimeThread> threadList = new ArrayList<>();
 
     private Handler handler = new Handler() {
         @Override
@@ -54,6 +53,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             holder.time.setText(time);
         }
     };
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 
     public MainAdapter(Context context, ArrayList<NoticeModel> noticeList, String id, String name, String image) {
         this.context = context;
@@ -91,7 +96,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             sb.append(day + "일 ");
         if (hour != 0)
             sb.append(hour + "시간 ");
-        sb.append(min + "분 ");
+        if (min != 0)
+            sb.append(min + "분 ");
+        sb.append(sec + "초");
 
         return sb.toString();
     }
@@ -135,20 +142,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         intent.putExtra(Global.KEY_NOTICE, notice);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
-
-//        int isCommentListVisible = holder.commentList.getVisibility();
-//        int color;
-//
-//        if (isCommentListVisible == View.GONE) {                                // 보여지고 있다면
-//            color = context.getResources().getColor(R.color.main);
-//            holder.commentBtn.setImageResource(R.drawable.comment_icon_main_color);
-//            holder.commentList.setVisibility(View.VISIBLE);
-//        } else {                                            // 댓글 취소
-//            color = context.getResources().getColor(R.color.gray);
-//            holder.commentBtn.setImageResource(R.drawable.comment_icon);
-//            holder.commentList.setVisibility(View.GONE);
-//        }
-//        holder.comment.setTextColor(color);
     }
 
 
@@ -177,15 +170,18 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         holder.badNum.setText(String.valueOf(notice.getBadNum()));
         holder.commentNum.setText(String.valueOf(notice.getCommentNum()));
 
-        final TimeThread thread = new TimeThread(time, holder);                                 // 시간 초 스레드 생성
+        final TimeTask task = new TimeTask(holder.time);                                 // 시간 초 스레드 생성
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, time);
 
         setGood(holder, position);
         holder.goodLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                noticeList.get(position).setIsCheckedGood(!noticeList.get(position).isCheckedGood());                // 반대로 바꿈
-                setGood(holder, position);
-                goodCheck(noticeList.get(position).isCheckedGood(), notice.getNoticeId(), position, holder, thread, time);
+                if (!noticeList.get(position).isCheckedBad()) {
+                    noticeList.get(position).setIsCheckedGood(!noticeList.get(position).isCheckedGood());                // 반대로 바꿈
+                    setGood(holder, position);
+                    goodCheck(noticeList.get(position).isCheckedGood(), notice.getNoticeId(), position, holder, task, time);
+                }
             }
         });
 
@@ -193,9 +189,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         holder.badLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                noticeList.get(position).setIsCheckedBad(!noticeList.get(position).isCheckedBad());
-                setBad(holder, position);
-                badCheck(noticeList.get(position).isCheckedBad(), notice.getNoticeId(), position, holder, thread, time);
+                if (!noticeList.get(position).isCheckedGood()) {
+                    noticeList.get(position).setIsCheckedBad(!noticeList.get(position).isCheckedBad());
+                    setBad(holder, position);
+                    badCheck(noticeList.get(position).isCheckedBad(), notice.getNoticeId(), position, holder, task, time);
+                }
             }
         });
 
@@ -218,59 +216,40 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             imageView.setImageBitmap(bitmap);
             holder.imageContainer.addView(imageView);
         }
-        thread.start();
-        threadList.add(thread);
     }
 
 
-    public class TimeThread extends Thread {
+    public class TimeTask extends AsyncTask<Long, String, String> {
 
-        private long time;
-        private ViewHolder holder;
-        private boolean setTime = false;
+        private TextView textView;
 
 
-        public TimeThread(long time, ViewHolder holder) {
-            this.time = time;
-            this.holder = holder;
-        }
-
-
-        public void setTime(long time) {
-            this.time = time;
-            setTime = true;
+        public TimeTask(TextView textView) {
+            this.textView = textView;
         }
 
 
         @Override
-        public void run() {
-            long curTime;
-            curTime = time;
+        protected String doInBackground(Long... params) {
+            long time = params[0];
 
             try {
-                while (!Thread.currentThread().isInterrupted() && curTime != 0) {
-                    Message msg = new Message();
-                    Bundle bundle = new Bundle();
-                    String time = getTime(curTime);
-                    bundle.putString("time", time);
-                    msg.setData(bundle);
-                    msg.obj = holder;
-                    handler.sendMessage(msg);
-                    curTime = curTime - 1000;
-
-                    if (setTime) {
-                        curTime = this.time;
-                        setTime = false;
-                    }
-
+                while (time > 0 && !isCancelled()) {
+                    publishProgress(getTime(time));
+                    time -= 1000;
                     Thread.sleep(1000);
                 }
-            } catch (InterruptedException e) {
-                interrupt();
-                Log.e(TAG, "interrupt Exception");
             } catch (Exception e) {
-                Log.e(TAG, "sleep 에러 = " + e.getMessage());
             }
+
+            return null;
+        }
+
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+            textView.setText(values[0]);
         }
     }
 
@@ -295,7 +274,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
      * TODO: 좋아요 버튼 클릭
      * @param flag : 좋아요, 좋아요 취소
      * */
-    private void goodCheck(boolean flag, String noticeId, int position, ViewHolder holder, TimeThread thread, long time) {
+    private void goodCheck(boolean flag, String noticeId, int position, ViewHolder holder, TimeTask task, long time) {
         if (flag) {                             // 좋아요
             int curGoodNum = noticeList.get(position).getGoodNum();
             noticeList.get(position).setGoodNum(curGoodNum + 1);
@@ -306,8 +285,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             noticeList.get(position).setGoodNum(curGoodNum - 1);
             holder.goodNum.setText(String.valueOf(curGoodNum - 1));
         }
-        thread.setTime(time);
-
         Intent intent = new Intent(context, OneDayService.class);
         intent.putExtra(Global.KEY_COMMAND, Global.KEY_GOOD);
         intent.putExtra(Global.KEY_FLAG, flag);
@@ -322,7 +299,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
      * TODO: 싫어요 버튼 클릭
      * @param flag : 싫어요, 싫어요 취소
      * */
-    private void badCheck(boolean flag, String noticeId, int position, ViewHolder holder, TimeThread thread, long time) {
+    private void badCheck(boolean flag, String noticeId, int position, ViewHolder holder, TimeTask task, long time) {
         if (flag) {                             // 싫어요
             int curBadNum = noticeList.get(position).getBadNum();
             noticeList.get(position).setBadNum(curBadNum + 1);
@@ -333,8 +310,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             noticeList.get(position).setBadNum(curBadNum - 1);
             holder.badNum.setText(String.valueOf(curBadNum - 1));
         }
-
-        thread.setTime(time);
 
         Intent intent = new Intent(context, OneDayService.class);
         intent.putExtra(Global.KEY_COMMAND, Global.KEY_BAD);
@@ -376,11 +351,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
 
     public void setItem(ArrayList<NoticeModel> noticeList) {
-        for (int i = 0; i < threadList.size(); i++) {
-            threadList.get(i).interrupt();
-        }
-        threadList.clear();
-
         notifyDataSetChanged();
         this.noticeList = noticeList;
     }

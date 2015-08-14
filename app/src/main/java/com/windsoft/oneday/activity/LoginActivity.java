@@ -107,6 +107,10 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
             Snackbar.with(getApplicationContext())
                     .text(R.string.success)
                     .show(this);
+
+            getSupportFragmentManager().beginTransaction()
+                    .remove(signUpFragment)
+                    .commit();
         }
     }
 
@@ -204,7 +208,7 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
     public void onIntentSignUp() {
         // 회원가입 버튼 눌렀을 때
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.activity_login_container, signUpFragment)
+                .add(R.id.activity_login_container, signUpFragment)
                 .addToBackStack(null)
                 .commit();
     }

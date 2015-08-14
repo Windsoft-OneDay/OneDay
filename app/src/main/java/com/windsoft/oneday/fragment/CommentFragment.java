@@ -94,4 +94,10 @@ public class CommentFragment extends Fragment {
     public void failComment(String comment, int position) {
         commentAdapter.failComment(comment, position);
     }
+
+
+    public void setName(String name) {
+        this.name = name;
+        commentAdapter.setName(name);
+    }
 }

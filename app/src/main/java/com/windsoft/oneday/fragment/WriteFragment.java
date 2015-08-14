@@ -224,4 +224,10 @@ public class WriteFragment extends Fragment {
         imageList.clear();
         pictureContainer.removeAllViews();
     }
+
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
