@@ -7,6 +7,7 @@
     <!-- Login Activity -->
     <string name="activity_login_id">아이디</string>
     <string name="activity_login_pw">비밀번호</string>
+    <string name="activity_login_confirm">비밀번호 확인</string>
     <string name="activity_login_submit">로그인</string>
     <string name="activity_login_sign_up">회원가입</string>
     <string name="activity_login_find_id">아이디 찾기</string>
@@ -38,6 +39,8 @@
     <string name="read_not_enough">더 이상 글이 없습니다.</string>
 
     <string name="fail_again">실패했습니다 잠시 후 다시 시도해주세요</string>
+
+    <string name="find_id_null">일치하는 아이디가 없습니다</string>
 
 
     <string name="success">성공했습니다</string>
@@ -84,4 +87,5 @@
     <string name="sign_out_title">정말 탈퇴하시겠습니까?</string>
     <string name="yes">예</string>
     <string name="no">아니오</string>
+    <string name="submit">확인</string>
 </resources>

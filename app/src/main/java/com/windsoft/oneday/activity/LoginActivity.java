@@ -8,6 +8,9 @@ import com.nispok.snackbar.Snackbar;
 import com.windsoft.oneday.Global;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
+import com.windsoft.oneday.SocketIO;
+import com.windsoft.oneday.fragment.FindIdFragment;
+import com.windsoft.oneday.fragment.FindPwFragment;
 import com.windsoft.oneday.fragment.LoginFragment;
 import com.windsoft.oneday.fragment.SignupFragment;
 import com.windsoft.oneday.fragment.SplashFragment;
@@ -18,7 +21,7 @@ import com.windsoft.oneday.login.NaverLogin;
  * Created by dongkyu Lee on 2015-08-02.
  * */
 public class LoginActivity extends FragmentActivity implements FacebookLogin.OnFacebookLoginHandler, NaverLogin.OnNaverLoginHandler
-                , LoginFragment.OnLoginHandler, SplashFragment.OnSplashHandler, SignupFragment.OnSignUpHandler{
+                , LoginFragment.OnLoginHandler, SplashFragment.OnSplashHandler, SignupFragment.OnSignUpHandler, FindIdFragment.OnFindIdHandler{
 
     private static final String TAG = "LoginActivity";
 
@@ -27,6 +30,8 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
 
     private LoginFragment loginFragment;                    // 로그인 프레그먼트
     private SplashFragment splashFragment;                    // 로그인 프레그먼트
+    private FindIdFragment findIdFragment;                    // 아이디 찾기 프레그먼트
+    private FindPwFragment findPwFragment;                    // 비밀번호호 찾기 프레그먼트
 
     private SignupFragment signUpFragment;                  //회원가입 프레그먼트
 
@@ -53,6 +58,8 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
         // 로그인 프레그먼트 부착
         loginFragment = LoginFragment.createInstance(facebookLogin, naverLoginLogin);
         splashFragment = new SplashFragment();
+        findIdFragment = new FindIdFragment();
+        findPwFragment = new FindPwFragment();
 
         /*프래그먼트 부착 소스*/
         getSupportFragmentManager().beginTransaction()
@@ -60,9 +67,10 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
                 .commit();
 
         signUpFragment = new SignupFragment();
-
-
         // 자동 로그인 허용된 아이디 탐색
+
+        if (SocketIO.getSocket().connected())
+            processConnection();
     }
 
 
@@ -83,11 +91,68 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
                 int code = intent.getIntExtra(Global.KEY_CODE, -1);
                 if (code != -1)
                     processSignUp(code);
+            } else if (command.equals(Global.KEY_FIND_ID)) {
+                int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                String id = intent.getStringExtra(Global.KEY_USER_ID);
+                if (code != -1)
+                    processFindId(code, id);
+            } else if (command.equals(Global.KEY_FIND_PW)) {
+                int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                if (code != -1)
+                    processFindPw(code);
+            } else if (command.equals(Global.KEY_SET_PW)) {
+                int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                if (code != -1)
+                    processSetPw(code);
             }
         }
 
         super.onNewIntent(intent);
     }
+
+
+    private void processSetPw(int code) {
+        if (code == Global.CODE_SUCCESS) {
+            Snackbar.with(this)
+                    .text(R.string.success)
+                    .show(this);
+
+            getSupportFragmentManager().beginTransaction()
+                    .remove(findPwFragment)
+                    .commit();
+        }
+    }
+
+
+    private void processFindPw(int code) {
+        if (code == Global.CODE_SUCCESS) {
+            findPwFragment.setPw();
+        } else if (code == Global.CODE_FIND_PW_NULL) {
+            Snackbar.with(this)
+                    .text(R.string.find_id_null)
+                    .show(this);
+        } else {
+            Snackbar.with(this)
+                    .text(R.string.fail_again)
+                    .show(this);
+        }
+    }
+
+
+    private void processFindId(int code, String id) {
+        if (code == Global.CODE_SUCCESS) {
+            findIdFragment.setId(id);
+        } else if (code == Global.CODE_FIND_ID_NULL) {
+            Snackbar.with(this)
+                    .text(R.string.find_id_null)
+                    .show(this);
+        } else {
+            Snackbar.with(this)
+                    .text(R.string.fail_again)
+                    .show(this);
+        }
+    }
+
 
 
     /**
@@ -240,5 +305,30 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
         intent.putExtra(Global.KEY_LOGIN_PW, pw);
         intent.putExtra(Global.KEY_LOGIN_TYPE, cond);
         startService(intent);
+    }
+
+
+    @Override
+    public void onIntentFindId() {
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.activity_login_container, findIdFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void onIntentFindPw() {
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.activity_login_container, findPwFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+
+    @Override
+    public void onIntentLogin() {
+        getSupportFragmentManager().beginTransaction()
+                .remove(findIdFragment)
+                .commit();
     }
 }

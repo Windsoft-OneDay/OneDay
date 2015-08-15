@@ -40,7 +40,7 @@ public class SocketIO {
 
     private int cond;
 
-    private static Socket socket;
+    public static Socket socket;
     private Context context;
 
     public SocketIO(Context context) {
@@ -67,10 +67,10 @@ public class SocketIO {
 
 
     private void socketConnect() {
-        if (socket != null && socket.connected()) {
-            socket.disconnect();
-            socket.close();
-        }
+//        if (socket != null && socket.connected()) {
+//            socket.disconnect();
+//            socket.close();
+//        }
 
         cond = 0;
 
@@ -237,10 +237,78 @@ public class SocketIO {
                     Log.e(TAG, "계정 삭제 에러 = " + e.getMessage());
                 }
             }
+        }).on(Global.KEY_FIND_ID, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    JSONObject obj = (JSONObject) args[0];
+                    int code = obj.getInt(Global.KEY_CODE);
+                    String id = null;
+                    if (code == Global.CODE_SUCCESS) {
+                        id = obj.getString(Global.KEY_USER_ID);
+                    }
+                    processFindId(code, id);
+                    Log.d(TAG, "아이디 찾기 응답");
+                } catch (Exception e) {
+                    Log.e(TAG, "아이디 찾기 에러 = " + e.getMessage());
+                }
+            }
+        }).on(Global.KEY_FIND_PW, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    JSONObject obj = (JSONObject) args[0];
+                    int code = obj.getInt(Global.KEY_CODE);
+                    processFindPw(code);
+                    Log.d(TAG, "비밀번호 찾기 응답");
+                } catch (Exception e) {
+                    Log.e(TAG, "비밀번호 찾기 에러 = " + e.getMessage());
+                }
+            }
+        }).on(Global.KEY_SET_PW, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    JSONObject obj = (JSONObject) args[0];
+                    int code = obj.getInt(Global.KEY_CODE);
+                    processSetPw(code);
+                    Log.d(TAG, "비밀번호 설정 응답");
+                } catch (Exception e) {
+                    Log.e(TAG, "비밀번호 설정 에러 = " + e.getMessage());
+                }
+            }
         });
 
         socket.open();
         socket.connect();
+    }
+
+
+    private void processSetPw(int code) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_SET_PW);
+        intent.putExtra(Global.KEY_CODE, code);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+
+    private void processFindPw(int code) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_FIND_PW);
+        intent.putExtra(Global.KEY_CODE, code);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+
+    private void processFindId(int code, String id) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_FIND_ID);
+        intent.putExtra(Global.KEY_CODE, code);
+        intent.putExtra(Global.KEY_USER_ID, id);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
 
@@ -350,7 +418,6 @@ public class SocketIO {
             for (int i = 0; i < array.length(); i++) {
                 try {
                     JSONObject obj = (JSONObject) array.get(i);
-
                     NoticeModel model = parsingNotice(obj, id);
                     noticeList.add(model);
                 } catch (Exception e) {
@@ -606,8 +673,10 @@ public class SocketIO {
         try {
             JSONObject obj = new JSONObject();
             obj.put(Global.KEY_COUNT, count);
+            obj.put(Global.KEY_USER_ID, id);
             obj.put(Global.KEY_KEY_WORD, keyWord);
             socket.emit(Global.KEY_READ_NOTICE, obj);
+            Log.d(TAG, "dd");
         } catch (Exception e) {
             Log.e(TAG, "readNotice 에러 = " + e.getMessage());
         }
@@ -712,6 +781,39 @@ public class SocketIO {
             JSONObject obj = new JSONObject();
             obj.put(Global.KEY_USER_ID, id);
             socket.emit(Global.KEY_SIGN_OUT, obj);
+        } catch (Exception e) {
+        }
+    }
+
+
+    public void findId(String name, String mail) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put(Global.KEY_USER_NAME, name);
+            obj.put(Global.KEY_USER_MAIL, mail);
+            socket.emit(Global.KEY_FIND_ID, obj);
+        } catch (Exception e) {
+        }
+    }
+
+
+    public void findPw(String id, String name, String mail) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put(Global.KEY_USER_ID, id);
+            obj.put(Global.KEY_USER_NAME, name);
+            obj.put(Global.KEY_USER_MAIL, mail);
+            socket.emit(Global.KEY_FIND_PW, obj);
+        } catch (Exception e) {
+        }
+    }
+
+    public void setPw(String id, String pw) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put(Global.KEY_USER_ID, id);
+            obj.put(Global.KEY_USER_PW, pw);
+            socket.emit(Global.KEY_SET_PW, obj);
         } catch (Exception e) {
         }
     }

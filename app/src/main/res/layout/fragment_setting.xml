@@ -3,4 +3,114 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/base_margin"
+        android:layout_marginBottom="@dimen/base_margin"
+        android:background="@color/text_white">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="게시글 정렬 방법"
+            android:layout_weight="1"/>
+
+
+        <Spinner
+            android:id="@+id/fragment_setting_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/main"
+            android:layout_weight="1"/>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical"
+        android:background="@color/text_white">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/version"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/maker"/>
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/email"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/school"/>
+
+
+        <Button
+            android:id="@+id/fragment_setting_logout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:src="@drawable/blank_button"
+            android:text="@string/logout"
+            android:layout_marginLeft="@dimen/btn_small"
+            android:layout_marginRight="@dimen/btn_small"/>
+
+
+        <Button
+            android:id="@+id/fragment_setting_sign_out"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:src="@drawable/blank_button"
+            android:text="@string/sign_out"
+            android:layout_marginLeft="@dimen/btn_small"
+            android:layout_marginRight="@dimen/btn_small"/>
+
+
+
+        <Button
+            android:id="@+id/fragment_setting_gide"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:src="@drawable/blank_button"
+            android:text="@string/gide"/>
+
+
+
+    </LinearLayout>
+
+
 </LinearLayout>

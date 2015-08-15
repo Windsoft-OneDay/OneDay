@@ -1,92 +1,86 @@
 package com.windsoft.oneday.fragment;
 
 import android.app.Activity;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
+import com.windsoft.oneday.Global;
+import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
 
 
-public class FindIdFragment extends Fragment {
+public class FindIdFragment extends android.support.v4.app.Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "FindIdFragment";
 
-    private String mParam1;
-    private String mParam2;
+    private EditText nameInput;
+    private EditText mailInput;
+    private Button submit;
 
-    private OnFragmentInteractionListener mListener;
-
-    public static FindIdFragment newInstance(String param1, String param2) {
-        FindIdFragment fragment = new FindIdFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private boolean isFind = false;
+    private OnFindIdHandler sender;
 
     public FindIdFragment() {
         // Required empty public constructor
     }
 
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        sender = (OnFindIdHandler) activity;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_find_id, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_find_id, container, false);
+
+        init(rootView);
+
+        return rootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+
+    private void init(View rootView) {
+        nameInput = (EditText) rootView.findViewById(R.id.fragment_find_id_name);
+        mailInput = (EditText) rootView.findViewById(R.id.fragment_find_id_mail);
+        submit = (Button) rootView.findViewById(R.id.fragment_find_id_submit);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isFind) {
+                    String name = nameInput.getText().toString();
+                    String mail = mailInput.getText().toString();
+
+                    if (name.length() > 0 && mail.length() > 0) {
+                        Intent intent = new Intent(getActivity(), OneDayService.class);
+                        intent.putExtra(Global.KEY_COMMAND, Global.KEY_FIND_ID);
+                        intent.putExtra(Global.KEY_USER_NAME, name);
+                        intent.putExtra(Global.KEY_USER_MAIL, mail);
+                        getActivity().startService(intent);
+                    }
+                } else {
+                    sender.onIntentLogin();
+                }
+            }
+        });
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+
+    public void setId(String id) {
+        submit.setText(id);
+        isFind = true;
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+    public interface OnFindIdHandler {
+        void onIntentLogin();
     }
-
 }

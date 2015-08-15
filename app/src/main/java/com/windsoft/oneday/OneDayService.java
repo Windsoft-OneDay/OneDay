@@ -74,8 +74,14 @@ public class OneDayService extends Service {
                 } else if (command.equals(Global.KEY_READ_NOTICE)) {                // 글 읽기 요청
                     int count = intent.getIntExtra(Global.KEY_COUNT, -1);
                     String id = intent.getStringExtra(Global.KEY_USER_ID);
-                    if (count != -1)
-                        socketIO.readNotice(count, id);
+                    String keyword = intent.getStringExtra(Global.KEY_KEY_WORD);
+                    Log.d(TAG, "keyword = " + keyword);
+                    if (count != -1) {
+                        if (keyword == null)
+                            socketIO.readNotice(count, id);
+                        else
+                            socketIO.readNotice(count, id, keyword);
+                    }
                 } else if (command.equals(Global.KEY_GOOD)) {
                     boolean flag = intent.getBooleanExtra(Global.KEY_FLAG, false);
                     String userId = intent.getStringExtra(Global.KEY_USER_ID);
@@ -101,6 +107,22 @@ public class OneDayService extends Service {
                     String image = intent.getStringExtra(Global.KEY_USER_IMAGE);
                     String id = intent.getStringExtra(Global.KEY_USER_ID);
                     socketIO.setImage(image, id);
+                } else if (command.equals(Global.KEY_SIGN_OUT)) {
+                    String id = intent.getStringExtra(Global.KEY_USER_ID);
+                    socketIO.signOut(id);
+                } else if (command.equals(Global.KEY_FIND_ID)) {
+                    String name = intent.getStringExtra(Global.KEY_USER_NAME);
+                    String mail = intent.getStringExtra(Global.KEY_USER_MAIL);
+                    socketIO.findId(name, mail);
+                } else if (command.equals(Global.KEY_FIND_PW)) {
+                    String id = intent.getStringExtra(Global.KEY_USER_ID);
+                    String name = intent.getStringExtra(Global.KEY_USER_NAME);
+                    String mail = intent.getStringExtra(Global.KEY_USER_MAIL);
+                    socketIO.findPw(id, name, mail);
+                } else if (command.equals(Global.KEY_SET_PW)) {
+                    String id = intent.getStringExtra(Global.KEY_USER_ID);
+                    String pw = intent.getStringExtra(Global.KEY_USER_PW);
+                    socketIO.setPw(id, pw);
                 }
             }
         }

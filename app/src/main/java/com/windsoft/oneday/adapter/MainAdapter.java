@@ -342,10 +342,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
 
     public void addItem(ArrayList<NoticeModel> noticeList) {
-        for (NoticeModel notice :
-                noticeList) {
-            this.noticeList.add(notice);
-        }
+        this.noticeList.addAll(noticeList);
         notifyDataSetChanged();
     }
 
@@ -367,6 +364,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         intent.putExtra(Global.KEY_COMMAND, Global.KEY_READ_NOTICE);
         intent.putExtra(Global.KEY_COUNT, count);
         intent.putExtra(Global.KEY_USER_ID, id);
+        context.startService(intent);
+    }
+
+
+    public void readNotice(String keyword, int count) {
+        Intent intent = new Intent(context, OneDayService.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_READ_NOTICE);
+        intent.putExtra(Global.KEY_COUNT, count);
+        intent.putExtra(Global.KEY_USER_ID, id);
+        intent.putExtra(Global.KEY_KEY_WORD, keyword);
         context.startService(intent);
     }
 

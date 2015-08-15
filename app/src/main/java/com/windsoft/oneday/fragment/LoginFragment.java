@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -124,6 +123,20 @@ public class LoginFragment extends Fragment {
                 sender.onIntentSignUp();
             }
         });
+
+        findIdBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sender.onIntentFindId();
+            }
+        });
+
+        findPwBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sender.onIntentFindPw();
+            }
+        });
     }
 
 
@@ -134,9 +147,6 @@ public class LoginFragment extends Fragment {
         Global.pref = getActivity().getSharedPreferences(Global.PREF_KEY, getActivity().MODE_PRIVATE);
         id = Global.pref.getString(Global.KEY_USER_ID, null);
         pw = Global.pref.getString(Global.KEY_USER_PW, null);
-
-        Log.d(TAG,"id = " + id);
-        Log.d(TAG,"pw = " + pw);
 
         Intent intent = new Intent(getActivity(), OneDayService.class);
         if (id != null) {           // 자동 로그인 허용 된 아이디가 있다면
@@ -156,5 +166,7 @@ public class LoginFragment extends Fragment {
     public interface OnLoginHandler {
         void onLoginReq(String id, String pw);
         void onIntentSignUp();
+        void onIntentFindId();
+        void onIntentFindPw();
     }
 }

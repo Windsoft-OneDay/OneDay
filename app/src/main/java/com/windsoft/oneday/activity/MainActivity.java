@@ -37,7 +37,7 @@ import it.neokree.materialtabs.MaterialTab;
 import it.neokree.materialtabs.MaterialTabHost;
 import it.neokree.materialtabs.MaterialTabListener;
 
-public class MainActivity extends AppCompatActivity implements SetNameDialog.OnSetNameHandler {
+public class MainActivity extends AppCompatActivity implements SetNameDialog.OnSetNameHandler, SettingFragment.OnSettingHandler {
 
     private final String TAG = "MainActivity";
     private static final int TAKE_GALLERY = 10;
@@ -108,6 +108,22 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
             @Override
             public void onClick(View v) {
                 writeFragment.post();
+            }
+        });
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mainFragment.setKeyword(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.length() == 0)
+                    mainFragment.setKeyword(null);
+                return false;
             }
         });
     }
@@ -295,8 +311,23 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
                     int code = intent.getIntExtra(Global.KEY_CODE, -1);
                     if (code != -1)
                         processSetPhoto(code);
+                } else if (command.equals(Global.KEY_SIGN_OUT)) {
+                    int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                    if (code != -1)
+                        processSingOut(code);
                 }
             }
+        }
+    }
+
+
+    private void processSingOut(int code) {
+        if (code != Global.CODE_SUCCESS) {
+            Snackbar.with(this)
+                    .text(R.string.fail_again)
+                    .show(this);
+        } else {
+            finish();
         }
     }
 
@@ -468,5 +499,16 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
         intent.putExtra(Global.KEY_USER_NAME, name);
         intent.putExtra(Global.KEY_USER_ID, id);
         startService(intent);
+    }
+
+
+    @Override
+    public void sortByGood() {
+        mainFragment.sortByGood();
+    }
+
+    @Override
+    public void sortByTime() {
+        mainFragment.sortByTime();
     }
 }
