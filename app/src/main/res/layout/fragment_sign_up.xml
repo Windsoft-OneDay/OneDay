@@ -5,155 +5,186 @@
     android:layout_height="match_parent"
     android:background="@color/main">
 
-    <FrameLayout
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/btn_large">
+        android:layout_height="@dimen/btn_large"
+        android:text="회원가입"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_middle_size"
+        android:gravity="center_vertical|center_horizontal"/>
 
-        <ImageView
-            android:layout_width="@dimen/btn_small"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/base_margin"
-            android:layout_marginTop="@dimen/small_margin"
-            android:layout_marginBottom="@dimen/small_margin"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
 
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="@dimen/btn_large"
-            android:layout_marginLeft="@dimen/base_margin"
-            android:layout_marginRight="@dimen/base_margin"
-            android:layout_marginTop="@dimen/small_margin"
-            android:layout_marginBottom="@dimen/small_margin"
-            android:hint="아이디"
-            android:id="@+id/fragment_sign_up_id"/>
-    </FrameLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/btn_large">
-
-        <ImageView
-            android:layout_width="@dimen/btn_small"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/base_margin"
-            android:layout_marginTop="@dimen/small_margin"
-            android:layout_marginBottom="@dimen/small_margin"/>
+            android:orientation="vertical">
 
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="@dimen/btn_large"
-            android:layout_marginLeft="@dimen/base_margin"
-            android:layout_marginRight="@dimen/base_margin"
-            android:layout_marginTop="@dimen/small_margin"
-            android:layout_marginBottom="@dimen/small_margin"
-            android:hint="비밀번호"
-            android:inputType="textPassword"
-            android:id="@+id/fragment_sign_up_pw"/>
-    </FrameLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/btn_large">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_small"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/base_margin">
 
-        <ImageView
-            android:layout_width="@dimen/btn_small"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/base_margin"
-            android:layout_marginTop="@dimen/small_margin"
-            android:layout_marginBottom="@dimen/small_margin"/>
+                <ImageView
+                    android:layout_width="@dimen/btn_small"
+                    android:layout_height="@dimen/btn_small"
+                    android:layout_marginLeft="@dimen/base_margin"/>
 
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="@dimen/btn_large"
-            android:layout_marginLeft="@dimen/base_margin"
-            android:layout_marginRight="@dimen/base_margin"
-            android:layout_marginTop="@dimen/small_margin"
-            android:layout_marginBottom="@dimen/small_margin"
-            android:hint="비밀번호 확인"
-            android:inputType="textPassword"
-            android:id="@+id/fragment_sign_up_config"/>
-    </FrameLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/btn_large">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/base_margin"
+                    android:layout_marginRight="@dimen/base_margin"
+                    android:hint="아이디"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:id="@+id/fragment_sign_up_id"/>
+            </LinearLayout>
 
-        <ImageView
-            android:layout_width="@dimen/btn_small"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/base_margin"
-            android:layout_marginTop="@dimen/small_margin"
-            android:layout_marginBottom="@dimen/small_margin"/>
-        
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="@dimen/btn_large"
-            android:layout_marginLeft="@dimen/base_margin"
-            android:layout_marginRight="@dimen/base_margin"
-            android:layout_marginTop="@dimen/small_margin"
-            android:layout_marginBottom="@dimen/small_margin"
-            android:hint="메일"
-            android:inputType="textEmailAddress"
-            android:id="@+id/fragment_sign_up_mail"/>
-    </FrameLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/btn_small">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_small"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/base_margin">
 
-        <ImageView
-            android:layout_width="@dimen/btn_small"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/base_margin"
-            android:layout_marginTop="@dimen/small_margin"
-            android:layout_marginBottom="@dimen/small_margin"/>
+                <ImageView
+                    android:layout_width="@dimen/btn_small"
+                    android:layout_height="@dimen/btn_small"
+                    android:layout_marginLeft="@dimen/base_margin"/>
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="@dimen/btn_small"
-            android:layout_marginLeft="@dimen/base_margin"
-            android:layout_marginRight="@dimen/base_margin"
-            android:layout_marginTop="@dimen/small_margin"
-            android:layout_marginBottom="@dimen/small_margin"
-            android:text="생일"
-            android:textSize="@dimen/font_small_size"/>
-    </FrameLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3">
-        <NumberPicker
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/fragment_sign_up_year"
-            android:layout_marginLeft="@dimen/base_margin">
-        </NumberPicker>
-        <NumberPicker
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/fragment_sign_up_month">
-        </NumberPicker>
-        <NumberPicker
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/fragment_sign_up_day"
-            android:layout_marginRight="@dimen/base_margin">
-        </NumberPicker>
-    </LinearLayout>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="확인"
-        android:layout_marginRight="@dimen/base_margin"
-        android:layout_marginLeft="@dimen/base_margin"
-        android:id="@+id/fragment_sign_up_submit"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/base_margin"
+                    android:layout_marginRight="@dimen/base_margin"
+                    android:hint="비밀번호"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:inputType="textPassword"
+                    android:id="@+id/fragment_sign_up_pw"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_small"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/base_margin">
+
+                <ImageView
+                    android:layout_width="@dimen/btn_small"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/base_margin"/>
+
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/base_margin"
+                    android:layout_marginRight="@dimen/base_margin"
+                    android:hint="비밀번호 확인"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:inputType="textPassword"
+                    android:id="@+id/fragment_sign_up_config"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_small"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/base_margin">
+
+                <ImageView
+                    android:layout_width="@dimen/btn_small"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/base_margin"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/base_margin"
+                    android:layout_marginRight="@dimen/base_margin"
+                    android:hint="메일"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:inputType="textEmailAddress"
+                    android:id="@+id/fragment_sign_up_mail"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_small"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/btn_small"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/base_margin"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:layout_marginBottom="@dimen/small_margin"/>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/base_margin"
+                    android:layout_marginRight="@dimen/base_margin"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:layout_marginBottom="@dimen/small_margin"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:text="생일"
+                    android:textSize="@dimen/font_small_size"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+                <NumberPicker
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/fragment_sign_up_year"
+                    android:layout_marginLeft="@dimen/base_margin">
+                </NumberPicker>
+                <NumberPicker
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/fragment_sign_up_month">
+                </NumberPicker>
+                <NumberPicker
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/fragment_sign_up_day"
+                    android:layout_marginRight="@dimen/base_margin">
+                </NumberPicker>
+            </LinearLayout>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_small"
+                android:layout_marginTop="@dimen/base_margin"
+                android:layout_marginBottom="@dimen/base_margin"
+                android:text="확인"
+                android:layout_marginRight="@dimen/base_margin"
+                android:layout_marginLeft="@dimen/base_margin"
+                android:background="@drawable/select_button"
+                android:id="@+id/fragment_sign_up_submit"/>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
 
 </LinearLayout>

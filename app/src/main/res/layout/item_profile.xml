@@ -9,7 +9,7 @@
         android:layout_height="@dimen/btn_icon"
         android:text="@string/profile"
         android:gravity="center_vertical"
-        android:background="@color/trans_gray"
+        android:background="@color/white"
         android:paddingLeft="@dimen/base_padding"/>
 
 
@@ -18,7 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/btn_large"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/white">
 
 
         <ImageButton
@@ -44,7 +45,8 @@
             android:id="@+id/item_profile_update_name"
             android:layout_width="@dimen/btn_icon"
             android:layout_height="@dimen/btn_icon"
-            android:layout_marginRight="@dimen/base_margin"/>
+            android:layout_marginRight="@dimen/base_margin"
+            android:background="@drawable/edit"/>
 
 
 
@@ -58,7 +60,7 @@
         android:text="@string/my_notice"
         android:paddingLeft="@dimen/base_padding"
         android:gravity="center_vertical"
-        android:background="@color/trans_gray"/>
+        android:background="@color/white"/>
 
 
 </LinearLayout>

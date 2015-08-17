@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--요놈 바꾸셈-->
+    <item android:drawable="@drawable/button_main" android:state_pressed="true" />
+    <item android:drawable="@drawable/button_main" android:state_pressed="false" />
+</selector>

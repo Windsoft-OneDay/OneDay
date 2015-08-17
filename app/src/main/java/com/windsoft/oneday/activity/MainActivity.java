@@ -53,9 +53,11 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
 
     private Toolbar toolbar;
     private Button submit;
+    private Button cancel;
     private TextView title;
     private SearchView searchView;
     private SetNameDialog dialog;
+    private MaterialTabHost tab;
 
     private String id;
     private String name;
@@ -96,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
         settingFragment = SettingFragment.newInstance(id);
 
         submit = (Button) findViewById(R.id.activity_main_submit);
+        cancel = (Button) findViewById(R.id.activity_main_cancel);
         title = (TextView) findViewById(R.id.activity_main_title);
         searchView = (SearchView) findViewById(R.id.activity_main_search);
         setViewPager();
@@ -109,6 +112,15 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
             @Override
             public void onClick(View v) {
                 writeFragment.post();
+            }
+        });
+
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                writeFragment.removeAll();
+                viewPager.setCurrentItem(0);
             }
         });
 
@@ -137,54 +149,39 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
 
 
     private void setViewPager() {
-        final MaterialTabHost tab = (MaterialTabHost) findViewById(R.id.activity_main_materialTabHost);
+        tab = (MaterialTabHost) findViewById(R.id.activity_main_materialTabHost);
         Drawable[] imageList = {
                 getResources().getDrawable(R.drawable.newspeed_icon),
                 getResources().getDrawable(R.drawable.write_icon),
-                getResources().getDrawable(R.drawable.find_id_icon),
+                getResources().getDrawable(R.drawable.user_icon),
                 getResources().getDrawable(R.drawable.setting_icon)
         };
         for (int i = 0; i < 4; i++) {
             Drawable image = imageList[i];
-            tab.addTab(tab.newTab()
+            MaterialTab curTab = tab.newTab()
                     .setIcon(image)
                     .setTabListener(new MaterialTabListener() {
                         @Override
                         public void onTabSelected(MaterialTab materialTab) {
                             int position = materialTab.getPosition();
                             viewPager.setCurrentItem(position);
-                            if (position == 0) {                        // 뉴스피드 탭
-                                searchView.setVisibility(View.VISIBLE);
-                                submit.setVisibility(View.GONE);
-                                title.setVisibility(View.GONE);
-                            } else if (position == 1) {                 // 글쓰기 탭
-                                searchView.setVisibility(View.GONE);
-                                submit.setVisibility(View.VISIBLE);
-                                title.setVisibility(View.VISIBLE);
-                                title.setText("글 쓰기");
-                            } else if (position == 2) {                 // 프로필 탭
-                                searchView.setVisibility(View.GONE);
-                                submit.setVisibility(View.GONE);
-                                title.setVisibility(View.VISIBLE);
-                                title.setText("프로필");
-                            } else if (position == 3) {                 // 설정 탭
-                                searchView.setVisibility(View.GONE);
-                                submit.setVisibility(View.GONE);
-                                title.setVisibility(View.VISIBLE);
-                                title.setText("설정");
-                            }
+                            setToolbarComponent(position);
+                            materialTab.setIconColor(getResources().getColor(R.color.light_main));
                         }
 
                         @Override
                         public void onTabReselected(MaterialTab materialTab) {
-
+                            materialTab.setIconColor(getResources().getColor(R.color.light_main));
                         }
 
                         @Override
                         public void onTabUnselected(MaterialTab materialTab) {
-
+                            materialTab.setIconColor(getResources().getColor(R.color.gray));
                         }
-                    }));
+                    });
+            tab.addTab(curTab);
+            tab.setIconColor(getResources().getColor(R.color.light_main));
+
         }
 
         viewPager = (ViewPager) findViewById(R.id.activity_main_pager);
@@ -196,28 +193,39 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
             @Override
             public void onPageSelected(int position) {
                 tab.setSelectedNavigationItem(position);
-                if (position == 0) {                        // 뉴스피드 탭
-                    searchView.setVisibility(View.VISIBLE);
-                    submit.setVisibility(View.GONE);
-                    title.setVisibility(View.GONE);
-                } else if (position == 1) {                 // 글쓰기 탭
-                    searchView.setVisibility(View.GONE);
-                    submit.setVisibility(View.VISIBLE);
-                    title.setVisibility(View.VISIBLE);
-                    title.setText("글 쓰기");
-                } else if (position == 2) {                 // 프로필 탭
-                    searchView.setVisibility(View.GONE);
-                    submit.setVisibility(View.GONE);
-                    title.setVisibility(View.VISIBLE);
-                    title.setText("프로필");
-                } else if (position == 3) {                 // 설정 탭
-                    searchView.setVisibility(View.GONE);
-                    submit.setVisibility(View.GONE);
-                    title.setVisibility(View.VISIBLE);
-                    title.setText("설정");
-                }
+                setToolbarComponent(position);
             }
         });
+    }
+
+
+    private void setToolbarComponent(int position) {
+        tab.setIconColor(getResources().getColor(R.color.gray));
+        tab.getCurrentTab().setIconColor(getResources().getColor(R.color.main));
+        if (position == 0) {                        // 뉴스피드 탭
+            searchView.setVisibility(View.VISIBLE);
+            submit.setVisibility(View.GONE);
+            cancel.setVisibility(View.GONE);
+            title.setVisibility(View.GONE);
+        } else if (position == 1) {                 // 글쓰기 탭
+            searchView.setVisibility(View.GONE);
+            submit.setVisibility(View.VISIBLE);
+            cancel.setVisibility(View.VISIBLE);
+            title.setVisibility(View.VISIBLE);
+            title.setText("글 쓰기");
+        } else if (position == 2) {                 // 프로필 탭
+            searchView.setVisibility(View.GONE);
+            submit.setVisibility(View.GONE);
+            cancel.setVisibility(View.GONE);
+            title.setVisibility(View.VISIBLE);
+            title.setText("프로필");
+        } else if (position == 3) {                 // 설정 탭
+            searchView.setVisibility(View.GONE);
+            submit.setVisibility(View.GONE);
+            cancel.setVisibility(View.GONE);
+            title.setVisibility(View.VISIBLE);
+            title.setText("설정");
+        }
     }
 
 
@@ -581,5 +589,11 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
         Intent intent = new Intent();
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, WriteFragment.TAKE_CAMERA);
+    }
+
+    @Override
+    public void post() {
+        mainFragment.readNotice(0);
+        profileFragment.getProfile();
     }
 }

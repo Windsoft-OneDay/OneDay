@@ -10,7 +10,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.4"></LinearLayout>
+        android:layout_weight="0.4">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/btn_large"
+            android:text="비밀번호 찾기"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_middle_size"
+            android:gravity="center_vertical|center_horizontal"/>
+
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"

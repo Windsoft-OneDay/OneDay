@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
@@ -19,6 +19,7 @@ import com.windsoft.oneday.Global;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
 import com.windsoft.oneday.activity.LoginActivity;
+import com.windsoft.oneday.adapter.SpinnerAdapter;
 
 /**
  * Created by ironFactory on 2015-08-04.
@@ -33,7 +34,7 @@ public class SettingFragment extends Fragment {
     private Spinner spinner;
     private Button logout;
     private Button signOut;
-    private Button gide;
+    private RelativeLayout gide;
 
     public static SettingFragment newInstance(String id) {
         SettingFragment fragment = new SettingFragment();
@@ -76,7 +77,7 @@ public class SettingFragment extends Fragment {
         spinner = (Spinner) rootView.findViewById(R.id.fragment_setting_spinner);
         logout = (Button) rootView.findViewById(R.id.fragment_setting_logout);
         signOut = (Button) rootView.findViewById(R.id.fragment_setting_sign_out);
-        gide = (Button) rootView.findViewById(R.id.fragment_setting_gide);
+        gide = (RelativeLayout) rootView.findViewById(R.id.fragment_setting_gide);
 
         setSpinner();
         setListener();
@@ -84,9 +85,10 @@ public class SettingFragment extends Fragment {
 
 
     private void setSpinner() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+        SpinnerAdapter adapter = new SpinnerAdapter(
                 getActivity(),
-                android.R.layout.simple_spinner_dropdown_item,
+                R.layout.spinner_text,
+                R.id.spinner_text,
                 new String[] {getActivity().getString(R.string.goodBy), getActivity().getString(R.string.timeBy)});
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

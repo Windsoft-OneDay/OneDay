@@ -2,7 +2,6 @@ package com.windsoft.oneday.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.nispok.snackbar.Snackbar;
@@ -285,19 +284,15 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
 
     @Override
     public void onSplash() {                    // 스플레시 보이고 2초 뒤 실행
-        if (!isSavedInstance) {
+        try {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.activity_login_container, loginFragment)
                     .commit();
+        } catch (Exception e) {
+
         }
     }
 
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        isSavedInstance = true;
-    }
 
     @Override
     public void onSignUp(String id, String pw, String mail, long birth) {

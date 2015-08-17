@@ -40,58 +40,83 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/btn_large"
+        android:layout_height="@dimen/btn_small"
         android:orientation="horizontal">
 
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/fragment_write_take_picture_layout"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:padding="@dimen/small_padding"
-            android:orientation="horizontal">
+            android:background="@color/main">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/small_padding"
+                android:gravity="center_vertical"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal">
 
 
-            <ImageView
-                android:layout_width="@dimen/btn_small"
-                android:layout_height="@dimen/btn_small"
-                android:layout_marginRight="@dimen/base_margin"/>
+                <ImageView
+                    android:layout_width="@dimen/btn_icon"
+                    android:layout_height="@dimen/btn_icon"
+                    android:layout_marginRight="@dimen/base_margin"
+                    android:src="@drawable/camera"/>
 
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical|left"
-                android:text="@string/fragment_write_take_picture"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|left"
+                    android:textColor="@color/text_white"
+                    android:text="@string/fragment_write_take_picture"/>
 
 
-        </LinearLayout>
+            </LinearLayout>
 
 
-        <LinearLayout
+        </RelativeLayout>
+
+
+        <RelativeLayout
             android:id="@+id/fragment_write_choice_picture_layout"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:padding="@dimen/small_padding"
-            android:orientation="horizontal">
+            android:background="@color/main">
 
 
-            <ImageView
-                android:layout_width="@dimen/btn_small"
-                android:layout_height="@dimen/btn_small"
-                android:layout_marginRight="@dimen/base_margin"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/small_padding"
+                android:gravity="center_vertical"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal">
 
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical|left"
-                android:text="@string/fragment_write_choice_picture"/>
+                <ImageView
+                    android:layout_width="@dimen/btn_icon"
+                    android:layout_height="@dimen/btn_icon"
+                    android:layout_marginRight="@dimen/base_margin"
+                    android:src="@drawable/gallery"/>
 
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|left"
+                    android:textColor="@color/text_white"
+                    android:text="@string/fragment_write_choice_picture"/>
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
 
 
     </LinearLayout>

@@ -33,9 +33,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
+                android:textColor="@color/text_white"
                 android:visibility="gone"
                 android:layout_weight="1"/>
 
+
+
+            <Button
+                android:id="@+id/activity_main_cancel"
+                android:layout_width="@dimen/btn_large"
+                android:layout_height="@dimen/btn_small"
+                android:layout_marginLeft="@dimen/base_margin"
+                android:text="@string/cancel"
+                android:visibility="gone"/>
 
 
             <Button
@@ -43,7 +53,7 @@
                 android:layout_width="@dimen/btn_large"
                 android:layout_height="@dimen/btn_small"
                 android:layout_marginLeft="@dimen/base_margin"
-                android:text="확인"
+                android:text="@string/submit"
                 android:visibility="gone"/>
 
         </LinearLayout>
@@ -68,10 +78,11 @@
                 android:id="@+id/activity_main_materialTabHost"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                app:iconColor="@color/gray"
                 app:primaryColor="@color/text_white"
                 app:accentColor="@color/main"
                 app:hasIcons="true"/>
+
+
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/activity_main_pager"

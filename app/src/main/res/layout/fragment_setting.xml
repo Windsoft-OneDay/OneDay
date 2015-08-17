@@ -26,7 +26,7 @@
             android:id="@+id/fragment_setting_spinner"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/main"
+            android:background="@drawable/spinner"
             android:layout_weight="1"/>
 
 
@@ -38,7 +38,9 @@
         android:layout_height="0dp"
         android:layout_weight="3"
         android:orientation="vertical"
-        android:background="@color/text_white">
+        android:background="@color/text_white"
+        android:paddingLeft="@dimen/btn_small"
+        android:paddingRight="@dimen/btn_small">
 
 
         <TextView
@@ -76,41 +78,69 @@
 
         <Button
             android:id="@+id/fragment_setting_logout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/blank_button"
+            android:textColor="@color/select_main_button"
+            android:background="@drawable/select_button_main"
             android:text="@string/logout"
-            android:layout_marginLeft="@dimen/btn_small"
-            android:layout_marginRight="@dimen/btn_small"/>
+            android:layout_marginTop="@dimen/small_margin"/>
 
 
         <Button
             android:id="@+id/fragment_setting_sign_out"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/blank_button"
+            android:textColor="@color/select_main_button"
+            android:background="@drawable/select_button_main"
             android:text="@string/sign_out"
-            android:layout_marginLeft="@dimen/btn_small"
-            android:layout_marginRight="@dimen/btn_small"/>
-
-
-
-        <Button
-            android:id="@+id/fragment_setting_gide"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/blank_button"
-            android:text="@string/gide"/>
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/small_margin"/>
 
 
 
     </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/fragment_setting_gide"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:background="@color/main">
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_centerInParent="true">
+
+
+            <ImageView
+                android:id="@+id/fragment_setting_gide_image"
+                android:layout_width="@dimen/btn_icon"
+                android:layout_height="@dimen/btn_icon"
+                android:scaleType="centerCrop"
+                android:src="@drawable/gide"/>
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_white"
+                android:text="@string/gide"
+                android:layout_marginLeft="@dimen/base_margin"
+                android:layout_toRightOf="@id/fragment_setting_gide_image"/>
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
 
 
 </LinearLayout>

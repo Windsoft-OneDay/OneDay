@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.nispok.snackbar.Snackbar;
 import com.windsoft.oneday.Global;
@@ -36,8 +37,8 @@ public class WriteFragment extends Fragment {
 
     private EditText contentInput;                          // 글
     private LinearLayout pictureContainer;                  // 골라진 사진 보이는 레이아웃
-    private LinearLayout takePictureContainer;              // 사진 찍기 버튼
-    private LinearLayout choicePictureContainer;            // 사진 고르기 버튼
+    private RelativeLayout takePictureContainer;              // 사진 찍기 버튼
+    private RelativeLayout choicePictureContainer;            // 사진 고르기 버튼
 
     private String content;
     private ArrayList<Bitmap> imageList = new ArrayList<>();
@@ -97,8 +98,8 @@ public class WriteFragment extends Fragment {
     private void init(View rootView) {
         contentInput = (EditText) rootView.findViewById(R.id.fragment_write_content);
         pictureContainer = (LinearLayout) rootView.findViewById(R.id.fragment_write_image_container);
-        takePictureContainer = (LinearLayout) rootView.findViewById(R.id.fragment_write_take_picture_layout);
-        choicePictureContainer = (LinearLayout) rootView.findViewById(R.id.fragment_write_choice_picture_layout);
+        takePictureContainer = (RelativeLayout) rootView.findViewById(R.id.fragment_write_take_picture_layout);
+        choicePictureContainer = (RelativeLayout) rootView.findViewById(R.id.fragment_write_choice_picture_layout);
 
         setListener();
     }
@@ -237,6 +238,7 @@ public class WriteFragment extends Fragment {
             getActivity().startService(intent);
         }
         removeAll();
+        sender.post();
     }
 
 
@@ -261,5 +263,6 @@ public class WriteFragment extends Fragment {
     public interface OnWriteHandler {
         void addPhotoFromGallery();
         void addPhotoFromCamera();
+        void post();
     }
 }
