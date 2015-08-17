@@ -134,8 +134,8 @@ public class SettingFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(getActivity(), OneDayService.class);
                         intent.putExtra(Global.KEY_COMMAND, Global.KEY_SIGN_OUT);
-                        intent.putExtra(Global.KEY_USER_ID, Global.KEY_USER_ID);
-                        startActivity(intent);
+                        intent.putExtra(Global.KEY_USER_ID, id);
+                        getActivity().startService(intent);
                     }
                 });
                 builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

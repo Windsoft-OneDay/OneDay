@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="300dp"
+    android:layout_height="match_parent">
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        card:cardCornerRadius="8dp"
+        card:cardBackgroundColor="#FFFFFF">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:id="@+id/custom_dialog_update_notice_update"
+                android:layout_width="match_parent"
+                android:gravity="center_horizontal|center_vertical"
+                android:layout_height="@dimen/btn_large"
+                android:paddingLeft="@dimen/base_padding">
+
+
+                <ImageView
+                    android:id="@+id/custom_dialog_update_notice_image1"
+                    android:layout_width="@dimen/btn_small"
+                    android:layout_height="@dimen/btn_small"
+                    android:layout_marginRight="@dimen/base_margin"
+                    android:layout_centerInParent="true"/>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/update"
+                    android:gravity="center_vertical"
+                    android:layout_toRightOf="@id/custom_dialog_update_notice_image1"/>
+
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/custom_dialog_update_notice_remove"
+                android:layout_width="match_parent"
+                android:gravity="center_horizontal|center_vertical"
+                android:layout_height="@dimen/btn_large"
+                android:paddingLeft="@dimen/base_padding">
+
+
+                <ImageView
+                    android:id="@+id/custom_dialog_update_notice_image2"
+                    android:layout_width="@dimen/btn_small"
+                    android:layout_height="@dimen/btn_small"
+                    android:layout_marginRight="@dimen/base_margin"
+                    android:layout_centerInParent="true"/>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/remove"
+                    android:gravity="center_vertical"
+                    android:layout_toRightOf="@id/custom_dialog_update_notice_image2"/>
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+
+    </android.support.v7.widget.CardView>
+
+
+
+
+</LinearLayout>

@@ -160,6 +160,10 @@ public class SignupFragment extends Fragment {
         //비밀번호 난이도 검사
         int cond = Secure.checkPasswordSecureLevel(pw);
         if (cond == Secure.SUCCESS) {
+            this.id.setText("");
+            this.pw.setText("");
+            this.config.setText("");
+            this.mail.setText("");
             sender.onSignUp(id, pw, mail, birth);              // 로그인 요청
         } else if (cond == Secure.NOT_ENOUGH_LETTER) {
             Snackbar.with(getActivity())

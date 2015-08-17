@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.windsoft.oneday.Global;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
+import com.windsoft.oneday.UpdateNoticeDialog;
 import com.windsoft.oneday.activity.MainActivity;
 import com.windsoft.oneday.model.CommentModel;
 import com.windsoft.oneday.model.NoticeModel;
@@ -94,11 +95,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
         if (day != 0)
             sb.append(day + "일 ");
-        if (hour != 0)
+        else if (hour != 0)
             sb.append(hour + "시간 ");
-        if (min != 0)
+        else if (min != 0)
             sb.append(min + "분 ");
-        sb.append(sec + "초");
+//        else if (sec != 0)
+            sb.append(sec + "초");
 
         return sb.toString();
     }
@@ -162,7 +164,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         holder.menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Custom Alert Dialog
+                UpdateNoticeDialog dialog = new UpdateNoticeDialog(context, notice);
+                dialog.show();
             }
         });
         holder.content.setText(notice.getContent());

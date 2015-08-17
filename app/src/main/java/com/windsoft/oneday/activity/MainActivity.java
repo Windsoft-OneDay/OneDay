@@ -24,6 +24,7 @@ import com.windsoft.oneday.ImageBase64;
 import com.windsoft.oneday.OneDayService;
 import com.windsoft.oneday.R;
 import com.windsoft.oneday.SetNameDialog;
+import com.windsoft.oneday.UpdateNoticeDialog;
 import com.windsoft.oneday.fragment.CommentFragment;
 import com.windsoft.oneday.fragment.MainFragment;
 import com.windsoft.oneday.fragment.ProfileFragment;
@@ -37,7 +38,7 @@ import it.neokree.materialtabs.MaterialTab;
 import it.neokree.materialtabs.MaterialTabHost;
 import it.neokree.materialtabs.MaterialTabListener;
 
-public class MainActivity extends AppCompatActivity implements SetNameDialog.OnSetNameHandler, SettingFragment.OnSettingHandler {
+public class MainActivity extends AppCompatActivity implements SetNameDialog.OnSetNameHandler, SettingFragment.OnSettingHandler, UpdateNoticeDialog.OnUpdateNoticeHandler, WriteFragment.OnWriteHandler {
 
     private final String TAG = "MainActivity";
     private static final int TAKE_GALLERY = 10;
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
 
 
     private void setName() {
-        dialog = new SetNameDialog(this);
+        dialog = new SetNameDialog(this, false);
         dialog.show();
     }
 
@@ -303,10 +304,7 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
                     if (code != -1)
                         processGetProfile(code, noticeList);
                 } else if (command.equals(Global.KEY_GET_PHOTO)) {
-                    Intent curIntent = new Intent();
-                    curIntent.setAction(Intent.ACTION_GET_CONTENT);
-                    curIntent.setType("image/*");
-                    startActivityForResult(curIntent, TAKE_GALLERY);
+
                 } else if (command.equals(Global.KEY_SET_PHOTO)) {
                     int code = intent.getIntExtra(Global.KEY_CODE, -1);
                     if (code != -1)
@@ -315,8 +313,42 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
                     int code = intent.getIntExtra(Global.KEY_CODE, -1);
                     if (code != -1)
                         processSingOut(code);
+                } else if (command.equals(Global.KEY_UPDATE_NOTICE)) {
+                    int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                    if (code != -1)
+                        processUpdateNotice(code);
+                } else if (command.equals(Global.KEY_REMOVE_NOTICE)) {
+                    int code = intent.getIntExtra(Global.KEY_CODE, -1);
+                    if (code != -1)
+                        processRemoveNotice(code);
                 }
             }
+        }
+    }
+
+
+    private void processUpdateNotice(int code) {
+        if (code != Global.CODE_SUCCESS) {
+            Snackbar.with(this)
+                    .text(R.string.fail_again)
+                    .show(this);
+        } else {
+            Snackbar.with(this)
+                    .text(R.string.success)
+                    .show(this);
+        }
+    }
+
+
+    private void processRemoveNotice(int code) {
+        if (code != Global.CODE_SUCCESS) {
+            Snackbar.with(this)
+                    .text(R.string.fail_again)
+                    .show(this);
+        } else {
+            Snackbar.with(this)
+                    .text(R.string.success)
+                    .show(this);
         }
     }
 
@@ -337,13 +369,21 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
             Snackbar.with(this)
                     .text(R.string.fail_again)
                     .show(this);
+        } else {
+            Snackbar.with(this)
+                    .text(R.string.success)
+                    .show(this);
         }
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == TAKE_GALLERY) {
+        Log.d(TAG, "requestCode = " + requestCode);
+        if (requestCode == WriteFragment.TAKE_GALLERY || requestCode == WriteFragment.TAKE_CAMERA)
+            writeFragment.onActivityResult(requestCode, resultCode, data);
+
+        else if (requestCode == TAKE_GALLERY) {
             if (data != null) {
                 Uri uri = data.getData();
                 Bitmap bitmap = null;
@@ -510,5 +550,36 @@ public class MainActivity extends AppCompatActivity implements SetNameDialog.OnS
     @Override
     public void sortByTime() {
         mainFragment.sortByTime();
+    }
+
+
+    @Override
+    public void update(String noticeId, String content, ArrayList<String> image) {
+        writeFragment.update(noticeId, content, image);
+        viewPager.setCurrentItem(1);
+    }
+
+    @Override
+    public void remove(String noticeId) {
+        Intent intent = new Intent(this, OneDayService.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_REMOVE_NOTICE);
+        intent.putExtra(Global.KEY_NOTICE_ID, noticeId);
+        startService(intent);
+    }
+
+
+    @Override
+    public void addPhotoFromGallery() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, WriteFragment.TAKE_GALLERY);
+    }
+
+    @Override
+    public void addPhotoFromCamera() {
+        Intent intent = new Intent();
+        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, WriteFragment.TAKE_CAMERA);
     }
 }

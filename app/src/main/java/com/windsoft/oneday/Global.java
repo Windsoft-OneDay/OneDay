@@ -37,6 +37,8 @@ public class Global {
     public static final String KEY_FIND_ID = "findId";
     public static final String KEY_FIND_PW = "findPw";
     public static final String KEY_SET_PW = "setPw";
+    public static final String KEY_UPDATE_NOTICE = "updateNotice";
+    public static final String KEY_REMOVE_NOTICE = "removeNotice";
 
     public static final String VALUE_CONNECT = "connection";
 
@@ -86,6 +88,8 @@ public class Global {
     public static final int CODE_FIND_ID_NULL = 321;             // 아이디 찾기 userDB 없음
     public static final int CODE_FIND_PW_NULL = 322;             // 비밀번호 찾기 userDB 없음
     public static final int CODE_SET_PW_ERR = 323;             // 비밀번호 설정 에러
+    public static final int CODE_UPDATE_NOTICE_ERR = 324;             // 글 수정 에러
+    public static final int CODE_REMOVE_NOTICE_ERR = 325;             // 글 삭제 에러
 
     public static Bitmap decodeImage(String str) {
         byte[] array = Base64.decode(str, Base64.DEFAULT);

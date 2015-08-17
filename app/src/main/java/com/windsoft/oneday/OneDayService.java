@@ -123,6 +123,21 @@ public class OneDayService extends Service {
                     String id = intent.getStringExtra(Global.KEY_USER_ID);
                     String pw = intent.getStringExtra(Global.KEY_USER_PW);
                     socketIO.setPw(id, pw);
+                } else if (command.equals(Global.KEY_UPDATE_NOTICE)) {                // 글 수정
+                    String content = intent.getStringExtra(Global.KEY_CONTENT);
+                    String noticeId = intent.getStringExtra(Global.KEY_NOTICE_ID);
+                    ArrayList<String> imageList = new ArrayList<>();
+
+                    String image;
+                    int i = 0;
+                    while ((image = intent.getStringExtra(Global.KEY_IMAGE + i)) != null) {
+                        i++;
+                        imageList.add(image);
+                    }
+                    socketIO.updateNotice(noticeId, content, imageList);
+                } else if (command.equals(Global.KEY_REMOVE_NOTICE)) {
+                    String noticeId = intent.getStringExtra(Global.KEY_NOTICE_ID);
+                    socketIO.removeNotice(noticeId);
                 }
             }
         }

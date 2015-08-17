@@ -76,6 +76,7 @@ public class ProfileFragment extends Fragment {
         recyclerView.setLayoutManager(manager);
 
         getProfile();
+        setData(new ArrayList<NoticeModel>());
     }
 
 

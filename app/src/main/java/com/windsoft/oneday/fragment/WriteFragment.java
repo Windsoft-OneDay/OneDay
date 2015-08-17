@@ -1,5 +1,6 @@
 package com.windsoft.oneday.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -41,12 +42,15 @@ public class WriteFragment extends Fragment {
     private String content;
     private ArrayList<Bitmap> imageList = new ArrayList<>();
 
-    private static final int TAKE_CAMERA = 0;
-    private static final int TAKE_GALLERY = 1;
+    public static final int TAKE_CAMERA = 0;
+    public static final int TAKE_GALLERY = 1;
 
     private String id;
     private String name;
     private String image;
+    private String noticeId;
+
+    private OnWriteHandler sender;
 
     public WriteFragment() {
     }
@@ -62,6 +66,12 @@ public class WriteFragment extends Fragment {
         return fragment;
     }
 
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        sender = (OnWriteHandler) activity;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,19 +108,14 @@ public class WriteFragment extends Fragment {
         takePictureContainer.setOnClickListener(new View.OnClickListener() {                    // 사진 찍기 버튼 클릭
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, TAKE_CAMERA);
+                sender.addPhotoFromCamera();
             }
         });
 
         choicePictureContainer.setOnClickListener(new View.OnClickListener() {                  // 사진 고르기 버튼 클릭
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                startActivityForResult(intent, TAKE_GALLERY);
+                sender.addPhotoFromGallery();
             }
         });
     }
@@ -126,6 +131,16 @@ public class WriteFragment extends Fragment {
                 Bitmap bitmap = getBitmap(uri);
                 addPhoto(bitmap);
             }
+        }
+    }
+
+
+    public void update(String noticeId, String content, ArrayList<String> image) {
+        this.noticeId = noticeId;
+        contentInput.setText(content);
+        for (int i = 0; i < image.size(); i++) {
+            Bitmap bitmap = Global.decodeImage(image.get(i));
+            addPhoto(bitmap);
         }
     }
 
@@ -199,6 +214,15 @@ public class WriteFragment extends Fragment {
             Snackbar.with(getActivity())
                     .text(R.string.fragment_write_no_msg)
                     .show(getActivity());
+        } else if (noticeId != null) {
+            Intent intent = new Intent(getActivity(), OneDayService.class);
+            intent.putExtra(Global.KEY_COMMAND, Global.KEY_UPDATE_NOTICE);
+            intent.putExtra(Global.KEY_NOTICE_ID, noticeId);
+            intent.putExtra(Global.KEY_CONTENT, content);
+            for (int i = 0; i < this.imageList.size(); i++) {
+                intent.putExtra(Global.KEY_IMAGE + i, ImageBase64.encodeTobase64(this.imageList.get(i)));
+            }
+            getActivity().startService(intent);
         } else {
             Intent intent = new Intent(getActivity(), OneDayService.class);
             intent.putExtra(Global.KEY_COMMAND, Global.KEY_POST_NOTICE);
@@ -211,8 +235,8 @@ public class WriteFragment extends Fragment {
                 intent.putExtra(Global.KEY_IMAGE + i, ImageBase64.encodeTobase64(this.imageList.get(i)));
             }
             getActivity().startService(intent);
-            Log.e(TAG,"보냄");
         }
+        removeAll();
     }
 
 
@@ -221,13 +245,21 @@ public class WriteFragment extends Fragment {
      * */
     public void removeAll() {
         contentInput.setText("");
-        imageList.clear();
         pictureContainer.removeAllViews();
+        imageList.clear();
+        content = null;
+        noticeId = null;
     }
 
 
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    public interface OnWriteHandler {
+        void addPhotoFromGallery();
+        void addPhotoFromCamera();
     }
 }

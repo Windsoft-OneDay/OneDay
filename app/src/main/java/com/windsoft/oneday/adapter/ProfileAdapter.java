@@ -309,11 +309,12 @@ public class ProfileAdapter extends RecyclerView.Adapter implements SetNameDialo
 
         if (day != 0)
             sb.append(day + "일 ");
-        if (hour != 0)
+        else if (hour != 0)
             sb.append(hour + "시간 ");
-        if (min != 0)
+        else if (min != 0)
             sb.append(min + "분 ");
-        sb.append(sec + "초");
+        else if (sec != 0)
+            sb.append(sec + "초");
 
         return sb.toString();
     }
@@ -356,7 +357,7 @@ public class ProfileAdapter extends RecyclerView.Adapter implements SetNameDialo
 
 
     private void updateName() {
-        SetNameDialog dialog = new SetNameDialog(context);
+        SetNameDialog dialog = new SetNameDialog(context, true);
         dialog.show();
     }
 

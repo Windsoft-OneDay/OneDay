@@ -277,10 +277,52 @@ public class SocketIO {
                     Log.e(TAG, "비밀번호 설정 에러 = " + e.getMessage());
                 }
             }
+        }).on(Global.KEY_UPDATE_NOTICE, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    JSONObject obj = (JSONObject) args[0];
+                    int code = obj.getInt(Global.KEY_CODE);
+                    processUpdateNotice(code);
+                    Log.d(TAG, "게시글 수정 응답");
+                } catch (Exception e) {
+                    Log.e(TAG, "게시글 수정 에러 = " + e.getMessage());
+                }
+            }
+        }).on(Global.KEY_REMOVE_NOTICE, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    JSONObject obj = (JSONObject) args[0];
+                    int code = obj.getInt(Global.KEY_CODE);
+                    processRemoveNotice(code);
+                    Log.d(TAG, "게시글 삭제 응답");
+                } catch (Exception e) {
+                    Log.e(TAG, "게시글 삭제 에러 = " + e.getMessage());
+                }
+            }
         });
 
         socket.open();
         socket.connect();
+    }
+
+
+    private void processRemoveNotice(int code) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_REMOVE_NOTICE);
+        intent.putExtra(Global.KEY_CODE, code);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+
+    private void processUpdateNotice(int code) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(Global.KEY_COMMAND, Global.KEY_UPDATE_NOTICE);
+        intent.putExtra(Global.KEY_CODE, code);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
 
@@ -815,6 +857,36 @@ public class SocketIO {
             obj.put(Global.KEY_USER_PW, pw);
             socket.emit(Global.KEY_SET_PW, obj);
         } catch (Exception e) {
+        }
+    }
+
+
+    public void updateNotice(String noticeId, String content, ArrayList<String> imageList) {
+        try {
+            Log.d(TAG, "updateNotice()");
+            JSONObject obj = new JSONObject();
+            JSONArray array = new JSONArray();
+            for (int i = 0; i < imageList.size(); i++) {
+                array.put(imageList.get(i));
+            }
+            obj.put(Global.KEY_CONTENT, content);
+            obj.put(Global.KEY_NOTICE_ID, noticeId);
+            obj.put(Global.KEY_IMAGE, array);
+            socket.emit(Global.KEY_UPDATE_NOTICE, obj);
+        } catch (Exception e) {
+
+        }
+    }
+
+
+    public void removeNotice(String noticeId) {
+        try {
+            Log.d(TAG, "removeNotice()");
+            JSONObject obj = new JSONObject();
+            obj.put(Global.KEY_NOTICE_ID, noticeId);
+            socket.emit(Global.KEY_REMOVE_NOTICE, obj);
+        } catch (Exception e) {
+
         }
     }
 }

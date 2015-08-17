@@ -2,6 +2,7 @@ package com.windsoft.oneday.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.nispok.snackbar.Snackbar;
@@ -36,6 +37,7 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
     private SignupFragment signUpFragment;                  //회원가입 프레그먼트
 
     private String pw;              // 자동로그인 패스워드
+    private boolean isSavedInstance = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,16 +63,19 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
         findIdFragment = new FindIdFragment();
         findPwFragment = new FindPwFragment();
 
-        /*프래그먼트 부착 소스*/
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.activity_login_container, splashFragment)
-                .commit();
-
         signUpFragment = new SignupFragment();
         // 자동 로그인 허용된 아이디 탐색
 
-        if (SocketIO.getSocket().connected())
-            processConnection();
+        if (SocketIO.getSocket().connected()) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.activity_login_container, loginFragment)
+                    .commit();
+        } else {
+            /*프래그먼트 부착 소스*/
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.activity_login_container, splashFragment)
+                    .commit();
+        }
     }
 
 
@@ -280,11 +285,19 @@ public class LoginActivity extends FragmentActivity implements FacebookLogin.OnF
 
     @Override
     public void onSplash() {                    // 스플레시 보이고 2초 뒤 실행
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.activity_login_container, loginFragment)
-                .commit();
+        if (!isSavedInstance) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.activity_login_container, loginFragment)
+                    .commit();
+        }
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        isSavedInstance = true;
+    }
 
     @Override
     public void onSignUp(String id, String pw, String mail, long birth) {

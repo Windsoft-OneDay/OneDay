@@ -17,11 +17,13 @@ public class SetNameDialog extends Dialog {
     private TextView title;
     private EditText name;
     private Button submit;
+    private boolean ableDismiss;
     private OnSetNameHandler sender;
 
-    public SetNameDialog(Context context) {
+    public SetNameDialog(Context context, boolean ableDismiss) {
         super(context);
         sender = (OnSetNameHandler) context;
+        this.ableDismiss = ableDismiss;
     }
 
 
@@ -40,13 +42,12 @@ public class SetNameDialog extends Dialog {
 
 
     private void init() {
-        title = (TextView) findViewById(R.id.custom_dialog_nickname_title);
         name = (EditText) findViewById(R.id.custom_dialog_nickname_nickname);
         submit = (Button) findViewById(R.id.custom_dialog_nickname_submit);
 
         setListener();
         setTitle("닉네임을 입력하세요");
-        setCancelable(false);
+        setCancelable(ableDismiss);
     }
 
 
@@ -64,10 +65,5 @@ public class SetNameDialog extends Dialog {
 
     public interface OnSetNameHandler {
         void onSetName(String name);
-    }
-
-
-    private void setTitle(String title) {
-        this.title.setText(title);
     }
 }
